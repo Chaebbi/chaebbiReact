@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
-import Grid from "../elements/Grid";
+import StackGraph from "./Charts/StackGraph";
 
 //영양정보 보여주는 컴포넌트 - 분석페이지에서 사용
 function NutrientsInfo(props){
@@ -20,38 +19,30 @@ function NutrientsInfo(props){
         bottom
     } = props;
 
-
-
     return(
         <NutrientsContainer position={position} top={top} left={left} right={right} bottom={bottom}>
-                <Grid col="2" row="1" colgap="20px" margin="0 auto" width="100%">
-                    <ChartContainer>
-                        <Chart>
-                        {`추천 섭취 칼로리 : ${recommended_kcal} kcal`}<br/>
-                        {`금일 섭취 칼로리 : ${total_kcal} kcal`}
-                        </Chart>
-                    </ChartContainer>
                     <InfoContainer>
                         <h2 style={{display:"inline-block",margin:"0",marginBottom:"15px"}}>주요 영양소</h2>
                         <span style={{float:"right"}}>(단위:g)</span>
                         <br/>
+                        {`추천 섭취 칼로리 : ${recommended_kcal} kcal`}<br/>
+                        {`금일 섭취 칼로리 : ${total_kcal} kcal`}
                         <div>
                             <H4>탄수화물</H4>
                             <G>{`${total_carb}/${recommended_carb}`}</G>
+                            <StackGraph intake={total_carb} recommend={recommended_carb}/>
                         </div>
-                        <Slider>0</Slider>
                         <div>
                             <H4>단백질</H4>
                             <G>{`${total_protein}/${recommended_protein}`}</G>
+                            <StackGraph intake={total_protein} recommend={recommended_protein}/>
                         </div>
-                        <Slider>0</Slider>
                         <div>
                             <H4>지방</H4>
                             <G>{`${total_fat}/${recommended_fat}`}</G>
+                            <StackGraph intake={total_fat} recommend={recommended_fat}/>
                         </div>
-                        <Slider>0</Slider>
                     </InfoContainer>  
-                </Grid>
             </NutrientsContainer>
         )
     }
@@ -83,18 +74,6 @@ const NutrientsContainer = styled.div`
     bottom: ${(props)=>props.bottom};
 `;
 
-const ChartContainer = styled.div`
-    background-color: yellow;
-    box-sizing: border-box;
-`;
-
-const Chart = styled.div`
-    width: 100%;
-    height: 357px;
-    border: 1px solid #fff;
-    background-color: #e6e6e6;
-`;
-
 const InfoContainer = styled.div`
     box-sizing: border-box;
     padding: 10px;
@@ -108,18 +87,10 @@ const H4 = styled.h3`
 
 const G = styled.span`
     display: inline-block;
-    width: 20%;
-    margin: 20px 10px 0px 0px;
+    width: 12%;
+    margin: 20px 0px 0px 0px;
     float: right;
 `;
 
-const Slider = styled.p`
-    width: 95%;
-    margin: 5px;
-    padding: 1px;
-    background-color: rgba(198,221,207,0.5);
-    border: 1px solid #fff;
-    border-radius: 15px;
-`;
 
 export default NutrientsInfo;
