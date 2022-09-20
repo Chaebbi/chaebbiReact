@@ -118,7 +118,7 @@ function UserLogin(){
                  border="#e6e6e6"
                  hover="#fff"
                  background="#fff"
-                 color="#000"
+                 color="#495057"
                  text="카카오계정으로 로그인" 
                  onClick={doKakaoLogin}
                  />
