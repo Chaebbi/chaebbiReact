@@ -8,29 +8,34 @@ function Landing(){
         <>
             <IntroduceBox>
                 <H1>Chaebbi</H1>
-                <H4>채식인들을 위한 식단추천 웹사이트</H4>
+                <H4>채식인들을 위한 일상 식단관리 웹사이트</H4>
+                
                 <Button 
-                 width="240px"
-                 height="46px" 
-                 margin="25px 0 15px 0"
-                 borderRadius="10px"
-                 position="relative" left="180px"
-                 text="테스트 페이지" 
-                 href="/test"
+                    width="240px"
+                    height="46px" 
+                    margin="25px 0 15px 0"
+                    borderRadius="10px"
+                    position="relative" 
+                    top="0px"
+                    left="180px"
+                    text="로그인하기" 
+                    href="/sign_in"
                 />
                 <Button
-                 width="240px" 
-                 height="46px"
-                 margin="25px 0 15px 0"
-                 position="relative" top="60px" left="-60px"
-                 borderRadius="10px"
-                 border="#e6e6e6"
-                 hover="#fff"
-                 background="#fff"
-                 color="#000"
-                 text="로그인하기" 
-                 href="/sign_in"
-                 />
+                    width="240px" 
+                    height="46px"
+                    margin="25px 0 15px 0"
+                    position="relative" 
+                    top="50px" 
+                    left="-60px"
+                    borderRadius="10px"
+                    border="#e6e6e6"
+                    hover="#fff"
+                    background="#fff"
+                    color="#000"
+                    text="가입하기" 
+                    href="/sign_up"
+                />
             
             </IntroduceBox>
         </>
