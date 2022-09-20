@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { useState,useEffect } from "react";
 import Grid from "../elements/Grid";
 import axios from "axios";
-import Pchart from "../components/Pchart";
-import WeeklyGraph from "../components/WeeklyGraph";
+import Pchart from "../components/Charts/Pchart";
+import WeeklyGraph from "../components/Charts/WeeklyGraph";
 
 //식단분석 페이지
 function AnalyzeDiet(){
@@ -59,32 +59,31 @@ function AnalyzeDiet(){
                     <h2>Today {fulldate}</h2>
                     <P>지난 7일간 기록된 점수입니다.</P>
                     {weeklist !== undefined||null||''?
-                            <WeeklyGraph week={weeklist}/>
+                        <div style={{width:"500px", height:"300px"}}><WeeklyGraph week={weeklist}/></div>
                     :
-                            <div style={{margin: "40px auto", backgroundColor:"#e6e6e6"}}>표본 부족</div>
+                        <div style={{margin: "0px auto", backgroundColor:"#e6e6e6"}}>표본 부족</div>
                     }       
                     </ChartContainer>
 
                 <NutrientsInfomation>
-                <Title>주간영양섭취량</Title>
+                    <Title>주간영양섭취량</Title>
 
-                <Grid col="2" row="1" margin="0">
-                    {ratio !== undefined||null||''?
-                        <Pchart nutrient={ratio}/>
-                    :
-                        <div style={{margin: "40px auto", backgroundColor:"#e6e6e6"}}>표본 부족</div>
-                    }
-                    
                     <Grid col="2" row="1" margin="0">
-                        <h4 style={{color:"#0088fe"}}>탄수화물</h4>
-                        <p>{total.carb} g</p>
-                        <h4 style={{color:"#00c49f"}}>단백질</h4>
-                        <p>{total.protein} g</p>
-                        <h4 style={{color:"#ffbb28"}}>지방</h4>
-                        <p>{total.fat} g</p>
+                        {ratio !== undefined||null||''?
+                            <Pchart nutrient={ratio}/>
+                    :
+                            <div style={{margin: "0px auto", backgroundColor:"#e6e6e6"}}>표본 부족</div>
+                        }
+                        <Grid col="2" row="1" margin="0">
+                            <h4 style={{color:"#0088fe"}}>탄수화물</h4>
+                            <p>{total.carb} g</p>
+                            <h4 style={{color:"#00c49f"}}>단백질</h4>
+                            <p>{total.protein} g</p>
+                            <h4 style={{color:"#ffbb28"}}>지방</h4>
+                            <p>{total.fat} g</p>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </NutrientsInfomation>
+                </NutrientsInfomation>
             </Grid>
             
             
@@ -99,10 +98,9 @@ function AnalyzeDiet(){
 
 const Container = styled.div`
     width: 80%;
-    min-width: 1000px;
     max-width: 1000px;
-    height: 380px;
-    min-width: 500px;
+    height: 460px;
+    min-width: 1000px;
     box-sizing: border-box;
 
     margin: 0 auto;
@@ -117,7 +115,6 @@ const Container = styled.div`
 
 const ChartContainer = styled.div`
     width: 100%;
-    margin-top: 20px;
     box-sizing: border-box;
     padding-top: 20px;
     padding-left: 10px;
@@ -127,13 +124,15 @@ const ChartContainer = styled.div`
 
 const NutrientsInfomation = styled.div`
     min-width: 300px;
-    height: 280px;
+    height: 300px;
     box-sizing: border-box;
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
+    position: relative;
+    top: 30px;
 `;
 
 const H2 = styled.h2`
