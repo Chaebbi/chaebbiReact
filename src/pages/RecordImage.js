@@ -174,7 +174,7 @@ function RecordImage(){
     }
 
     //유효성 검사========================================================
-    const handleValid =()=>{
+    const handleValid =(e)=>{
         let ckName = name.length > 0;
         let ckCalory = calory > 0 && calory !== '';
         let ckCarb = carb > 0 && carb !== '';
@@ -229,38 +229,38 @@ function RecordImage(){
             </ImageBox>
             
             {isPost ? 
-                    <Form width="60%" height="400px" margin="0 auto" padding="20px" position="relative" top="50px">
+                    <Form width="50%" height="auto" margin="0 auto 20px" padding="20px" position="relative" top="50px">
                         <FoodName>{name}</FoodName>
-                        <Grid col="2" row="1" margin="10px" colgap="20px" width="90%" height="200px">
+                        <Grid col="2" row="1" margin="0 0 20px 0" colgap="20px" width="100%" height="auto">
                             <div className="image2"></div>
 
-                            <Grid col="2" row="1" margin="0" width="100%">
+                            <Grid col="1" row="3" margin="0" width="100%">
                                 <Input name="date" type="date" text="식사날짜" placeholder="2022-00-00" value={date||''} margin="0px" fieldwidth="95%" onChange={changeDate}/>
                                 <Input name="time" type="time" text="식사시간" placeholder="00:00~23:59" value={time||''} margin="0px" fieldwidth="95%" onChange={changeTime}/>
+                                <RadioBox>
+                                        <Legend>끼니</Legend>
+                                            {Array.from(when).map((m,index) => (
+                                                <Radio
+                                                    key={index} 
+                                                    id={m.id}
+                                                    name={m.name}
+                                                    value={m.value}
+                                                    label={m.label}
+                                                    text={m.label}
+                                                    onClick={changeMeal}/>
+                                            ))}
+                                </RadioBox>
                             </Grid>
                         </Grid>
-                        <RadioBox>
-                                <Legend>끼니</Legend>
-                                    {Array.from(when).map((m,index) => (
-                                        <Radio
-                                            key={index} 
-                                            id={m.id}
-                                            name={m.name}
-                                            value={m.value}
-                                            label={m.label}
-                                            text={m.label}
-                                            onClick={changeMeal}/>
-                                    ))}
-                            </RadioBox>
                         <Grid col="2" row="1" margin="0">
                             <Text label="칼로리" text={`${calory} kcal`}/>
                             <Input name="amount" type="number" text="식사량" placeholder="그람(1인분 300g)" value={amount} margin="0px" fieldwidth="95%" onChange={changeAmount}/>
-                            </Grid>
-                            <Grid col="3" row="1" colgap="6px" margin="0">
+                        </Grid>
+                        <Grid col="3" row="1" colgap="6px" margin="0">
                             <Text label="탄수화물" text={`${carb} g`}/>
                             <Text label="단백질" text={`${protein} g`}/>
                             <Text label="지방" text={`${fat} g`}/>
-                            </Grid>
+                        </Grid>
                         
                         
                         
@@ -269,7 +269,7 @@ function RecordImage(){
                                 submit
                                 width="240px"
                                 height="46px" 
-                                margin="0 auto"
+                                margin="20px auto 0 auto"
                                 borderRadius="10px"
                                 text="기록하기"
                                 onClick={handleValid}
