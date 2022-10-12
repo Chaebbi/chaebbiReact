@@ -176,9 +176,7 @@ const ProfileContainer = styled.div`
     width : 42%;
     min-width: 550px;
     height: 310px;
-    margin: 0 auto;
     padding: 20px;
-    margin-top: 50px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     box-sizing: border-box;
