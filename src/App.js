@@ -15,7 +15,7 @@ import Detail from "./pages/Detail";
 import KakaoUserLogin from "./pages/KakaoUserLogin";
 import OnBoard from "./pages/OnBoard";
 import PrivateRoute from "./components/Routes/PrivateRoute";
-import isLogin from "../src/utils/isLogin";
+import Test from "./pages/Test";
 
 function App() {
   // const insertedToken = localStorage.getItem('token');
@@ -41,6 +41,9 @@ function App() {
             <Route path='/sign_in' element={<UserLogin/>}/>
             <Route path='/kakao_login' element={<KakaoUserLogin/>}/>
             <Route path='/on_board' element={<OnBoard/>}></Route>
+
+
+            <Route path='/test' element={<Test/>}></Route>
           </Routes>
         </Subcontainer>
       </Router>
@@ -56,7 +59,7 @@ const Container = styled.div`
 
 const Subcontainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 90vh;
   position: relative;
   top: 60px;
   z-index: 0;
