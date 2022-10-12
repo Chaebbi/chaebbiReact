@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import "../styles/ScrollBar.css";
 import { useState, useEffect } from "react";
 import Form from "../elements/Form";
 import Input from "../elements/Input";
@@ -30,7 +31,6 @@ function RecordSearch(){
         console.log([e.target.name], e.target.value);
 
         setRatio((parseFloat(e.target.value)/food.capacity)*10);
-        // console.log(parseFloat(e.target.value)/food.capacity);
 
         setCarb((food.carb*ratio).toFixed(1));
         setProtein((food.pro*ratio).toFixed(1));
@@ -206,13 +206,13 @@ function RecordSearch(){
       } ,[searchword,food,carb,protein,fat,calory]);
 
     return(
-        <>
+        <div className="boxForZ-index">
             <Explain>검색어를 입력하면 식단기록창이 나타납니다.</Explain>
 
             <SearchBox>
                 <Search type="text" placeholder="검색어를 입력하세요." value={searchword} onChange={handleKeyword}/>
                 {searchword.length > 0 && searchword && (
-                    <AutoSearchContainer>
+                    <AutoSearchContainer className="scrollbar">
                         <AutoSearchWrap>
                             {autocompletes.map((a,index)=>(
                                 <AutoSearchData key={index} onClick={()=>{selectFood(`${a.name}`,`${a.id}`)}}>{a.name}</AutoSearchData>
@@ -226,7 +226,7 @@ function RecordSearch(){
                     null
                 :
                 <>
-                <Form width="45%" height="400px" margin="0 auto" padding="20px" position="relative" top="75px">
+                <Form width="45%" height="400px" margin="0 auto" padding="20px" position="absolute" top="190px" left="356px">
                 <FoodName>{name}</FoodName> 
                 <Grid col="2" row="1" margin="0">
                     <Input name="date" type="date" text="식사날짜" value={date || ''} margin="0px" fieldwidth="95%" onChange={changeDate}/>
@@ -272,7 +272,7 @@ function RecordSearch(){
                 </>
             }
             
-        </>
+        </div>
         )
 }
 
@@ -287,7 +287,6 @@ const AutoSearchContainer = styled.div`
   border: 1px solid #e6e6e6;
   border-radius: 20px;
   padding: 5px;
-  overflow: scroll;
 `;
 
 const AutoSearchWrap = styled.ul`
