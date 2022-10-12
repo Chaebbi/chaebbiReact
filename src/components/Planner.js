@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { AiOutlineFileAdd,AiOutlineArrowRight } from "react-icons/ai";
 import Input from "../elements/Input";
-import Modal from "../elements/Modal";
 import axios from  "axios";
 import { useEffect } from "react";
 import Grid from "../elements/Grid";
