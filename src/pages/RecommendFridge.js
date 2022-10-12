@@ -5,6 +5,7 @@ import Grid from "../elements/Grid";
 import Button from "../elements/Button";
 import { AiOutlineLink } from "react-icons/ai";
 import axios from "axios";
+import "../styles/ScrollBar.css";
 
 //냉장고 재료 추천 페이지
 function RecommendFridge(){
@@ -58,8 +59,8 @@ function RecommendFridge(){
             console.log(`나의 냉장고:: ${basket}`);
             setRecoMenu(response.data.foods);
             setRecoMenuInfo(response.data.foodDto);
-            console.log(response.data.foods);
-            console.log(response.data.foodDto);
+            console.log(response.data.foods[0]);
+            console.log(response.data.foodDto[0]);
         }).catch(function(error) {
             console.log(error);
         });
@@ -77,13 +78,13 @@ function RecommendFridge(){
     },[searchword,basket]);
 
     return(
-        <>  
+        <div className="boxForZ-index">  
         <Explain>재료를 먼저 입력 후 '추천받기' 버튼을 눌러주세요.</Explain>
 
         <SearchBox>
                 <Search type="text" placeholder="검색어를 입력하세요." value={searchword} onChange={handleKeyword}/>
                 {searchword.length > 0 && searchword && (
-                    <AutoSearchContainer>
+                    <AutoSearchContainer className="scrollbar">
                         <AutoSearchWrap>
                             {autocompletes.map((a,index)=>(
                                 <AutoSearchData key={index} onClick={()=>{selectIngredient(`${a.name}`)}}>{a.name}</AutoSearchData>
@@ -141,7 +142,7 @@ function RecommendFridge(){
                                 </>)
                             }
                             <Listlabel>있는 재료</Listlabel>
-                            <HaveList>
+                            <HaveList className="scrollbar">
                                 <ul>
                                     { reco.has === undefined || null ? 
                                         ''
@@ -156,7 +157,7 @@ function RecommendFridge(){
                             </HaveList>
 
                             <Listlabel>필요한 재료</Listlabel>
-                            <NeedList>
+                            <NeedList className="scrollbar">
                                 <ul>
                                     { reco.no == undefined ? 
                                         ''
@@ -175,7 +176,7 @@ function RecommendFridge(){
 
                 </RecommendContainer>
             }
-        </>
+        </div>
         )
     }
 
@@ -191,7 +192,6 @@ const AutoSearchContainer = styled.div`
     border: 1px solid #e6e6e6;
     border-radius: 20px;
     padding: 5px;
-    overflow: scroll;
   `;
   
 const AutoSearchWrap = styled.ul`
@@ -215,8 +215,9 @@ const Container = styled.div`
     width: 45%;
     min-width: 500px;
     height: 290px;
-    position: relative;
-    top: 80px;
+    position: absolute;
+    top: 190px;
+    left: 380px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #e6e6e6;
@@ -253,7 +254,7 @@ const RecommendContainer = styled.div`
     min-width: 600px;
     max-width: 850px;
     position: relative;
-    top: 95px;
+    top: 380px;
     background-color: #f8f9fa;
     box-sizing: border-box;
     margin: 0 auto;
@@ -296,7 +297,6 @@ const HaveList = styled.div`
     border-radius: 20px;
     box-sizing: border-box;
     background-color: rgba(198,221,207,0.3);
-    overflow: auto;
 `;
 
 const NeedList = styled.div`
@@ -305,7 +305,6 @@ const NeedList = styled.div`
     border-radius: 20px;
     box-sizing: border-box;
     background-color: rgba(198,221,207,0.3);
-    overflow: auto;
 `;
 
 const Explain = styled.h2`
