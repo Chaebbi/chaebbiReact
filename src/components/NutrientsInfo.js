@@ -16,11 +16,12 @@ function NutrientsInfo(props){
         top,
         left,
         right,
-        bottom
+        bottom,
+        width
     } = props;
 
     return(
-        <NutrientsContainer position={position} top={top} left={left} right={right} bottom={bottom}>
+        <NutrientsContainer position={position} top={top} left={left} right={right} bottom={bottom} width={width}>
                     <InfoContainer>
                         <h2 style={{display:"inline-block",margin:"0",marginBottom:"15px"}}>주요 영양소</h2>
                         <span style={{float:"right"}}>(단위:g)</span>
@@ -59,8 +60,8 @@ NutrientsInfo.defaultProps={
     }
 
 const NutrientsContainer = styled.div`
-    width: 30%;
-    min-width: 500px;
+    width:  ${(props)=>props.width};
+    min-width: 300px;
     height: 400px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
