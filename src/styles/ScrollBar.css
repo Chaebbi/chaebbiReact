@@ -1,0 +1,26 @@
+.boxForZ-index{
+    position: relative;
+    width: 90vw;
+    height: 80vh; 
+    margin: 0 auto;
+}
+
+.scrollbar {
+    border: 1px solid #e6e6e6;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 6px;  /* 너비 */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    height: 20%; /* 길이 */
+    background: rgba(113,177,127, 0.6); /* 색상 */
+    border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    background: rgba(113,177,127, 0.1);  /* 배경 */
+}
