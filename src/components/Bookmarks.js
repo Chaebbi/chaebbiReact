@@ -62,7 +62,8 @@ function Bookmarks(){
                             key={index}
                             id={b.bistroId}
                             title={b.name}
-                            category={b.category}
+                            // category={b.category}
+                            category="response에 카테고리가 없음"
                             newaddress={b.roadAddr}
                             address={b.lnmAddr}
                             call={b.telNo}
@@ -82,13 +83,11 @@ function Bookmarks(){
 const FavoritesContainer = styled.div`
     width : 1050px;
     min-height: 500px;
-    margin: 0 auto;
     padding: 20px;
-    margin-top: 25px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     box-sizing: border-box;
-    background-color: #f8f9fa;
+    background-color: #fff;
 `;
 
 export default Bookmarks;
