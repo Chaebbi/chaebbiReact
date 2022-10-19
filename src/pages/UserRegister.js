@@ -13,6 +13,7 @@ function UserRegister(){
     const navigate = useNavigate();
     const [userinfo,setUserinfo] = useState({
         email: '',
+        nickname: '',
         pwd: '',
         name: '',
         gender: '',
@@ -37,7 +38,7 @@ function UserRegister(){
 		setUserinfo({...userinfo,[event.target.name]: event.target.value});
 	};
 
-    //중복체크(POST)==================================================================
+    //이메일 중복체크(POST)==================================================================
     const [isDupl, setIsDupl] = useState(false);
     const checkDuplicate =()=>{
         axios.post("https://spring.chaebbiserver.shop/api/email-check",
@@ -56,6 +57,27 @@ function UserRegister(){
                 console.log(error);
               });
     }
+    //닉네임 중복체크(POST)==================================================================
+    const [isDuplNickname, setIsDuplNickname] = useState(false);
+    const checkDuplicateNickname =(e)=>{
+        e.preventDefault();
+        axios.post("https://spring.chaebbiserver.shop/api/user-nickname",
+            {
+                nickname: userinfo.nickname,
+            },
+            ).then(function(response) {
+                console.log(response.data);
+                if(response.data.result.exist === true){
+                    alert("이미 존재하는 닉네임입니다.(Duplicate)");
+                    setIsDuplNickname(false);
+                }else{
+                    alert("사용 가능한 닉네임입니다.(Not Duplicate)");
+                    setIsDuplNickname(true);
+                }
+              }).catch(function(error) {
+                console.log(error);
+              });
+    }
 
     const handleCheckDuplicate =()=>{
         if(userinfo.email.includes('@') && userinfo.email.includes('.')){
@@ -64,10 +86,18 @@ function UserRegister(){
             alert("이메일이 입력되지 않았거나 올바르지 않습니다.");
         }
     }
+    const handleCheckDuplicateNK =()=>{
+        if(userinfo.nickname.length > 0){
+            checkDuplicateNickname();
+        }else{
+            alert("닉네임이 입력되지 않았거나 올바르지 않습니다.");
+        }
+    }
 
     const registerUser =()=>{
         axios.post("https://spring.chaebbiserver.shop/api/create-user", {
                 email: userinfo.email,
+                nickname: userinfo.nickname,
                 pwd: userinfo.pwd,
                 name: userinfo.name,
                 gender: Number(userinfo.gender),
@@ -91,7 +121,9 @@ function UserRegister(){
     const handleValid =(e)=>{
         e.preventDefault();
         let ckDupl = isDupl === true;
+        let ckDuplNickname = isDuplNickname === true;
         let ckEmail = userinfo.email.length > 0 && userinfo.email.includes('@') && userinfo.email.includes('.');
+        let ckNickname = userinfo.nickname.length > 0;
         let ckPwd = userinfo.pwd.length > 4 && userinfo.pwd.length < 20;
         let ckName = userinfo.name.length > 0 && userinfo.name.length < 45;
         let ckGender = userinfo.gender !== '';
@@ -100,13 +132,19 @@ function UserRegister(){
         let ckWeight = userinfo.weight > 0 && userinfo.weight !== '';
         let ckActivity = userinfo.activity !== '';
 
-        if(ckEmail && ckDupl && ckPwd && ckName && ckGender && ckAge && ckHeight && ckWeight && ckActivity){
+        if(ckEmail && ckDupl && ckNickname && ckDuplNickname && ckPwd && ckName && ckGender && ckAge && ckHeight && ckWeight && ckActivity){
             registerUser();
         }else{
             if(!ckEmail){
+                setIsDupl(false); //중복체크 해놓고 이메일을 지우고 다시 입력한 후 가입하기를 누를 때의 문제 방지
                 alert("이메일을 입력해주세요.");
             }else if(!ckDupl){
-                alert("중복체크를 해주세요.");
+                alert("이메일 중복체크를 해주세요.");
+            }else if(!ckNickname){
+                setIsDuplNickname(false); //중복체크 해놓고 닉네임을 지우고 다시 입력한 후 가입하기를 누를 때의 문제 방지
+                alert("닉네임을 입력해주세요.");
+            }else if(!ckDuplNickname){
+                alert("닉네임 중복체크를 해주세요.");
             }else if(!ckPwd){
                 alert("비밀번호를 올바른 형식으로 입력해주세요.");
             }else if(!ckName){
@@ -126,14 +164,14 @@ function UserRegister(){
     }
 
     return(
-        <Form width="40%" height="730px" minwidth="500px" margin="0 auto" position="relative" top="50px">
+        <Form width="40%" height="720px" minwidth="500px" margin="0 auto" position="relative" top="50px">
                 <h1 style={{textAlign:"center", margin:"20px 0 20px 0"}}>회원가입</h1>
                 {/* 각 항목별 오류메세지는 라벨 옆에 띄우고 border: 1px solid red로 변경 시키면 될 것 같음 */}
-                <Grid col="2" row="1" margin="0">
+                <GridContainer>
                     <Input name="email" type="email" text="이메일" placeholder="id@gmail.com" margin="30px 5px 5px 5px" onChange={changeContent}/>
                     <Button
                         submit
-                        width="45%" 
+                        width="93%"
                         height="44px"
                         position="relative"
                         top="60px"
@@ -142,7 +180,21 @@ function UserRegister(){
                         text="중복확인" 
                         onClick={handleCheckDuplicate}
                     />
-                </Grid>
+                </GridContainer>
+                <GridContainer>
+                    <Input name="nickname" type="text" text="닉네임" placeholder="닉네임" margin="0px 5px 5px 5px" onChange={changeContent}/>
+                    <Button
+                        submit
+                        width="93%"
+                        height="44px"
+                        position="relative"
+                        top="30px"
+                        left="5%"
+                        borderRadius="10px"
+                        text="중복확인" 
+                        onClick={handleCheckDuplicateNK}
+                    />
+                </GridContainer>
                 <Input name="pwd" type="password" text="비밀번호" placeholder="5자 이상 20자 미만" margin="5px" minlength="5" maxlength="20" onChange={changeContent}/>
     
                 <Grid col="2" row="2" margin="0">
@@ -198,14 +250,19 @@ function UserRegister(){
 }
 
 const RadioBox = styled.div`
-    margin-left: 10px;
-    margin-bottom: 20px;
+    margin: 10px;
 `;
 
 const Legend = styled.legend`
     font-weight: 700;
     font-size: 15px;
     margin-bottom: 6px;
+`;
+
+const GridContainer = styled.div`
+    display: grid;
+    grid-template-columns: 70% 30%;
+    margin-bottom: 10px;
 `;
 
 export default UserRegister;
