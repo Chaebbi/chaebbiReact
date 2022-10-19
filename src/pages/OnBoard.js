@@ -13,6 +13,7 @@ function OnBoard(){
     const navigate = useNavigate();
     const [userinfo,setUserinfo] = useState({
         name: '',
+        nickname: '',
         gender: '',
         age: '',
         height: '',
@@ -35,10 +36,44 @@ function OnBoard(){
 		setUserinfo({...userinfo,[event.target.name]: event.target.value});
 	};
 
+    //닉네임 중복체크(POST)==================================================================
+    const [isDuplNickname, setIsDuplNickname] = useState(false);
+    const [tmp, setTmp] = useState('');
+    const checkDuplicateNickname =()=>{
+        axios.post("https://spring.chaebbiserver.shop/api/user-nickname",
+            {
+                nickname: userinfo.nickname,
+            },
+            ).then(function(response) {
+                console.log(response.data);
+                if(response.data.result.exist === true){
+                    alert("이미 존재하는 닉네임입니다.(Duplicate)");
+                    setIsDuplNickname(false);
+                    setTmp(userinfo.nickname);
+                }else{
+                    alert("사용 가능한 닉네임입니다.(Not Duplicate)");
+                    setIsDuplNickname(true);
+                    setTmp(userinfo.nickname);
+                }
+              }).catch(function(error) {
+                console.log(error);
+              });
+    }
+
+    const handleCheckDuplicateNK =(event)=>{
+        event.preventDefault();
+        if(userinfo.nickname.length > 0){
+            checkDuplicateNickname();
+        }else{
+            alert("닉네임이 입력되지 않았거나 올바르지 않습니다.");
+        }
+    }
+
 
     const signUp =()=>{
         axios.post("https://spring.chaebbiserver.shop/api/signup", {
                 name: userinfo.name,
+                nickname: userinfo.nickname,
                 gender: Number(userinfo.gender),
                 age: Number(userinfo.age),
                 height: userinfo.height,
@@ -59,17 +94,24 @@ function OnBoard(){
     const handleValid =(e)=>{
         e.preventDefault();
         let ckName = userinfo.name.length > 0 && userinfo.name.length < 45;
+        let ckDuplNickname = isDuplNickname === true;
+        let ckNickname = userinfo.nickname.length > 0;
         let ckGender = userinfo.gender !== '';
         let ckAge = userinfo.age > 0 && userinfo.age !== '';
         let ckHeight = userinfo.height > 0 && userinfo.height !== '';
         let ckWeight = userinfo.weight > 0 && userinfo.weight !== '';
         let ckActivity = userinfo.activity !== '';
 
-        if(ckName && ckGender && ckAge && ckHeight && ckWeight && ckActivity){
+        if(ckName && ckNickname && ckDuplNickname && ckGender && ckAge && ckHeight && ckWeight && ckActivity){
             signUp();
         }else{
             if(!ckName){
                 alert("이름을 올바르게 입력해주세요.");
+            }else if(!ckNickname){
+                setIsDuplNickname(false); //닉네임 중복체크 해놓고 닉네임을 지우는 경우의 문제 방지
+                alert("닉네임을 입력해주세요.");
+            }else if(!ckDuplNickname){
+                alert("닉네임 중복체크를 해주세요.");
             }else if(!ckAge){
                 alert("나이를 올바르게 입력해주세요.");
             }else if(!ckHeight){
@@ -85,7 +127,7 @@ function OnBoard(){
     }
 
     return(
-        <Form width="40%" height="500px" minwidth="500px" margin="0 auto" position="relative" top="70px">
+        <Form width="40%" height="560px" minwidth="500px" margin="0 auto" position="relative" top="70px">
                 <h1 style={{textAlign:"center", margin:"20px 0 20px 0"}}>프로필 신규 등록</h1>
                 {/* 각 항목별 오류메세지는 라벨 옆에 띄우고 border: 1px solid red로 변경 시키면 될 것 같음 */}
     
@@ -95,6 +137,20 @@ function OnBoard(){
                     <Input name="height" type="number" text="신장(cm)" placeholder="cm" margin="5px" fieldwidth="95%" onChange={changeContent}/>
                     <Input name="weight" type="number" text="몸무게(kg)" placeholder="kg" margin="5px" fieldwidth="95%" onChange={changeContent}/>
                 </Grid>
+
+                <GridContainer>
+                        <Input name="nickname" type="text" text="닉네임" placeholder="닉네임" margin="0px 5px 5px 5px" onChange={changeContent}/>
+                        <Button
+                            submit
+                            width="93%" 
+                            height="44px"
+                            position="relative"
+                            top="30px"
+                            left="5%"
+                            borderRadius="10px"
+                            text="중복확인" 
+                            onClick={handleCheckDuplicateNK}/>
+                </GridContainer>
                 
                 <RadioBox>
                     <Legend>성별</Legend>
@@ -150,6 +206,12 @@ const Legend = styled.legend`
     font-weight: 700;
     font-size: 15px;
     margin-bottom: 6px;
+`;
+
+const GridContainer = styled.div`
+    display: grid;
+    grid-template-columns: 70% 30%;
+    margin: 10px 0;
 `;
 
 export default OnBoard;
