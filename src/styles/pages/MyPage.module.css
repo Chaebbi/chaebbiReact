@@ -1,6 +1,10 @@
 .container{
-    width: auto;
+    width: 60vw;
+    min-width: 500px;
     overflow: hidden;
+    margin: 0 auto;
+    position: relative;
+    top: 30px;
 }
 
 .radioContainer {
@@ -14,13 +18,13 @@
 .radioContainer input[type=radio]+label{
     display: inline-block;
     cursor: pointer;
-    height: 30px;
+    height: 40px;
     width: 100px;
     border: 1px solid #e6e6e6;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     color: #495057;
-    line-height: 30px;
+    line-height: 40px;
     text-align: center;
     font-size:14px;
     background-color: #f8f9fa;
