@@ -2,8 +2,8 @@ import styled from "styled-components";
 import Grid from "../elements/Grid";
 import Card from "../elements/Card";
 import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState,useEffect } from "react";
+import "../styles/ScrollBar.css";
 
 //즐겨찾기 컴포넌트
 function Bookmarks(){
@@ -49,21 +49,21 @@ function Bookmarks(){
     },[]);
 
     return(
-        <FavoritesContainer>
-            <Grid col="3" row="2" colgap="20px" rowgap="20px">
+        <FavoritesContainer className="scrollbar">
+            <GridContainer>
                 { bookmarks == undefined ?
                     <div>북마크된 음식점이 없습니다.</div>
                 :
                 <>
                     {Array.from(bookmarks).map((b,index) => (
                         <Card del
-                            width="320px"
+                            width="100%"
                             height="220px"
                             key={index}
                             id={b.bistroId}
                             title={b.name}
-                            // category={b.category}
-                            category="response에 카테고리가 없음"
+                            url={b.bistroUrl}
+                            category={b.category}
                             newaddress={b.roadAddr}
                             address={b.lnmAddr}
                             call={b.telNo}
@@ -75,19 +75,34 @@ function Bookmarks(){
                 </>
                 }
                 
-            </Grid>
+            </GridContainer>
         </FavoritesContainer>
     )
 }
 
 const FavoritesContainer = styled.div`
-    width : 1050px;
-    min-height: 500px;
+    min-height: 550px;
+    height: 550px;
     padding: 20px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     box-sizing: border-box;
-    background-color: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+`;
+
+const GridContainer = styled.div`
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+
+    @media (max-width: 1100px){
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        row-gap: 20px;
+    }
 `;
 
 export default Bookmarks;
