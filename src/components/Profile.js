@@ -5,15 +5,18 @@ import Image from "../elements/Image";
 import Input from "../elements/Input";
 import Radio from "../elements/Radio";
 import {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Text from "../elements/Text";
-import { MdModeEdit } from "react-icons/md";
-import { VscSaveAs } from "react-icons/vsc";
+import { BsGenderAmbiguous,BsPersonBadge } from "react-icons/bs";
+
 
 //프로필 컴포넌트
 function Profile(){
+    const navigate = useNavigate();
     const [profile, setProfile] = useState({ //서버에서 불러온 유저정보를 각 필드에 저장
         name: '',
+        nickname: '',
         age: '',
         weight: '',
         height: '',
@@ -39,6 +42,7 @@ function Profile(){
         );
         setProfile({
                 name: response.data.result.name,
+                nickname: response.data.result.nickname,
                 age: response.data.result.age,
                 weight: response.data.result.weight,
                 height: response.data.result.height,
@@ -49,9 +53,22 @@ function Profile(){
         console.log(response.data.result);
     }
 
+    //성별에 따른 아바타 가져오기========================================================
+    const getAvatar =(gender)=>{
+        const maleAvt = "/images/avatar-male-man-svgrepo-com.svg";
+        const femaleAvt = "/images/avatar-female-portrait-2-svgrepo-com.svg";
+        const defaultAvt = "/images/blank-profile.png";
+        if(gender == 0){
+            return maleAvt;
+        }else if(gender == 1){
+            return femaleAvt;
+        }else{
+            return defaultAvt;
+        }
+    }
+
     //유저정보 수정하기(PUT)========================================================
-    const saveAll =(e)=>{
-        // e.preventDefault();
+    const saveAll =()=>{
         axios.put("https://spring.chaebbiserver.shop/api/userupdate",{
             age: profile.age,
             height: profile.height,
@@ -62,7 +79,7 @@ function Profile(){
         ).then(function(response) {
             console.log(response.data);
             alert("정상적으로 수정되었습니다.");
-            window.location.reload();
+            setEditmode(!editmode);
         }).catch(function(error) {
             console.log(error);
         });
@@ -84,7 +101,8 @@ function Profile(){
 	};
 
     //유효성 검사========================================================
-    const handleValid =()=>{
+    const handleValid =(e)=>{
+        e.preventDefault();
         let ckAge = profile.age> 1;
         let ckHeight = profile.height> 0;
         let ckWeight = profile.weight> 0;
@@ -101,71 +119,94 @@ function Profile(){
             }
         }
     }
+    //유저 삭제하기(delete)========================================================
+    const deleteUser =()=>{
+        axios.delete("https://spring.chaebbiserver.shop/api/userdelete", 
+        { headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
+        ).then(function(response) {
+            console.log(response.data);
+            alert('탈퇴되었습니다.');
+            localStorage.removeItem('token');
+            navigate("/sign_in");
+        }).catch(function(error) {
+            console.log(error);
+        });
+    };
+
+    const confirmDelete=()=>{
+        let answer = window.confirm("정말로 탈퇴하시겠습니까?");
+        if(answer){
+            deleteUser();
+        }else{
+            console.log('canceled');
+        }
+    }
     
     //useEffect====================================================
     useEffect(()=>{
         getProfile();
-    },[actlabel]);
+    },[actlabel,editmode]);
 
     return(
         <ProfileContainer>
             <Image 
-                src="blank-profile.png"
-                width="120px" 
-                height="120px" 
+                src={`${getAvatar(profile.gender)}`}
+                width="150px" 
+                height="150px" 
                 borderRadius="100%"
-                display="inline-block"
+                margin="0 auto"
                 position="relative"
-                top="15px"
-                left="30px"
+                top="30px"
+                className="avatar"
             />
          {editmode ?
-            (  <> 
+            (  
+            <>
             {/* 수정모드 */}
-                <Grid col="2" row="2" width="64%" position="relative" top="-120px" left="30%">
-                    <Text label="이름" text={profile.name} margin="0 0 20px 0"/>
-                    <Text label="성별" text={profile.gender == 1 ? "여자" : "남자"} margin="0 0 20px 0"/>
-                    <Input name="age" type="number" text="나이" placeholder="10" margin="5px" fieldwidth="95%" value={profile.age} onChange={changeContentInt}/>
-                    <Input name="height" type="number" text="신장(cm)" placeholder="cm" margin="5px" fieldwidth="95%" value={profile.height} onChange={changeContent}/>
-                    <Input name="weight" type="number" text="몸무게(kg)" placeholder="kg" margin="5px" fieldwidth="95%" value={profile.weight} onChange={changeContent} />
-                    <RadioBox>
-                    <Legend>활동점수</Legend>
-                        <div>
-                            <input id="1" value="25" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==25}/>1단계
-                            <input id="2" value="33" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==33}/>2단계<br/>
-                            <input id="3" value="40" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==40}/>3단계
-                        </div>
-                    </RadioBox>
-                </Grid>
-                    
-                
-                <div style={{width: "60%", position: "relative", top:"-245px"}}>
-                    {/* <Input name="image" type="file" text="프로필이미지" margin="5px" fieldwidth="95%"/> */}
+            <InfoContainer>
+                <div>
+                    <h1>{profile.name}</h1>
+                    <p><BsPersonBadge/> {profile.nickname} <BsGenderAmbiguous/> {profile.gender == 1 ? "여자" : "남자"}</p>
                 </div>
+                <GridContainer style={{gridTemplateColumns: "repeat(3, 1fr)"}}>
+                    <Input center name="age" type="number" text="나이" placeholder="10" value={profile.age} onChange={changeContentInt}/>
+                    <Input center name="height" type="number" text="신장(cm)" placeholder="cm" value={profile.height} onChange={changeContent}/>
+                    <Input center name="weight" type="number" text="몸무게(kg)" placeholder="kg" value={profile.weight} onChange={changeContent} />
+                </GridContainer>
+                    <RadioBox>
+                        <Legend>활동점수</Legend>
+                            <div>
+                                <input id="1" value="25" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==25}/>1단계
+                                <input id="2" value="33" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==33}/>2단계
+                                <input id="3" value="40" name="activity" type="radio" onChange={changeContentInt} checked={profile.activity==40}/>3단계
+                            </div>
+                    </RadioBox>
                 
-                <Icon onClick={handleValid} style={{top:"-150px"}}>
-                    <VscSaveAs size="25" color="#868e96"/>
-                </Icon>
+                <button onClick={handleValid} style={{display:"block", margin:"0 auto"}}>프로필 저장</button>
+            </InfoContainer>
             </>
         )
         :
         (
-            <>
+        <>
             {/* 수정모드 아님 */}
-                <Grid col="2" row="2" width="64%" position="relative" top="-120px" left="30%">
-                    <Text label="이름" text={profile.name} margin="0 0 20px 0"/>
-                    <Text label="성별" text={profile.gender == 1 ? "여자" : "남자"} margin="0 0 20px 0"/>
-                    <Input name="age" type="number" text="나이" placeholder="10" margin="5px" fieldwidth="95%" value={profile.age} disabled/>
-                    <Input name="height" type="number" text="신장(cm)" placeholder="cm" margin="5px" fieldwidth="95%" value={profile.height} disabled/>
-                    <Input name="weight" type="number" text="몸무게(kg)" placeholder="kg" margin="5px" fieldwidth="95%" value={profile.weight} disabled/>
-                    <Text label="활동점수" text={actlabel} position="relative" top="-0px"/>
-                </Grid>
-
-                <Icon onClick={changeEditmode}>
-                    <MdModeEdit size="25" color="#868e96"/>
-                </Icon>
-                
-            </>
+            <InfoContainer>
+                <div>
+                    <h1>{profile.name}</h1>
+                    <p><BsPersonBadge/> {profile.nickname} <BsGenderAmbiguous/> {profile.gender == 1 ? "여자" : "남자"}</p>
+                </div>
+                <GridContainer>
+                    <Text center label="나이" text={profile.age}/>
+                    <Text center label="신장" text={`${profile.height} cm`}/>
+                    <Text center label="체중" text={`${profile.weight} kg`}/>
+                    <Text center label="활동점수" text={actlabel}/>
+                </GridContainer>
+                <div>
+                    <button onClick={changeEditmode}>프로필 수정</button>
+                    <button onClick={confirmDelete} style={{marginLeft:"10px"}}>회원탈퇴</button>
+                </div>
+            </InfoContainer>
+        </>   
         )
     }
         </ProfileContainer>
@@ -173,30 +214,67 @@ function Profile(){
 }
 
 const ProfileContainer = styled.div`
-    width : 42%;
-    min-width: 550px;
-    height: 310px;
+    min-height: 550px;
+    height: 550px;
     padding: 20px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     box-sizing: border-box;
 `;
 
-const RadioBox = styled.div`
-    margin-left: 12px;
-    margin-bottom: 20px;
-    margin-top: 4px;
+const InfoContainer = styled.div`
+    position: relative;
+    top: 60px;
+
+    div { text-align: center; color: #495057; }
+    div h1  { margin: 0; font-size: 28px; }
+    div p { margin: 0; margin-top: 20px; font-size: 16px; }
+    div:last-child { margin: 0 auto; }
+
+    button{
+        display: inline-block;
+        width: 120px;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #777;
+        border-radius: 5px;
+        background-color: transparent;
+        color: #777;
+        cursor: pointer;
+
+        position: relative;
+        top: 70px;
+    }
 `;
 
-const Legend = styled.legend`
+const GridContainer = styled.div`
+    display: grid;
+    width: 65%;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0 auto;
+    position: relative;
+    top: 30px;
+
+    @media (max-width: 730px){
+        
+    }
+`;
+
+const RadioBox = styled.div`
+    position: relative;
+    top: 50px;
+
+    div{
+        display: inline;
+    }
+`;
+
+const Legend = styled.span`
+    display: inline;
     font-weight: 700;
     font-size: 15px;
-    margin-bottom: 6px;
+    margin-right: 15px;
 `;
 
-const Icon = styled.span`
-    position: relative;
-    top: -150px;
-    left: 96%;
-`;
+
 export default Profile;
