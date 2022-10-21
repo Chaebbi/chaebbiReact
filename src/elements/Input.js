@@ -22,6 +22,8 @@ function Input(props){
         multiple,
         borderRadius,
         disabled,
+        inline,
+        center,
         step
     } = props;
 
@@ -44,6 +46,48 @@ function Input(props){
                     borderRadius="0px"
                 />
             </Div>
+            );
+    }
+
+    if(inline){
+        return(
+            <InlineDiv width={width} padding={padding} inline>
+                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
+                <InputField2
+                    name={name}
+                    type={type} 
+                    id={name}
+                    onChange={onChange}
+                    value={value}
+                    color={color}
+                    padding={padding}
+                    height={height}
+                    fieldwidth={fieldwidth}
+                    border={border}
+                    borderRadius={borderRadius}
+                />
+            </InlineDiv>
+            );
+    }
+
+    if(center){
+        return(
+            <CenterDiv width={width} padding={padding} center>
+                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
+                <InputField2
+                    name={name}
+                    type={type} 
+                    id={name}
+                    onChange={onChange}
+                    value={value}
+                    color={color}
+                    padding={padding}
+                    height={height}
+                    fieldwidth={fieldwidth}
+                    border={border}
+                    borderRadius={borderRadius}
+                />
+            </CenterDiv>
             );
     }
 
@@ -78,8 +122,8 @@ function Input(props){
 
 Input.defaultProps = {
     fontsize : "15px",
-    height : "30px",
-    margin: "5px 0",
+    height : "40px",
+    margin: "0px",
     padding: "5px",
     border: "1px solid #e6e6e6",
     borderRadius: "10px",
@@ -92,10 +136,31 @@ const Div = styled.div`
     display: inline-block;
     width: ${(props)=>props.width};
     margin: ${(props)=>props.margin};
-    margin-bottom: 20px;
-    padding-right: 10px;
     box-sizing: border-box;
-    /* background-color: yellow; */
+`;
+
+const InlineDiv = styled.div`
+    display: inline-grid;
+    grid-template-columns: 30% 70%;
+    width: ${(props)=>props.width};
+    margin: ${(props)=>props.margin};
+    box-sizing: border-box;
+
+    @media (max-width: 200px){
+        display: inline-block;
+        margin: ${(props)=>props.margin};
+        width: ${(props)=>props.width};
+        min-width: 220px;
+        box-sizing: border-box;
+    }
+`;
+
+const CenterDiv  = styled.div`
+    display: inline-block;
+    width: ${(props)=>props.width};
+    margin: ${(props)=>props.margin};
+    box-sizing: border-box;
+    text-align: center;
 `;
 
 const Label = styled.label`
@@ -107,11 +172,21 @@ const Label = styled.label`
     font-weight: 600;
 `;
 
+
+const InlineLabel = styled.label`
+    display: inline-block;
+    line-height: 42px;
+    font-size: ${(props)=>props.fontsize};
+    color: ${(props)=>props.color};
+    font-weight: 600;
+`;
+
 const InputField = styled.input.attrs({
     placeholderTextColor : "#000"
 })`
    width: ${(props)=>props.fieldwidth};
    height: ${(props)=>props.height};
+   box-sizing: border-box;
    padding: ${(props)=>props.padding};
    padding-left: 10px;
    color: ${(props)=>props.color};
@@ -132,6 +207,7 @@ const InputField = styled.input.attrs({
 const InputField2 = styled.input`
    width: ${(props)=>props.fieldwidth};
    height: ${(props)=>props.height};
+   box-sizing: border-box;
    padding: ${(props)=>props.padding};
    padding-left: 10px;
    color: ${(props)=>props.color};
