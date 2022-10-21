@@ -6,8 +6,7 @@ function Navigation(){
     const navigate = useNavigate();
     const doLogout =()=>{
         localStorage.removeItem('token');
-        navigate("/");
-        window.location.reload();
+        navigate("/sign_in");
     }
 
     return(
@@ -18,7 +17,7 @@ function Navigation(){
                 </Logo>
                 ) : (
                 <Logo>
-                    <StyledLink to='/'>CHAEBBI</StyledLink>
+                    <StyledLink to='/landing'>CHAEBBI</StyledLink>
                 </Logo>
                 )}
             
