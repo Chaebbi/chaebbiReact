@@ -11,22 +11,28 @@ import NutrientsInfo from "./NutrientsInfo";
 //일정등록 컴포넌트
 function Planner(){
     //식단조회를 위한 날짜 조작====================================================================
-    const handleSDate =(e)=>{
-        showPlans(dateConversion(e.target.value));
-    }
-
-    function today (){
+    function getToday (){
         let today = new Date();   
         let year = today.getFullYear();
         let month = ("0" + (1 + today.getMonth())).slice(-2);
         let day = ("0" + today.getDate()).slice(-2);
         return String(year + '-' + month + '-' + day);
     }
+    
+    let day = getToday();
+
+    const [today, setToday] = useState(day);
+    const handleSDate =(e)=>{
+        setToday(e.target.value);
+        showPlans(dateConversion(e.target.value));
+    }
 
     const dateConversion =(s)=> {
         let form = s.toString().split('-');
+        console.log(form);
         return (`${form[0]}.${form[1]}.${form[2]}.`);
     }
+    
 
     //식단조회(POST)============================================================================
     const [bmeal,setBmeal] = useState([]); //식단-아침(목록)
@@ -51,19 +57,17 @@ function Planner(){
 
 
     useEffect(()=>{
-        let day = today();
         showPlans(dateConversion(day));
         console.log(day);
     },[]);
 
     return(
         <>
-        
             <PlanContainer>
                 <DateContainer>
-                    <Input name="sdate" type="date" text="날짜" width="80%" onChange={handleSDate}/>
+                    <Input inline name="sdate" type="date" text="날짜" value={today} onChange={handleSDate}/>
                 </DateContainer>
-                <Grid col="2" row="1" width="60vw" colgap="20px" margin="0 auto" position="relative" top="80px">
+                <Grid col="2" row="1" width="70vw" colgap="20px" margin="0 auto" position="relative" top="80px">
                     <>
                     { bmeal.length || lmeal.length || dmeal.length !== 0? 
                         <MealRecord 
@@ -74,10 +78,10 @@ function Planner(){
                         />
                     :
                         <MealRecord 
-                        width="30vw"
-                        breakfast={bmeal} 
-                        lunch={lmeal} 
-                        dinner={dmeal}
+                            width="30vw"
+                            breakfast={bmeal} 
+                            lunch={lmeal} 
+                            dinner={dmeal}
                         />
                     }
                     </>
@@ -112,7 +116,7 @@ const DateContainer = styled.div`
     min-width: 300px;
     margin: 0 auto;
     position: relative;
-    top: 80px;
+    top: 80px; 
 `;
 
 export default Planner;
