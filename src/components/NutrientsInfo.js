@@ -23,28 +23,28 @@ function NutrientsInfo(props){
     return(
         <NutrientsContainer position={position} top={top} left={left} right={right} bottom={bottom} width={width}>
                     <InfoContainer>
-                        <h2 style={{display:"inline-block",margin:"0",marginBottom:"15px"}}>주요 영양소</h2>
-                        <span style={{float:"right"}}>(단위:g)</span>
+                        <h2>주요 영양소</h2>
+                        <span>(단위:g)</span>
                         <br/>
                         {`추천 섭취 칼로리 : ${recommended_kcal} kcal`}<br/>
                         {`금일 섭취 칼로리 : ${total_kcal} kcal`}
                         <div>
-                            <H4>탄수화물</H4>
+                            <h3>탄수화물</h3>
                             <G>{`${total_carb}/${recommended_carb}`}</G>
                             <StackGraph intake={total_carb} recommend={recommended_carb}/>
                         </div>
                         <div>
-                            <H4>단백질</H4>
+                            <h3>단백질</h3>
                             <G>{`${total_protein}/${recommended_protein}`}</G>
                             <StackGraph intake={total_protein} recommend={recommended_protein}/>
                         </div>
                         <div>
-                            <H4>지방</H4>
+                            <h3>지방</h3>
                             <G>{`${total_fat}/${recommended_fat}`}</G>
                             <StackGraph intake={total_fat} recommend={recommended_fat}/>
                         </div>
                     </InfoContainer>  
-            </NutrientsContainer>
+        </NutrientsContainer>
         )
     }
 
@@ -78,18 +78,16 @@ const NutrientsContainer = styled.div`
 const InfoContainer = styled.div`
     box-sizing: border-box;
     padding: 10px;
-`;
 
-const H4 = styled.h3`
-    display: inline-block;
-    width: 55%;
-    margin: 20px 0px 0px 10px;
+    h2 { display: inline-block; margin: 0; margin-bottom: 15px; }
+    >span { float: right; }
+    div h3 { display: inline-block; width: 55%; margin: 20px 0px 0px 5px; }
 `;
 
 const G = styled.span`
     display: inline-block;
     width: 12%;
-    margin: 20px 0px 0px 0px;
+    margin: 20px 15px 0px 0px;
     float: right;
 `;
 
