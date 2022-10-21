@@ -36,7 +36,7 @@ function Image(props){
 Image.defaultProps = {
     src: "no_image_50px.png",
     width: "100%",
-    height: "300px",
+    height: "100%",
     margin: "0",
     borderRadius: "0"
     };
