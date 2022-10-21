@@ -16,6 +16,8 @@ import KakaoUserLogin from "./pages/KakaoUserLogin";
 import OnBoard from "./pages/OnBoard";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import Test from "./pages/Test";
+import CommunityMain from "./pages/community/CommunityMain";
+import CommunityMypage from "./pages/community/CommunityMypage";
 
 function App() {
   // const insertedToken = localStorage.getItem('token');
@@ -33,7 +35,9 @@ function App() {
               <Route path='/detail/:r_id' element={<Detail/>}/>
               <Route path='/search-restaurant' element={<SearchRestaurant/>}></Route>
               <Route path='/recommend-fridge-ingredients' element={<RecommendFridge/>}></Route>
-              <Route path='/mypage' element={<Mypage/>}></Route><Route path='/' element={<Landing/>}></Route>
+              <Route path='/mypage' element={<Mypage/>}></Route>
+              <Route path='/community' element={<CommunityMain/>}></Route>
+              <Route path='/community-mypage' element={<CommunityMypage/>}></Route>
             </Route>
           
             <Route path='/landing' element={<Landing/>}/>
@@ -59,7 +63,7 @@ const Container = styled.div`
 
 const Subcontainer = styled.div`
   width: 100%;
-  height: 90vh;
+  height: 800px;
   position: relative;
   top: 60px;
   z-index: 0;
