@@ -3,7 +3,6 @@ import Bookmarks from "../components/Bookmarks";
 import styles from "../styles/pages/MyPage.module.css";
 import {useState,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 
 //마이페이지
 function Mypage(){

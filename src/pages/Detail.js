@@ -10,7 +10,7 @@ import Text from "../elements/Text";
 import Image from "../elements/Image";
 import axios from "axios";
 import Input from "../elements/Input";
-import Radio from "../elements/Radio";
+import {API} from "../utils/API.js";
 
 //기록된 식단을 보여주는 상세페이지
 function Detail(){
@@ -26,18 +26,25 @@ function Detail(){
         let form = r.split('-');
         return (`${form[0]}.${form[1]}.${form[2]}.`);
     }
+    function ateMeal(m){
+        const morning = '아침';
+        const lunch = '점심';
+        const dinner = '저녁';
 
-    const when = [
-        {id: 0, name:"meal", value:"0", label:"아침"},
-        {id: 1, name:"meal", value:"1", label:"점심"},
-        {id: 2, name:"meal", value:"2", label:"저녁"},
-    ]
+        if(m == 0){
+            return morning;
+        }else if(m == 1){
+            return lunch;
+        }else{
+            return dinner;
+        }
+    }
 
     //식단기록을 get api 호출하는 함수=========================================================================
     const [record, setRecord] = useState([]);
     const [today, setToday] = useState('');
     const getRecord=()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/detailrecord",{
+        axios.post(`${API}/detailrecord`,{
             record_id: r_id
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -63,7 +70,7 @@ function Detail(){
 
     //식단기록 삭제(DELETE)=============================================================
     const deleteRecord =()=>{
-        axios.delete("https://spring.chaebbiserver.shop/api/record", 
+        axios.delete(`${API}/record`, 
         {
             data:
             {
@@ -110,7 +117,7 @@ function Detail(){
 
     const deleteImage =(e)=>{
         e.preventDefault();
-        axios.delete("https://spring.chaebbiserver.shop/api/image-delete",
+        axios.delete(`${API}/image-delete`,
         {
             data:
             {
@@ -146,10 +153,10 @@ function Detail(){
         formData.append("image", image);
 
         axios.all([
-        axios.post("https://spring.chaebbiserver.shop/api/image-update", formData,
+        axios.post(`${API}/image-update`, formData,
         { headers : { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${localStorage.getItem('token')}`}
         }),
-        axios.post("https://spring.chaebbiserver.shop/api/record-update", formData,
+        axios.post(`${API}/record-update`, formData,
         { headers : { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         ]).then(axios.spread((res1, res2)=>{
@@ -221,7 +228,7 @@ function Detail(){
                 <Grid col="3" row="1" margin="10px 0">
                     <Text inline label="날짜" text={record.date}/>
                     <Text inline label="시간" text={record.time}/>
-                    <Text inline label="끼니" text={`${when.label}`}/>
+                    <Text inline label="끼니" text={ateMeal(record.meal)}/>
                 </Grid>
                 <hr/>
                 <Grid col="2" row="1" margin="0 0 10px 0">
@@ -306,12 +313,15 @@ const Container = styled.form`
         background-color: #e6e6e6; /* 크롬 */
         height:1px;
         border:0;
+        margin: 10px 0;
     }
 `;
 
 const RadioBox = styled.div`
     margin: 4px 0px 4px 10px;
     display: inline-block;
+
+    input{ margin-left: 10px; }
 `;
 
 const Legend = styled.legend`

@@ -2,7 +2,7 @@ import {LineChart,Line, Legend, Tooltip, YAxis, XAxis, CartesianGrid,ResponsiveC
 import React from 'react';
 
 function WeeklyGraph({week}){
-    console.log(week);
+    // console.log(week);
     let dateArray = [];
     let kcalArray = [];
     if(week!==null){
@@ -19,7 +19,6 @@ function WeeklyGraph({week}){
     for(let i = 0; i<dateArray.length; i++){
         weekData.push({name: dateArray[i], kcal: kcalArray[i]});
     }
-    console.log(weekData);
 
     return (
         <>

@@ -10,6 +10,7 @@ import Text from "../elements/Text";
 import axios from "axios";
 import Modal from "../elements/Modal";
 import { useEffect } from "react";
+import {API,FlaskAPI} from "../utils/API.js";
 
 //식단 기록 - 이미지
 function RecordImage(){
@@ -128,10 +129,10 @@ function RecordImage(){
     //음식 이미지 전송(POST)=====================================================================
     const [isPost, setIsPost] = useState(false); //이미지 등록 여부
     const [food,setFood] = useState();
-    const predictImage =(e)=>{
+    const predictImage =()=>{
         const formData = new FormData();
         formData.append("file", image);
-        axios.post("https://flask.chaebbiserver.shop/api/foodpredict",formData,
+        axios.post(`${FlaskAPI}/foodpredict`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             console.log(response);
@@ -161,12 +162,13 @@ function RecordImage(){
         formData.append("meal", Number(meal));
         formData.append("rdate", dateform);
         formData.append('rtime', time24);
-        axios.post("https://spring.chaebbiserver.shop/api/record",formData,
+        axios.post(`${API}/record`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             console.log(response.data);
             if(response.data.code == 1000){
                 alert('식단이 정상적으로 등록되었습니다.');
+                window.location.reload();
             }
         }).catch(function(error) {
             console.log(error);
@@ -175,6 +177,7 @@ function RecordImage(){
 
     //유효성 검사========================================================
     const handleValid =(e)=>{
+        e.preventDefault();
         let ckName = name.length > 0;
         let ckCalory = calory > 0 && calory !== '';
         let ckCarb = carb > 0 && carb !== '';
@@ -222,19 +225,21 @@ function RecordImage(){
 
     return(
         <>
-            <Explain>이미지를 불러오면 식단을 기록할 수 있습니다.</Explain>
-            <ImageBox>
-                <input type="file" name="image" onChange={handleImage}/>
-                <button onClick={openModal}>이미지등록</button>
-            </ImageBox>
+            <Explain>
+                <h2>이미지를 불러오면 식단을 기록할 수 있습니다.</h2>
+                <ImageBox>
+                    <input type="file" name="image" onChange={handleImage}/>
+                    <Button just width="110px" height="28px" fontsize="13px" borderRadius="10px"text="이미지등록" onClick={openModal}/>
+                </ImageBox>
+            </Explain>
             
             {isPost ? 
-                    <Form width="50%" height="auto" margin="0 auto 20px" padding="20px" position="relative" top="50px">
+                    <Form width="50%" height="auto" margin="0 auto 20px" padding="20px" position="relative" top="85px">
                         <FoodName>{name}</FoodName>
                         <Grid col="2" row="1" margin="0 0 20px 0" colgap="20px" width="100%" height="auto">
                             <div className="image2"></div>
 
-                            <Grid col="1" row="3" margin="0" width="100%">
+                            <Grid col="1" row="3" margin="0" width="100%" rowgap="8px">
                                 <Input name="date" type="date" text="식사날짜" placeholder="2022-00-00" value={date||''} margin="0px" fieldwidth="95%" onChange={changeDate}/>
                                 <Input name="time" type="time" text="식사시간" placeholder="00:00~23:59" value={time||''} margin="0px" fieldwidth="95%" onChange={changeTime}/>
                                 <RadioBox>
@@ -256,7 +261,7 @@ function RecordImage(){
                             <Text label="칼로리" text={`${calory} kcal`}/>
                             <Input name="amount" type="number" text="식사량" placeholder="그람(1인분 300g)" value={amount} margin="0px" fieldwidth="95%" onChange={changeAmount}/>
                         </Grid>
-                        <Grid col="3" row="1" colgap="6px" margin="0">
+                        <Grid col="3" row="1" colgap="6px" margin="8px 0 0 0">
                             <Text label="탄수화물" text={`${carb} g`}/>
                             <Text label="단백질" text={`${protein} g`}/>
                             <Text label="지방" text={`${fat} g`}/>
@@ -282,7 +287,7 @@ function RecordImage(){
             
             
 
-            <Modal open={modalOpen} close={closeModal} submit={submitModal} header="미리보기" height="400px" margin="150px auto">
+            <Modal open={modalOpen} close={closeModal} submit={submitModal} header="미리보기" height="460px" margin="120px auto">
                 <PreviewBox id="image_preview"></PreviewBox>
             </Modal>
         </>
@@ -290,26 +295,31 @@ function RecordImage(){
 }
 
 
-const Explain = styled.h2`
+const Explain = styled.div`
+    width: 50%;
+    min-width: 530px;
+    margin: 0 auto;
     text-align:center;
     position:relative;
-    top: 40px;
+    top: 55px;
 `;
 
 const ImageBox = styled.form`
-    width: 40%;
-    min-width: 400px;
-    text-align: center;
-
+    width: 50%;
+    min-width: 530px;
+    height: 50px;
     position: relative;
-    top: 45px;
-
+    top: 15px;
     border: 1px solid #e6e6e6;
     border-radius: 20px;
-
+    box-sizing: border-box;
     padding: 10px 10px 10px 20px;
     margin: 0 auto;
-    box-sizing: border-box;
+    text-align: left;
+
+    >button{
+        float: right;
+    }
 `;
 
 const PreviewBox = styled.div`

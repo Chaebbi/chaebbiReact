@@ -1,14 +1,12 @@
 import styled from "styled-components";
-import Button from "../elements/Button";
-import Grid from "../elements/Grid";
 import Image from "../elements/Image";
 import Input from "../elements/Input";
-import Radio from "../elements/Radio";
 import {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Text from "../elements/Text";
 import { BsGenderAmbiguous,BsPersonBadge } from "react-icons/bs";
+import {API} from "../utils/API.js";
 
 
 //프로필 컴포넌트
@@ -37,7 +35,7 @@ function Profile(){
 
     //유저정보 불러오기(GET)========================================================
     const getProfile = async() => {
-        const response = await axios.get("https://spring.chaebbiserver.shop/api/userinfo",
+        const response = await axios.get(`${API}/userinfo`,
             { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
         );
         setProfile({
@@ -69,7 +67,7 @@ function Profile(){
 
     //유저정보 수정하기(PUT)========================================================
     const saveAll =()=>{
-        axios.put("https://spring.chaebbiserver.shop/api/userupdate",{
+        axios.put(`${API}/userupdate`,{
             age: profile.age,
             height: profile.height,
             weight: profile.weight,
@@ -121,7 +119,7 @@ function Profile(){
     }
     //유저 삭제하기(delete)========================================================
     const deleteUser =()=>{
-        axios.delete("https://spring.chaebbiserver.shop/api/userdelete", 
+        axios.delete(`${API}/userdelete`, 
         { headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             console.log(response.data);

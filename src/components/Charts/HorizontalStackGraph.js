@@ -1,60 +1,53 @@
 import styled,{ keyframes } from "styled-components";
 
-function HorizontalStackGraph({carb, protein, fat, width}){
-    // console.log(carb, protein, fat); //string
-
-    let c = Number(carb);
-    let p = Number(protein);
-    let f = Number(fat);
-    const total = c + p+ f;
-    const carbPercent = Number(((c/total)*100).toFixed(0));
-    const proteinPercent = ((p/total)*100).toFixed(0);
-    const fatPercent = ((f/total)*100).toFixed(0);
-    const nutrientsRatio = [carbPercent,proteinPercent,fatPercent];
+function HorizontalStackGraph(props){
+    const {carb, protein, fat, width} = props;
 
     return(
-        <HorizontalContainer width={width}>
-            <span carbPercent={carbPercent}>탄수화물 {`${nutrientsRatio[0]}%`}</span>
-            <span proteinPercent={proteinPercent}>단백질 {`${nutrientsRatio[1]}%`}</span>
-            <span fatPercent={fatPercent}>지방 {`${nutrientsRatio[2]}%`}</span>
+        <HorizontalContainer width={width} carb={carb} protein={protein} fat={fat}>
+            <span>탄수화물 {carb}</span>
+            <span>단백질 {protein}</span>
+            <span>지방 {fat}</span>
         </HorizontalContainer>
     )
 }
 
 const HorizontalContainer = styled.div`
     width: ${(props)=>props.width};
-    height: 40px;
+    height: 48px;
     position: relative;
     box-sizing: border-box;
-    border: 1px solid #cac4ce;
-    background-color: #cac4ce;
+    /* border: 1px solid #cac4ce; */
+    border: 1px solid #fff;
+    background-color: #fff;
     margin: 0 auto;
     white-space: nowrap;
 
     span{
-        line-height: 40px;
+        line-height: 48px;
         list-style-type: none;
         display: inline-block;
-        background-color: beige;
+        border: 1px solid #fff;
         box-sizing: border-box;
         text-align: center;
-        font-size: 12px;
-        color: #4a5759;
+        font-size: 14px;
+        background-color: beige;
+        color: #fff;
     }
     span:first-child{
-        width: ${(props)=>props.carbPercent}%;
-        background-color: #dde5b6;
+        width: ${(props)=>props.carb};
+        background-color: #0088fe;
         /* color:"#0088fe" */
         /* color:"#00c49f" */
         /* color:"#ffbb28" */
     }
     span:nth-child(2){
-        width: ${(props)=>props.proteinPercent}%;
-        background-color: #adc178;
+        width: ${(props)=>props.protein};
+        background-color: #00c49f;
     }
     span:last-child{
-        width: ${(props)=>props.fatPercent}%;
-        background-color: #cbdfbd;
+        width: ${(props)=>props.fat};
+        background-color: #ffbb28;
     }
 `;
 

@@ -4,6 +4,7 @@ import Card from "../elements/Card";
 import axios from "axios";
 import { useState,useEffect } from "react";
 import "../styles/ScrollBar.css";
+import {API} from "../utils/API.js";
 
 //즐겨찾기 컴포넌트
 function Bookmarks(){
@@ -11,7 +12,7 @@ function Bookmarks(){
     //북마크 조회(GET)=============================================================
     const [bookmarks, setBookmarks] = useState([]);
     const getBookmarkList =async()=> {
-        const response = await axios.get("https://spring.chaebbiserver.shop/api/bookmarklist", 
+        const response = await axios.get(`${API}/bookmarklist`, 
             { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}});
         
         console.log(response.data); //.count, .data[]
@@ -24,7 +25,7 @@ function Bookmarks(){
 
     //북마크 삭제(DELETE)=============================================================
     const deleteBookmark =(id)=>{
-        axios.delete("https://spring.chaebbiserver.shop/api/del/bookmark", 
+        axios.delete(`${API}/del/bookmark`,
         {
             data:
             {
@@ -37,6 +38,7 @@ function Bookmarks(){
         })
         .then(function(response) {
             console.log(response.data);
+            alert('삭제되었습니다');
             window.location.reload();
         }).catch(function(error) {
             console.log(error);

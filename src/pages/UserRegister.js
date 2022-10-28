@@ -7,6 +7,7 @@ import Radio from "../elements/Radio";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {API} from '../utils/API.js';
 
 //유저 회원가입
 function UserRegister(){
@@ -41,7 +42,7 @@ function UserRegister(){
     //이메일 중복체크(POST)==================================================================
     const [isDupl, setIsDupl] = useState(false);
     const checkDuplicate =()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/email-check",
+        axios.post(`${API}/email-check`,
             {
                 email: userinfo.email,
             },
@@ -59,9 +60,8 @@ function UserRegister(){
     }
     //닉네임 중복체크(POST)==================================================================
     const [isDuplNickname, setIsDuplNickname] = useState(false);
-    const checkDuplicateNickname =(e)=>{
-        e.preventDefault();
-        axios.post("https://spring.chaebbiserver.shop/api/user-nickname",
+    const checkDuplicateNickname =()=>{
+        axios.post(`${API}/user-nickname`,
             {
                 nickname: userinfo.nickname,
             },
@@ -95,7 +95,7 @@ function UserRegister(){
     }
 
     const registerUser =()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/create-user", {
+        axios.post(`${API}/create-user`, {
                 email: userinfo.email,
                 nickname: userinfo.nickname,
                 pwd: userinfo.pwd,
@@ -170,7 +170,7 @@ function UserRegister(){
                 <GridContainer>
                     <Input name="email" type="email" text="이메일" placeholder="id@gmail.com" margin="30px 5px 5px 5px" onChange={changeContent}/>
                     <Button
-                        submit
+                        just
                         width="93%"
                         height="44px"
                         position="relative"
@@ -184,7 +184,7 @@ function UserRegister(){
                 <GridContainer>
                     <Input name="nickname" type="text" text="닉네임" placeholder="닉네임" margin="0px 5px 5px 5px" onChange={changeContent}/>
                     <Button
-                        submit
+                        just
                         width="93%"
                         height="44px"
                         position="relative"

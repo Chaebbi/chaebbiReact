@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Grid from "../elements/Grid";
 import MealRecord from "./MealRecord";
 import NutrientsInfo from "./NutrientsInfo";
+import {API} from "../utils/API.js";
 
 
 //일정등록 컴포넌트
@@ -40,7 +41,7 @@ function Planner(){
     const [dmeal,setDmeal] = useState([]); //식단-저녁(목록)
     const [nutrients,setNutrients] = useState([]); //영양정보
     const showPlans =async(e)=>{
-        await axios.post("https://spring.chaebbiserver.shop/api/daterecord",{
+        await axios.post(`${API}/daterecord`,{
             date: e
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -67,18 +68,18 @@ function Planner(){
                 <DateContainer>
                     <Input inline name="sdate" type="date" text="날짜" value={today} onChange={handleSDate}/>
                 </DateContainer>
-                <Grid col="2" row="1" width="70vw" colgap="20px" margin="0 auto" position="relative" top="80px">
+                <GridContainer>
                     <>
                     { bmeal.length || lmeal.length || dmeal.length !== 0? 
                         <MealRecord 
-                        width="30vw"
+                        width="390px"
                         breakfast={bmeal} 
                         lunch={lmeal} 
                         dinner={dmeal}
                         />
                     :
                         <MealRecord 
-                            width="30vw"
+                            width="390px"
                             breakfast={bmeal} 
                             lunch={lmeal} 
                             dinner={dmeal}
@@ -87,7 +88,7 @@ function Planner(){
                     </>
                     
                     <NutrientsInfo
-                        width="30vw"
+                        width="390px"
                         recommended_kcal={nutrients.recommCalory}
                         recommended_carb={nutrients.recommCarb}
                         recommended_protein={nutrients.recommPro}
@@ -97,7 +98,7 @@ function Planner(){
                         total_protein={nutrients.totalPro}
                         total_fat={nutrients.totalFat}
                     />
-                </Grid>
+                </GridContainer>
                 
                     
             </PlanContainer>
@@ -112,11 +113,21 @@ const PlanContainer = styled.div`
 `;
 
 const DateContainer = styled.div`
-    width: 30vw;
-    min-width: 300px;
+    width: 500px;
+    /* min-width: 300px; */
+    text-align: center;
     margin: 0 auto;
     position: relative;
     top: 80px; 
+`;
+
+const GridContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    width: 800px;
+    margin: 0 auto;
+    position: relative;
+    top: 93px;
 `;
 
 export default Planner;

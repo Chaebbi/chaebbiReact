@@ -8,6 +8,7 @@ import Button from "../elements/Button";
 import Radio from "../elements/Radio";
 import Text from "../elements/Text";
 import axios from "axios";
+import {API} from "../utils/API.js";
 
 //식단 기록 - 검색
 function RecordSearch(){
@@ -83,7 +84,7 @@ function RecordSearch(){
     const [foodlist, setFoodlist] = useState([]);
     const foodlist2 = foodlist;
     const getFoodList =async()=>{
-        await axios.get("https://spring.chaebbiserver.shop/api/foodname",
+        await axios.get(`${API}/foodname`,
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}})
         .then((response) => 
             setFoodlist(response.data.result.data)
@@ -112,7 +113,7 @@ function RecordSearch(){
         console.log(food);
         setSearchword(food);
 
-        axios.post("https://spring.chaebbiserver.shop/api/food",{
+        axios.post(`${API}/food`,{
             id: id
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -143,7 +144,7 @@ function RecordSearch(){
         formData.append("meal", Number(meal));
         formData.append("rdate", dateform);
         formData.append('rtime', time24);
-        axios.post("https://spring.chaebbiserver.shop/api/record-no-img",formData,
+        axios.post(`${API}/record-no-img`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             console.log(response.data);
@@ -225,8 +226,8 @@ function RecordSearch(){
             {  food == undefined ?
                     null
                 :
-                <>
-                <Form width="45%" height="400px" margin="0 auto" padding="20px" position="absolute" top="190px" left="356px">
+                
+                <Form width="45%" height="485px" padding="20px" position="absolute" top="175px" left="27.5%">
                 <FoodName>{name}</FoodName> 
                 <Grid col="2" row="1" margin="0">
                     <Input name="date" type="date" text="식사날짜" value={date || ''} margin="0px" fieldwidth="95%" onChange={changeDate}/>
@@ -264,14 +265,12 @@ function RecordSearch(){
                         margin="0 auto"
                         borderRadius="10px"
                         text="기록하기"
-                        // onClick={recordBySearch}
                         onClick={handleValid}
                     />
                 </ButtonPlace>
             </Form>
-                </>
+                
             }
-            
         </div>
         )
 }
@@ -292,13 +291,13 @@ const AutoSearchContainer = styled.div`
 const AutoSearchWrap = styled.ul`
     list-style-type: none;
     padding: 0;
+    margin: 0;
 `;
 
 const AutoSearchData = styled.li`
   padding: 5px 0;
   width: 100%;
   font-size: 14px;
-  z-index: 4;
   
   &:hover {
       background-color: rgba(198,221,207,0.3);
@@ -309,13 +308,14 @@ const AutoSearchData = styled.li`
 const Explain = styled.h2`
     text-align:center;
     position: relative;
-    top: 60px;
+    top: 55px;
 `;
 
 const SearchBox = styled.form`
     text-align: center;
     position: relative;
-    top: 65px;
+    top: 70px;
+    z-index: 10;
 `;
 
 const Search = styled.input`

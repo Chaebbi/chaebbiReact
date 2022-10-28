@@ -7,6 +7,7 @@ import Radio from "../elements/Radio";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {API} from "../utils/API.js";
 
 //온보드 페이지
 function OnBoard(){
@@ -40,7 +41,7 @@ function OnBoard(){
     const [isDuplNickname, setIsDuplNickname] = useState(false);
     const [tmp, setTmp] = useState('');
     const checkDuplicateNickname =()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/user-nickname",
+        axios.post(`${API}/user-nickname`,
             {
                 nickname: userinfo.nickname,
             },
@@ -71,7 +72,7 @@ function OnBoard(){
 
 
     const signUp =()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/signup", {
+        axios.post(`${API}/signup`, {
                 name: userinfo.name,
                 nickname: userinfo.nickname,
                 gender: Number(userinfo.gender),

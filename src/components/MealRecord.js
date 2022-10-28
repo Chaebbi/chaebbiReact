@@ -108,7 +108,7 @@ function MealRecord({breakfast, lunch, dinner,width}){
                 <Button
                     width="30%" 
                     height="30px"
-                    borderRadius="50px"
+                    borderRadius="10px"
                     color="#fff"
                     text="이미지" 
                     margin="0 5px 0 0"
@@ -117,7 +117,7 @@ function MealRecord({breakfast, lunch, dinner,width}){
                 <Button
                     width="30%" 
                     height="30px"
-                    borderRadius="50px"
+                    borderRadius="10px"
                     color="#fff"
                     text="검색"
                     margin="0"
@@ -155,7 +155,7 @@ const TabMenu = styled.div`
     width: 100%;
     height: 40px;
     position: relative;
-    top: -17px;
+    top: -5px;
     border-bottom: 1px solid #e6e6e6;
     background-color: #fff;
 
@@ -189,7 +189,7 @@ const H5 = styled.h5`
 
 const ButtonContainer = styled.div`
     position: relative;
-    top: 5px;
+    top: 13px;
     text-align: center;
 `;
 

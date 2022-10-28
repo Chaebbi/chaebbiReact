@@ -2,17 +2,15 @@ import styled from "styled-components";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import {API} from "../utils/API.js";
+import {REST_API_KEY} from "../utils/kakao_API_KEY.js";
 
 //카카오 로그인 페이지
 function KakaoUserLogin(){
     const location = useLocation();
     const navigate = useNavigate();
     const KAKAO_CODE = location.search.split('=')[1];
-
-    //분리하고 GITIGNORE에 추가할것*****************************
-    const REST_API_KEY = 'de34834910d5d355823cd6cceaeb1678';
     const REDIRECT_URI = 'http://localhost:3000/kakao_login';
-    //*********************************************************
 
     //카카오 액세스토큰 받아오기
     const getToken =()=>{
@@ -33,7 +31,7 @@ function KakaoUserLogin(){
 
     //카카오 액세스토큰 받아오기
     const sendKakaoToken=(at)=>{
-        axios.post(`https://spring.chaebbiserver.shop/api/login`,{
+        axios.post(`${API}/login`,{
             accessToken: at
         },
         ).then(function(response) {

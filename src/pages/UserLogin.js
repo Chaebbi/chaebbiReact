@@ -4,6 +4,7 @@ import Form from "../elements/Form";
 import axios from "axios";
 import { useState } from "react";
 import{ useNavigate } from "react-router-dom";
+import {API} from "../utils/API.js";
 
 //유저 로그인
 function UserLogin(){
@@ -47,7 +48,7 @@ function UserLogin(){
     }
 
     const doLogin =()=>{
-        axios.post("https://spring.chaebbiserver.shop/api/user-login", {
+        axios.post(`${API}/user-login`, {
                 email: email,
                 pwd: pwd
             }).then(function(response) {

@@ -4,6 +4,9 @@ import axios from "axios";
 import Image from "../elements/Image";
 import WeeklyGraph from "../components/Charts/WeeklyGraph";
 import HorizontalStackGraph from "../components/Charts/HorizontalStackGraph";
+import {API} from '../utils/API.js';
+import Accordion from "../components/Accordion";
+import styles from "../styles/AnalyzeDiet.module.css";
 
 //식단분석 페이지
 function AnalyzeDiet(){
@@ -22,11 +25,11 @@ function AnalyzeDiet(){
     const [ratio, setRatio] = useState('');
     const [total, setTotal] = useState('');
     const [weeklist, setWeeklist] = useState([]); //그래프에 사용(날짜별 총 섭취 칼로리)
-    const [problems, setProblems] = useState(''); //문제
-    const [suggestionList, setSuggestionList] = useState(''); //제안 식단
+    const [problems, setProblems] = useState([]); //문제
+    const [suggestionList, setSuggestionList] = useState([]); //제안 식단
 
     const getAnalysis=async()=>{
-        await axios.get("https://spring.chaebbiserver.shop/api/analysis",
+        await axios.get(`${API}/analysis`,
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             console.log(response.data);
@@ -51,6 +54,15 @@ function AnalyzeDiet(){
             console.log(error);
         });
     }
+    //=====================================================
+    var probStorage = [];
+    for(let i=0; i<problems.length; i++){
+        let filtered = Array.from(suggestionList).filter((s)=>{ return s.problemId == problems[i].problemId });
+        probStorage.push(filtered);
+    }
+    //=====================================================
+    var dietProbList = problems.map(p => {return p.problemId});
+    console.log(suggestionList);
 
     useEffect(()=>{
         getAnalysis();
@@ -78,7 +90,7 @@ function AnalyzeDiet(){
                 <NutrientsInfomation>
                     <Title>주간영양섭취량</Title>
                     {/* 아예 퍼센트를 계산해서 넘겨줘야 css를 인식할듯 */}
-                    <HorizontalStackGraph carb={total.carb} protein={total.protein} fat={total.fat} width="80%"/>
+                    <HorizontalStackGraph carb={`${ratio.carb}%`} protein={`${ratio.protein}%`} fat={`${ratio.fat}%`} width="80%"/>
                     <h3>지난 7일간의 식습관 평가</h3>
                     <ul>
                         {Array.from(problems).map((p,index) => (
@@ -90,17 +102,26 @@ function AnalyzeDiet(){
                 <SuggestionContainer>
                     <h2>식습관 개선을 위한 채식 제안</h2>
                     <p>걱정마세요! 채삐가 사용자님을 위해 이런 음식들을 가져왔어요.</p>
-                    <GridContainer>
-                                {Array.from(suggestionList).map((s,index) => (
-                                    <div>
-                                        <div style={{height:"100px",backgroundColor:"yellow"}}>
-                                            <Image src={s.foodUrl} width="100%" height="auto"/>
+                    <ul id={styles.accordionContainer}>
+                        {Array.from(problems).map((p,index) => (
+                                <li key={index}>
+                                    <label htmlFor={index}>{problem[p.problemId-1]}<span>&#x3e;</span></label>
+                                    <input type="checkbox" name="suggestions" id={index}/>
+                                    <div className={styles.content}>
+                                    {Array.from(probStorage[index]).map((p,index) => (
+                                        <div key={index}>
+                                            <Image src={p.foodUrl} width="100%" height="100px"/>
+                                            <p>{p.foodName}</p>
                                         </div>
-                                        <h3>{s.foodName}</h3>
+                                    ))}
                                     </div>
-                                ))}
-                    </GridContainer>
+                                </li>
+                        ))}
+                    </ul>
                 </SuggestionContainer>
+                {/* <Accordion suggestions={suggestionList} problems={problems} problemlist={problem}/> */}
+                
+
         </Container>
         </>
         )
@@ -108,7 +129,7 @@ function AnalyzeDiet(){
 
 const Container = styled.div`
     width: 60%;
-    height: 1600px;
+    height: auto;
     min-width: 600px;
     box-sizing: border-box;
     padding: 20px;
@@ -128,38 +149,19 @@ const ChartContainer = styled.div`
 `;
 
 const NutrientsInfomation = styled.div`
+
+    h3{
+        margin-top: 15px;
+    }
     
-    ul li {
-
+    ul{
+      padding-left: 20px;
     }
-`;
-
-const GridContainer = styled.div`
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    grid-template-rows: repeat(3, 200px);
-    column-gap: 10px;
-    row-gap: 10px;
-    position: relative;
-
-    div{
-        height: 200px;
-        border: 1px solid #e6e6e6;
-    }
-
-    div h3{
-        position: relative;
-        top: -50px;
-        z-index: 2;
-        color: #fff;
-    }
-
-
 `;
 
 const SuggestionContainer = styled.div`
-    h2{ margin: 20px 0 0 0; }
-    p{ margin: 10px 0; color: #868e96; }
+    > h2{ margin: 20px 0 0 0; }
+    > p{ margin: 10px 0; color: #868e96; }
 `;
 
 const H2 = styled.h2`

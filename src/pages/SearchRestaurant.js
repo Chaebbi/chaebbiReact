@@ -5,6 +5,7 @@ import styles from '../styles/pages/SearchRestaurant.module.css';
 import Card from "../elements/Card";
 import Map from "../components/Map";
 import { BiRestaurant,BiCoffeeTogo,BiAlignLeft } from 'react-icons/bi';
+import {API} from "../utils/API.js";
 
 //음식점 검색 페이지(map)
 function SearchRestaurant(){
@@ -18,7 +19,7 @@ function SearchRestaurant(){
     //지역(구) 불러오기(POST)========================================================
     const [bistromiddle, setBistromiddle] = useState('');
     const getBistromiddle = async(wide) => {
-        axios.post("https://spring.chaebbiserver.shop/api/bistromiddle",{
+        axios.post(`${API}/bistromiddle`,{
             wide: wide //param
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -105,7 +106,7 @@ function SearchRestaurant(){
     const [laPositions, setLaPositions] = useState([]); //좌표관리la
     const [loPositions, setLoPositions] = useState([]); //좌표관리lo
     const getAllRestaurants =async(wide,middle)=>{
-            await axios.post("https://spring.chaebbiserver.shop/api/categories",{
+            await axios.post(`${API}/categories`,{
                 wide: wide,
                 middle: middle
             },
@@ -126,7 +127,7 @@ function SearchRestaurant(){
     const [mainArr, setMainArr] = useState([]);
     const [mainCategory, setMainCategory] = useState('');
     const getBistro =(wide,middle,main)=>{
-        axios.post("https://spring.chaebbiserver.shop/api/bistro-category-main", {
+        axios.post(`${API}/bistro-category-main`, {
             siteWide: wide,
             siteMiddle: middle,
             categoryMain: main
@@ -151,7 +152,7 @@ function SearchRestaurant(){
     const [middleArr, setMiddleArr] = useState([]);
     const [middleCategory, setMiddleCategory] = useState('');
     const getMiddle =(wide,middle,main,cmiddle)=>{
-        axios.post("https://spring.chaebbiserver.shop/api/bistro-category-middle", {
+        axios.post(`${API}/bistro-category-middle`, {
                 siteWide: wide,
                 siteMiddle: middle,
                 categoryMain: main,
@@ -178,7 +179,7 @@ function SearchRestaurant(){
 
     //북마크 추가(POST)===============================================================
     const addBookmark =(id) => {
-        axios.post("https://spring.chaebbiserver.shop/api/bookmark",{
+        axios.post(`${API}/bookmark`,{
             bistroId: id
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}

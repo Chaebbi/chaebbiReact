@@ -5,6 +5,7 @@ import Grid from "../elements/Grid";
 import Button from "../elements/Button";
 import { AiOutlineLink } from "react-icons/ai";
 import axios from "axios";
+import {API,FlaskAPI} from "../utils/API.js";
 import "../styles/ScrollBar.css";
 
 //냉장고 재료 추천 페이지
@@ -13,7 +14,7 @@ function RecommendFridge(){
     const [ingredientlist, setIngredientlist] = useState([]);
     const ingredientlist2 = ingredientlist;
     const getIngredientList =()=>{
-        axios.get("https://spring.chaebbiserver.shop/api/ingredient",
+        axios.get(`${API}/ingredient`,
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}})
         .then((response) =>{
             console.log(response.data);
@@ -51,7 +52,7 @@ function RecommendFridge(){
     const [recomenuinfo, setRecoMenuInfo] = useState([]);
     const recommendMenu =(e) => {
         e.preventDefault();
-        axios.post("https://flask.chaebbiserver.shop/api/foodrecommend",{
+        axios.post(`${FlaskAPI}/foodrecommend`,{
             ingredients: basket
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
@@ -203,7 +204,6 @@ const AutoSearchData = styled.li`
     padding: 5px 0;
     width: 100%;
     font-size: 14px;
-    z-index: 4;
     
     &:hover {
         background-color: rgba(198,221,207,0.3);
@@ -216,7 +216,7 @@ const Container = styled.div`
     min-width: 500px;
     height: 290px;
     position: absolute;
-    top: 190px;
+    top: 175px;
     left: 380px;
     margin: 0 auto;
     padding: 20px;
@@ -243,18 +243,24 @@ const IngredientsList = styled.div`
     width:100%;
     height: 125px;
     margin: 20px 0;
-    box-sizing: border-box;
     border: 1px solid #e6e6e6;
     border-radius: 20px;
-    box-sizing: border-box;
     background-color: rgba(198,221,207,0.3);
+    box-sizing: border-box;
+    padding: 10px;
+
+    ul{ padding-left: 10px; }
+    li{
+        list-style-type: none;
+    }
 `;
 
 const RecommendContainer = styled.div`
     min-width: 600px;
     max-width: 850px;
-    position: relative;
-    top: 380px;
+    position: absolute;
+    top: 478px;
+    left: 278px;
     background-color: #f8f9fa;
     box-sizing: border-box;
     margin: 0 auto;
@@ -265,11 +271,11 @@ const RecommendContainer = styled.div`
 `;
 
 const MenuContainer = styled.div`
+    height: 440px;
     border: 1px solid #e6e6e6;
     border-radius: 20px;
-    box-sizing: border-box;
     background-color: #fff;
-    height: 440px;
+    box-sizing: border-box;
     padding: 10px;
     
     > h3 {
@@ -285,6 +291,9 @@ const MenuContainer = styled.div`
             color: #398234;
         }
     }
+    
+    ul{ padding-left: 10px; }
+    li{ list-style-type: none; }
 `;
 
 const Listlabel = styled.p`
@@ -296,6 +305,7 @@ const HaveList = styled.div`
     border: 1px solid #e6e6e6;
     border-radius: 20px;
     box-sizing: border-box;
+    padding: 15px;
     background-color: rgba(198,221,207,0.3);
 `;
 
@@ -304,20 +314,21 @@ const NeedList = styled.div`
     border: 1px solid #e6e6e6;
     border-radius: 20px;
     box-sizing: border-box;
+    padding: 15px;
     background-color: rgba(198,221,207,0.3);
 `;
 
 const Explain = styled.h2`
     text-align:center;
     position: relative;
-    top: 60px;
+    top: 55px;
 `;
 
 const SearchBox = styled.form`
     min-width: 600px;
     text-align: center;
     position: relative;
-    top: 65px;
+    top: 70px;
 `;
 
 const Search = styled.input`

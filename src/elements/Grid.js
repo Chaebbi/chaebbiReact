@@ -19,6 +19,8 @@ function Grid(props){
         right,
         justify_content,
         align_content,
+        border,
+        borderRadius,
         children
     } = props;
 
@@ -40,7 +42,9 @@ function Grid(props){
             right={right}
             background={background}
             justify-content={justify_content}
-            align-content={align_content}>
+            align-content={align_content}
+            border={border}
+            borderRadius={borderRadius}>
                 {children}
         </GridBox>
     )
@@ -48,8 +52,11 @@ function Grid(props){
 
 Grid.defaultProps = {
     row: "1fr 1fr",
-    margin: "0",
-    padding: "0"
+    margin: "0px",
+    padding: "0",
+    borderRadius: "50px",
+    border: "0px",
+    height: "auto"
 };
 
 const GridBox = styled.div`
@@ -68,11 +75,13 @@ const GridBox = styled.div`
     grid-template-rows: ${(props)=>props.row};
     column-gap: ${(props)=>props.colgap};
     row-gap: ${(props)=>props.rowgap};
-    margin: ${(props)=>props.margin};
+    box-sizing: border-box;
     padding: ${(props)=>props.padding};
+    margin: ${(props)=>props.margin};
     justify-content: ${(props)=>props.justify_content};
     align-content: ${(props)=>props.align_content};
-    box-sizing: border-box;
+    border: ${(props)=>props.border};
+    border-radius: ${(props)=>props.borderRadius};
 `;
 
 export default Grid;

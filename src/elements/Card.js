@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import {useState} from 'react';
-import { AiFillStar,AiOutlineStar } from 'react-icons/ai';
 import { IoIosStarOutline,IoIosStar,IoIosCall } from 'react-icons/io';
 import { IoCloseOutline } from 'react-icons/io5';
 import { MdOutlineZoomOutMap } from "react-icons/md";
@@ -65,14 +63,14 @@ function Card(props){
         return(
             <CardContainer del id={id} width={width} height={height} margin={margin} >
                 <CategoryContainer>
-                    <div>
-                        <Category catesize={catesize}>{category}</Category>
-                        <Icon onClick={onClick}>
-                            <IoCloseOutline size="22" color="#868e96"/> 
-                        </Icon>
-                    </div>
+                    {/* <Category catesize={catesize}>{category}</Category> */}
+                    <Icon onClick={onClick}>
+                        <IoCloseOutline size="22" color="#868e96"/> 
+                    </Icon>
                     <Title>
-                        {title.length> 22 ? `${title.slice(0,22)} ..`: title}
+                        <a href={`${url}`} target="_blank">
+                            {title.length> 22 ? `${title.slice(0,22)} ..`: title}
+                        </a>
                     </Title>
                 </CategoryContainer>
 
@@ -133,7 +131,6 @@ const CardContainer = styled.div`
     transition: all 0.3s;
     display: grid;
     row-gap: 10px;
-    cursor: pointer;
     
     &:hover{
         color: #112A46;
@@ -147,6 +144,7 @@ const Title = styled.h3`
     width: 95%;
     margin: 0;
     color: #495057;
+    cursor: pointer;
     
     >a {
         text-decoration: none;

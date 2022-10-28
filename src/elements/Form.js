@@ -14,6 +14,7 @@ function Form(props){
         bottom,
         left,
         right,
+        zindex,
         children
     } = props;
 
@@ -31,6 +32,7 @@ function Form(props){
             right={right}
             background={background}
             display={display}
+            zindex={zindex}
         >
             {children}
         </Container>
@@ -55,6 +57,8 @@ const Container = styled.form`
     background-color: ${(props)=>props.background};
     margin: ${(props)=>props.margin};
     padding: ${(props)=>props.padding};
+    z-index: ${(props)=>props.zindex};
+    text-align: left;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
 `;
