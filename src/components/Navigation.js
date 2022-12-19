@@ -5,7 +5,7 @@ function Navigation(){
     const insertedToken = localStorage.getItem('token');
     const navigate = useNavigate();
     const doLogout =()=>{
-        localStorage.removeItem('token');
+        localStorage.clear();
         navigate("/sign_in");
     }
 

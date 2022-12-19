@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Image from "../elements/Image";
 import Input from "../elements/Input";
 import {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import axios from "axios";
 import Text from "../elements/Text";
 import { BsGenderAmbiguous,BsPersonBadge } from "react-icons/bs";
@@ -139,6 +139,12 @@ function Profile(){
             console.log('canceled');
         }
     }
+
+    //커뮤니티 이동시 로컬스토리지에 값 저장
+    const gotoCommunity =()=>{
+        window.localStorage.setItem('community', true);
+        console.log(localStorage.getItem('community'));
+    }
     
     //useEffect====================================================
     useEffect(()=>{
@@ -200,7 +206,8 @@ function Profile(){
                     <Text center label="활동점수" text={actlabel}/>
                 </GridContainer>
                 <div>
-                    <button onClick={changeEditmode}>프로필 수정</button>
+                    <button onClick={gotoCommunity}><Link to="/community">커뮤니티</Link></button>
+                    <button onClick={changeEditmode} style={{marginLeft:"10px"}}>프로필 수정</button>
                     <button onClick={confirmDelete} style={{marginLeft:"10px"}}>회원탈퇴</button>
                 </div>
             </InfoContainer>

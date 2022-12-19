@@ -24,7 +24,9 @@ function Input(props){
         disabled,
         inline,
         center,
-        step
+        step,
+        multiline,
+        rows
     } = props;
 
     if(disabled){
@@ -44,6 +46,28 @@ function Input(props){
                     fieldwidth={fieldwidth}
                     border="0px"
                     borderRadius="0px"
+                />
+            </Div>
+            );
+    }
+
+    if(multiline){
+        return(
+            <Div width={width} margin={margin} padding={padding}>
+                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
+                <Textarea
+                    name={name}
+                    type={type}
+                    rows={rows}
+                    id={name}
+                    onChange={onChange}
+                    value={value}
+                    color={color}
+                    padding={padding}
+                    height={height}
+                    fieldwidth={fieldwidth}
+                    border={border}
+                    borderRadius={borderRadius}
                 />
             </Div>
             );
@@ -215,6 +239,25 @@ const InputField2 = styled.input`
    border: ${(props)=>props.border};
    border-radius: ${(props)=>props.borderRadius};
    outline: 0;
+`;
+
+const Textarea = styled.textarea`
+    width: ${(props)=>props.fieldwidth};
+    border: ${(props)=>props.border};
+    border-radius: ${(props)=>props.borderRadius};
+    box-sizing: border-box;
+    padding: ${(props)=>props.padding};
+    margin: ${(props)=>props.margin};
+    color: ${(props)=>props.color};
+    background-color: transparent;
+    outline: 0;
+
+    &:hover{
+        border: 1px solid #adb5bd;
+   }
+    &:focus{
+        border: 1.2px solid #398234;
+    }
 `;
 
 export default Input;

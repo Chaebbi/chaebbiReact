@@ -18,7 +18,7 @@ function AnalyzeDiet(){
     let fulldate = year + '.' + month + '.' + date;
 
     //식이문제번호====================================================================================
-    const problem = ["칼로리 섭취 높음","칼로리 섭취 적음","탄수화물 섭취 높음","탄수화물 섭취 적음","단백질 섭취 높음","단백질 섭취 적음","지방 섭취 높음","지방 섭취 적음"];
+    const problem = ["", "칼로리 섭취 높음","칼로리 섭취 적음","탄수화물 섭취 높음","탄수화물 섭취 적음","단백질 섭취 높음","단백질 섭취 적음","지방 섭취 높음","지방 섭취 적음"];
 
 
     //식단분석결과 가져오기(GET)=======================================================================
@@ -94,7 +94,7 @@ function AnalyzeDiet(){
                     <h3>지난 7일간의 식습관 평가</h3>
                     <ul>
                         {Array.from(problems).map((p,index) => (
-                            <li key={index}>{problem[p.problemId-1]}</li>
+                            <li key={index}>{problem[p.problemId]}</li>
                         ))}
                     </ul>
                 </NutrientsInfomation>
@@ -105,7 +105,7 @@ function AnalyzeDiet(){
                     <ul id={styles.accordionContainer}>
                         {Array.from(problems).map((p,index) => (
                                 <li key={index}>
-                                    <label htmlFor={index}>{problem[p.problemId-1]}<span>&#x3e;</span></label>
+                                    <label htmlFor={index}>{problem[p.problemId]}<span>&#x3e;</span></label>
                                     <input type="checkbox" name="suggestions" id={index}/>
                                     <div className={styles.content}>
                                     {Array.from(probStorage[index]).map((p,index) => (
