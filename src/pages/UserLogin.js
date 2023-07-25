@@ -58,7 +58,7 @@ function UserLogin(){
                 let msg = response.data.message;
                 if(isSuccess){
                     localStorage.setItem('token', response.data.result.token);
-                    // alert("로그인 성공");
+                    localStorage.setItem('userIdx', response.data.result.userId);
                     navigate("/");
                     window.location.reload(); 
                 }else{
@@ -122,6 +122,18 @@ function UserLogin(){
                  color="#495057"
                  text="카카오계정으로 로그인" 
                  onClick={doKakaoLogin}
+                 />
+
+                 {/* 임시이동방편 */}
+                 <Button
+                 width="96%" 
+                 height="46px"
+                 margin="10px 0"
+                 position="relative"
+                 left="2%"
+                 borderRadius="10px"
+                 text="커뮤니티(임시)" 
+                 href="/community" 
                  />
             </Form>
     )

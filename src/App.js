@@ -18,16 +18,24 @@ import PrivateRoute from "./components/Routes/PrivateRoute";
 import Test from "./pages/Test";
 import CommunityMain from "./pages/community/CommunityMain";
 import CommunityMypage from "./pages/community/CommunityMypage";
+import BlogPost from "./pages/community/BlogPost";
+import BlogDetail from "./pages/community/BlogDetail";
+import BlogUpdate from "./pages/community/BlogUpdate";
 
 function App() {
-  // const insertedToken = localStorage.getItem('token');
+  //커뮤니티에 접속중일때 로컬스토리지에 접속여부를 저장
+  //커뮤니티 접속 버튼 클릭시 setItem, 로그아웃 혹은 채삐관련 페이지로 이동 시 removeItem.
+  const isCommunity = localStorage.getItem('community');
   return (
+    <>
     <Container>
       <Router>
         <Navigation/>
         <Subcontainer>
           <Routes>
+            <Route path='/landing' element={<Landing/>}/>
             <Route element={<PrivateRoute />}>
+              {/* 채삐 관련 페이지=============================================== */}
               <Route path='/' element={<Main />} exact/>
               <Route path='/analyze-diet' element={<AnalyzeDiet/>}/>
               <Route path='/record-foodsearch'element={<RecordSearch/>}/>
@@ -36,11 +44,16 @@ function App() {
               <Route path='/search-restaurant' element={<SearchRestaurant/>}></Route>
               <Route path='/recommend-fridge-ingredients' element={<RecommendFridge/>}></Route>
               <Route path='/mypage' element={<Mypage/>}></Route>
+
+            </Route>
+              {/* 채숲 관련 페이지=============================================== */}
               <Route path='/community' element={<CommunityMain/>}></Route>
               <Route path='/community-mypage' element={<CommunityMypage/>}></Route>
-            </Route>
+              <Route path='/community/posting' element={<BlogPost/>}></Route>
+              <Route path='/community/detail/:postIdx' element={<BlogDetail/>}></Route>
+              <Route path='/community/detail/:postIdx/edit' element={<BlogUpdate/>}></Route>
           
-            <Route path='/landing' element={<Landing/>}/>
+            
             <Route path='/sign_up' element={<UserRegister/>}/>
             <Route path='/sign_in' element={<UserLogin/>}/>
             <Route path='/kakao_login' element={<KakaoUserLogin/>}/>
@@ -52,6 +65,7 @@ function App() {
         </Subcontainer>
       </Router>
     </Container>
+    </>
   );
 }
 

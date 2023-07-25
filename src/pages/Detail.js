@@ -223,7 +223,6 @@ function Detail(){
                     width="100%" 
                     height="200px" 
                     borderRadius="5px"
-                    display="inline-block"
                 />
                 <Grid col="3" row="1" margin="10px 0">
                     <Text inline label="날짜" text={record.date}/>

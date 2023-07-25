@@ -171,3 +171,16 @@ return(
         )
     }
 
+
+{Array.from(myPosts).map((p,index)=>{
+                        console.log(p.content);
+                        <div key={index}>
+                            <h3>
+                                <Link to={`/detail/${p.postIdx}`}>
+                                    {p.title}
+                                </Link>
+                            </h3>
+                            <p>{p.createdAt}</p>
+                            <p>{p.content}(길이제한)</p>
+                        </div>
+                    })}
