@@ -1,4 +1,4 @@
-import styled,{ keyframes } from "styled-components";
+import styled from "styled-components";
 
 function HorizontalStackGraph(props){
     const {carb, protein, fat, width} = props;

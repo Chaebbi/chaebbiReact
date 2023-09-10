@@ -1,7 +1,7 @@
-import Profile from "../components/Profile";
-import Bookmarks from "../components/Bookmarks";
-import styles from "../styles/pages/MyPage.module.css";
-import {useState,useEffect} from "react";
+import Profile from "../../components/Profile";
+import Bookmarks from "../../components/Bookmarks";
+import styles from "../../styles/pages/MyPage.module.css";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 //마이페이지
@@ -11,7 +11,7 @@ function Mypage(){
     const navigate = useNavigate();
     
     const changeRadio =(e)=>{
-        if(e.target.value == "profile"){
+        if(e.target.value === "profile"){
             setIsProfile(true);
             setIsBookmarks(false);
             console.log(e.target.value);

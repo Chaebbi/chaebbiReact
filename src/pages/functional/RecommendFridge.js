@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
-import Grid from "../elements/Grid";
-import Button from "../elements/Button";
+import Grid from "../../elements/Grid";
+import Button from "../../elements/Button";
 import { AiOutlineLink } from "react-icons/ai";
 import axios from "axios";
-import {API,FlaskAPI} from "../utils/API.js";
-import "../styles/ScrollBar.css";
+import {API,FlaskAPI} from "../../utils/API.js";
+import "../../styles/ScrollBar.css";
 
 //냉장고 재료 추천 페이지
 function RecommendFridge(){

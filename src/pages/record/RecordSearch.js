@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import "../styles/ScrollBar.css";
+import "../../styles/ScrollBar.css";
 import { useState, useEffect } from "react";
-import Form from "../elements/Form";
-import Input from "../elements/Input";
-import Grid from "../elements/Grid";
-import Button from "../elements/Button";
-import Radio from "../elements/Radio";
-import Text from "../elements/Text";
+import Form from "../../elements/Form";
+import Input from "../../elements/Input";
+import Grid from "../../elements/Grid";
+import Button from "../../elements/Button";
+import Radio from "../../elements/Radio";
+import Text from "../../elements/Text";
 import axios from "axios";
-import {API} from "../utils/API.js";
+import { API } from "../../utils/API.js";
 
 //식단 기록 - 검색
 function RecordSearch(){

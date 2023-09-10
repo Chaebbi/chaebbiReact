@@ -5,12 +5,12 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoCloseOutline } from 'react-icons/io5';
 import { MdModeEdit } from "react-icons/md";
 import { VscSaveAs } from "react-icons/vsc";
-import Grid from "../elements/Grid";
-import Text from "../elements/Text";
-import Image from "../elements/Image";
+import Grid from "../../elements/Grid";
+import Text from "../../elements/Text";
+import Image from "../../elements/Image";
 import axios from "axios";
-import Input from "../elements/Input";
-import {API} from "../utils/API.js";
+import Input from "../../elements/Input";
+import { API } from "../../utils/API.js";
 
 //기록된 식단을 보여주는 상세페이지
 function Detail(){
