@@ -6,6 +6,7 @@ export const GlobalStyle = createGlobalStyle`
         --color-hover: #0d5f07;
         --color-border: #e6e6e6;
         --color-border-hover: #adb5bd;
+        --color-input-focus: #F4FDF8;
         --color-light-gray: #c8c8c8;
         --color-dark-gray: #616161;
         --color-danger: #C50000;
@@ -21,11 +22,15 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     html{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 3rem;
         font-size: 62.5%;
         color: var(--color-text);
     }
 
-    h1, h2, h3, h4, h5, h6{
+    h1, h2, h3, h4, h5, h6, label, legend{
         color: var(--color-black);
     }
 
