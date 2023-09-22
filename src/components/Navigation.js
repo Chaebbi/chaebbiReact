@@ -1,16 +1,45 @@
 import styled from "styled-components";
-import { useNavigate,Link } from 'react-router-dom';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import Button from "../elements/Button";
+import { throttle } from 'lodash';
 
 function Navigation(){
     const insertedToken = localStorage.getItem('token');
     const navigate = useNavigate();
+
+    const [scroll, setScroll] = useState(false);
+    const beforeScrollY = useRef(0);
+    const throttledScroll = useMemo(
+        () =>
+          throttle(() => {
+            const currentScrollY = window.scrollY;
+            if (beforeScrollY.current < currentScrollY) {
+                setScroll(false);
+                console.log(scroll);
+            } else {
+                setScroll(true);
+                console.log(scroll);
+            }
+            beforeScrollY.current = currentScrollY;
+        }, 300),
+        [beforeScrollY]
+    );
+
     const doLogout =()=>{
         localStorage.clear();
         navigate("/sign_in");
     }
 
+    useEffect(()=>{
+        window.addEventListener('scroll', throttledScroll);
+        return () => {
+            window.removeEventListener('scroll', throttledScroll);
+    };
+    },[beforeScrollY]);
+
     return(
-        <NavBox>
+        <NavBox state={scroll}>
             {insertedToken ? ( 
                 <Logo>
                     <StyledLink to='/'>CHAEBBI</StyledLink>
@@ -43,11 +72,9 @@ function Navigation(){
                 </Ul>
 
                 {insertedToken ? 
-                    <span onClick={doLogout}>로그아웃</span>
+                    <Button onClick={doLogout}>로그아웃</Button>
                 :
-                    <span>
-                        <StyledLink to='/sign_in'>로그인</StyledLink>
-                    </span>
+                    <Button href="/sign_in">로그인</Button>
                 }
         </NavBox>
     )
@@ -55,52 +82,39 @@ function Navigation(){
 
 const NavBox = styled.div`
     width: 100%;
-    height: 60px;
-    border-bottom: 1px solid #e6e6e6; 
-    background-color: #fff;
-    z-index: 1;
+    height: 6rem;
+    padding: 0 2rem;
+    background-color: ${(props)=>(props.state ? 'transparent':'var(--color-white)')};
+    border-bottom: ${(props)=>(props.state ? 'transparent':`1px solid var(--color-light-gray)`)};
+    color: ${(props)=>(props.state ? 'var(--color-white)' : 'var(--color-text)')};
+    transition: all 0.2s ease;
+    z-index: 3;
 
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-
-    > span{
-        display: inline-block;
-        min-width: 80px;
-        margin: 0 30px;
-        color: #495057;
-        font-weight: 600;
-    }
 `;
 
 const Logo = styled.div`
-    height: 40px;
-    font-size: 25px;
+    font-size: 2.6rem;
     font-weight: 600;
-    margin-left: 40px;
-    margin-right: 40px;
+    margin-top: 0.3rem;
 `;
 
 const Ul = styled.ul`
     display: flex;
-    min-width: 630px;
-    box-sizing: border-box;
-    margin: 0;
     padding-left: 0;
     
 
     > li {
-            box-sizing: inherit;
-            margin: 10px;
-            padding:5px;
+            margin: 1rem;
+            padding: 5px;
             font-size: 14px;
             font-weight: 500;
-            opacity: 0.9;
             list-style: none;
         }
 `;
@@ -108,11 +122,10 @@ const Ul = styled.ul`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    color: #495057;
+    color: inherit;
 
     &:focus, &:hover, &:visited, &:link, &:active {
         text-decoration: none;
-        color: #495057;
     }
 `;
 
