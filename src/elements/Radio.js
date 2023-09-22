@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 function Radio(props){
     const { legend, radioArray, checked, onChange } = props
@@ -36,7 +37,7 @@ const RadioWrapper = styled.div`
 `;
 
 const StyledLabel = styled.label`
-    color: var(--color-light-gray);
+    color: var(--color-border-hover);
     font-size: 1.4rem;
     border: 1px solid var(--color-border);
     border-radius: 0.4rem;
@@ -60,4 +61,4 @@ const RadioInput = styled.input`
     }
 `
 
-export default Radio;
+export default React.memo(Radio);
