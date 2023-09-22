@@ -1,20 +1,22 @@
-import styled from "styled-components";
+import styled,{css} from "styled-components";
+import React from "react";
+import ErrorIcon from '@mui/icons-material/Error';
 
 function Input(props){
     const {
         name,
         type, 
         placeholder,
-        disabled = false,
+        disabled,
         onChange,
         value,
         label,
-        step,
+        error
     } = props
 
 
     return(
-        <InputWrapper>
+        <div>
             <Label htmlFor={name}>{label}</Label>
             <InputField
                 id={name}
@@ -24,44 +26,77 @@ function Input(props){
                 onChange={onChange}
                 value={value}
                 disabled={disabled}
-                required
                 autoComplete="off"
-                step={step}
+                error={error}
             />
-        </InputWrapper>
+            {error && <ErrorMessage><ErrorIcon/>{error}</ErrorMessage>}
+        </div>
         );
 
 }
 
-
-const InputWrapper = styled.div`
-
-`;
-
 const Label = styled.label`
-    margin-right: 0.6rem;
     color: var(--color-black);
+    margin-left: 0.4rem;
     font-size: 1.4rem;
     font-weight: 600;
 `;
 
-
 const InputField = styled.input.attrs({
     placeholderTextColor : "var(--color-black)",
 })`
-   padding: 1rem;
-   background-color: transparent;
-   border: 1px solid var(--color-border);
-   border-radius: 0.6rem;
-   outline: 0;
-   transition: all 0.2s;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.2rem;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
+    outline: 0;
+    transition: all 0.2s;
 
-   &:hover{
+    &:hover{
         border: 1px solid var(--color-border-hover);
-   }
-   &:focus{
+    }
+    &:focus{
         border: 1.2px solid var(--color-primary);
+        background-color: var(--color-input-focus);
+    }
+
+    ${({ error }) =>
+        error &&
+        css`
+            border: 1.2px solid var(--color-danger);
+            background-color: var(--color-input-danger);
+
+            &:focus{
+                border: 1.2px solid var(--color-danger);
+                background-color: var(--color-input-danger);
+            }
+        `
+    }
+
+    ${({ disabled }) =>
+        disabled &&
+        css`
+            border: 1.2px solid var(--color-border);
+            background-color: var(--color-light-gray);
+
+            &:hover{
+                border: 1px solid var(--color-border);
+            }
+        `
     }
 `;
 
-export default Input;
+const ErrorMessage = styled.p`
+    color: var(--color-danger);
+    font-size: 1.2rem;
+
+    svg{
+        position: relative;
+        top: 0.2rem;
+        margin-right: 0.2rem;
+    }
+`;
+
+export default React.memo(Input);
