@@ -3,12 +3,14 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from "../elements/Button";
 import { throttle } from 'lodash';
+import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 
 function Navigation(){
     const insertedToken = localStorage.getItem('token');
     const navigate = useNavigate();
 
-    const [scroll, setScroll] = useState(false);
+    
+    const [scroll, setScroll] = useState(true);
     const beforeScrollY = useRef(0);
     const throttledScroll = useMemo(
         () =>
@@ -49,33 +51,41 @@ function Navigation(){
                     <StyledLink to='/landing'>CHAEBBI</StyledLink>
                 </Logo>
                 )}
-            
-                <Ul>
-                    <li>
-                        <StyledLink to='/record-foodimage'>식단기록-이미지</StyledLink>
-                    </li>
-                    <li>
-                        <StyledLink to='/record-foodsearch'>식단기록-검색</StyledLink>
-                    </li>
-                    <li>
-                        <StyledLink to='/analyze-diet'>식단분석</StyledLink>
-                    </li>
-                    <li>
-                        <StyledLink to='/search-restaurant'>음식점검색</StyledLink>
-                    </li>
-                    <li>
-                        <StyledLink to='/recommend-fridge-ingredients'>메뉴추천</StyledLink>
-                    </li>
-                    <li>
-                        <StyledLink to='/mypage'>마이페이지</StyledLink>
-                    </li>
-                </Ul>
+                <div>
+                    <MenuIndicator>
+                        <span>
+                            <KeyboardArrowDownSharpIcon/> menu
+                        </span>
 
-                {insertedToken ? 
-                    <Button onClick={doLogout}>로그아웃</Button>
-                :
-                    <Button href="/sign_in">로그인</Button>
-                }
+                        <ul className="menu-pop">
+                            <li>
+                                <StyledLink to='/record-foodimage'>식단기록-이미지</StyledLink>
+                            </li>
+                            <li>
+                                <StyledLink to='/record-foodsearch'>식단기록-검색</StyledLink>
+                            </li>
+                            <li>
+                                <StyledLink to='/analyze-diet'>식단분석</StyledLink>
+                            </li>
+                            <li>
+                                <StyledLink to='/search-restaurant'>음식점검색</StyledLink>
+                            </li>
+                            <li>
+                                <StyledLink to='/recommend-fridge-ingredients'>메뉴추천</StyledLink>
+                            </li>
+                            <li>
+                                <StyledLink to='/mypage'>마이페이지</StyledLink>
+                            </li>
+                        </ul>
+                    </MenuIndicator>
+
+                    {insertedToken ? 
+                        <Button onClick={doLogout}>로그아웃</Button>
+                    :
+                        <Button href="/sign_in">로그인</Button>
+                    }
+                </div>
+                
         </NavBox>
     )
 }
@@ -92,6 +102,7 @@ const NavBox = styled.div`
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     position: fixed;
     top: 0;
@@ -105,19 +116,57 @@ const Logo = styled.div`
     margin-top: 0.3rem;
 `;
 
-const Ul = styled.ul`
-    display: flex;
-    padding-left: 0;
-    
+const MenuIndicator = styled.div`
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    padding: 1rem;
+    margin-right: 0.8rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
 
-    > li {
+    .menu-pop{
+        display: flex;
+        display: none;
+        position: absolute;
+        width: 20rem;
+        top: 100%;
+        left: -12.5rem;
+        padding: 1rem;
+        background-color: var(--color-white);
+        border-radius: 0.5rem;
+        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+
+        li {
+            color: var(--color-text);
             margin: 1rem;
-            padding: 5px;
+            padding: 1rem;
             font-size: 14px;
             font-weight: 500;
             list-style: none;
+            border-radius: 0.5rem;
+            transition: 0.2s all;
+
+            &:hover{
+                background-color: var(--color-border);
+            }
         }
-`;
+    }
+
+    svg{
+        position: relative;
+        top: 0.3rem;
+    }
+
+
+    &:hover {
+        background-color: rgba(0,0,0,0.1);
+
+        .menu-pop {
+          display: block;
+        }
+    }
+`
 
 
 const StyledLink = styled(Link)`
