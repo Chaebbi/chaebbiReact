@@ -9,7 +9,11 @@ function Navigation(){
     const insertedToken = localStorage.getItem('token');
     const navigate = useNavigate();
 
-    
+    const [isOpen, setIsOpen] = useState(false);
+    const openMenuList =()=>{
+        setIsOpen(!isOpen);
+    }
+
     const [scroll, setScroll] = useState(true);
     const beforeScrollY = useRef(0);
     const throttledScroll = useMemo(
@@ -52,12 +56,12 @@ function Navigation(){
                 </Logo>
                 )}
                 <div>
-                    <MenuIndicator>
+                    <MenuIndicator onClick={openMenuList}>
                         <span>
-                            <KeyboardArrowDownSharpIcon/> menu
+                            <KeyboardArrowDownSharpIcon className={isOpen && "active"}/> menu
                         </span>
 
-                        <ul className="menu-pop">
+                        <MenuList isOpen={isOpen}>
                             <li>
                                 <StyledLink to='/record-foodimage'>식단기록-이미지</StyledLink>
                             </li>
@@ -76,7 +80,7 @@ function Navigation(){
                             <li>
                                 <StyledLink to='/mypage'>마이페이지</StyledLink>
                             </li>
-                        </ul>
+                        </MenuList>
                     </MenuIndicator>
 
                     {insertedToken ? 
@@ -125,48 +129,47 @@ const MenuIndicator = styled.div`
     border-radius: 0.5rem;
     transition: all 0.2s;
 
-    .menu-pop{
-        display: flex;
-        display: none;
-        position: absolute;
-        width: 20rem;
-        top: 100%;
-        left: -12.5rem;
-        padding: 1rem;
-        background-color: var(--color-white);
-        border-radius: 0.5rem;
-        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-
-        li {
-            color: var(--color-text);
-            margin: 1rem;
-            padding: 1rem;
-            font-size: 14px;
-            font-weight: 500;
-            list-style: none;
-            border-radius: 0.5rem;
-            transition: 0.2s all;
-
-            &:hover{
-                background-color: var(--color-border);
-            }
-        }
-    }
-
     svg{
         position: relative;
         top: 0.3rem;
+        transition: transform 0.3s;
     }
 
+    svg.active{
+        transform: rotate(-180deg);
+    }
 
     &:hover {
         background-color: rgba(0,0,0,0.1);
-
-        .menu-pop {
-          display: block;
-        }
     }
 `
+
+const MenuList = styled.ul`
+    display: ${(props) => (props.isOpen ? 'block' : 'none')};
+    position: absolute;
+    width: 20rem;
+    top: 100%;
+    left: -12.5rem;
+    padding: 1rem;
+    background-color: var(--color-white);
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+
+    li {
+        color: var(--color-text);
+        margin: 1rem;
+        padding: 1rem;
+        font-size: 14px;
+        font-weight: 500;
+        list-style: none;
+        border-radius: 0.5rem;
+        transition: 0.2s all;
+
+        &:hover{
+            background-color: var(--color-border);
+        }
+    }
+`;
 
 
 const StyledLink = styled(Link)`
