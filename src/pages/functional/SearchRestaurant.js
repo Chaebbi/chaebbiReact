@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import styles from '../styles/pages/SearchRestaurant.module.css';
-import Card from "../elements/Card";
-import Map from "../components/Map";
+import styles from '../../styles/pages/SearchRestaurant.module.css';
+import Card from "../../elements/Card";
+import Map from "../../components/Map";
 import { BiRestaurant,BiCoffeeTogo,BiAlignLeft } from 'react-icons/bi';
-import {API} from "../utils/API.js";
+import {API} from "../../utils/API.js";
 
 //음식점 검색 페이지(map)
 function SearchRestaurant(){

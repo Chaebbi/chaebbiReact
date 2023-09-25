@@ -1,263 +1,102 @@
-import styled from "styled-components";
+import styled,{css} from "styled-components";
+import React from "react";
+import ErrorIcon from '@mui/icons-material/Error';
 
 function Input(props){
     const {
         name,
         type, 
         placeholder,
-        accept,
+        disabled,
         onChange,
         value,
-        text,
-        color,
-        margin,
-        padding,
-        fontsize,
-        border,
-        width,
-        fieldwidth,
-        height,
-        minlength,
-        maxlength,
-        multiple,
-        borderRadius,
-        disabled,
-        inline,
-        center,
-        step,
-        multiline,
-        rows
-    } = props;
+        label,
+        error
+    } = props
 
-    if(disabled){
-        return(
-            <Div width={width} margin={margin} padding={padding}>
-                <Label htmlFor={name} color={color} fontsize={fontsize}>{text}</Label>
-                <InputField2
-                    disabled
-                    name={name}
-                    type={type} 
-                    id={name}
-                    onChange={onChange}
-                    value={value}
-                    color={color}
-                    padding={padding}
-                    height={height}
-                    fieldwidth={fieldwidth}
-                    border="0px"
-                    borderRadius="0px"
-                />
-            </Div>
-            );
-    }
-
-    if(multiline){
-        return(
-            <Div width={width} margin={margin} padding={padding}>
-                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
-                <Textarea
-                    name={name}
-                    type={type}
-                    rows={rows}
-                    id={name}
-                    onChange={onChange}
-                    value={value}
-                    color={color}
-                    padding={padding}
-                    height={height}
-                    fieldwidth={fieldwidth}
-                    border={border}
-                    borderRadius={borderRadius}
-                />
-            </Div>
-            );
-    }
-
-    if(inline){
-        return(
-            <InlineDiv width={width} padding={padding} inline>
-                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
-                <InputField2
-                    name={name}
-                    type={type} 
-                    id={name}
-                    onChange={onChange}
-                    value={value}
-                    color={color}
-                    padding={padding}
-                    height={height}
-                    fieldwidth={fieldwidth}
-                    border={border}
-                    borderRadius={borderRadius}
-                />
-            </InlineDiv>
-            );
-    }
-
-    if(center){
-        return(
-            <CenterDiv width={width} padding={padding} center>
-                <InlineLabel htmlFor={name} color={color} fontsize={fontsize}>{text}</InlineLabel>
-                <InputField2
-                    name={name}
-                    type={type} 
-                    id={name}
-                    onChange={onChange}
-                    value={value}
-                    color={color}
-                    padding={padding}
-                    height={height}
-                    fieldwidth={fieldwidth}
-                    border={border}
-                    borderRadius={borderRadius}
-                />
-            </CenterDiv>
-            );
-    }
 
     return(
-        <Div width={width} margin={margin} padding={padding}>
-            <Label htmlFor={name} color={color} fontsize={fontsize}>{text}</Label>
+        <div>
+            <Label htmlFor={name}>{label}</Label>
             <InputField
-                name={name}
-                type={type} 
                 id={name}
+                name={name}
+                type={type}
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
-                accept={accept}
-                multiple={multiple}
-                color={color}
-                required
-                padding={padding}
-                height={height}
-                fieldwidth={fieldwidth}
-                minlength={minlength}
-                maxlength={maxlength}
-                border={border}
-                borderRadius={borderRadius}
+                disabled={disabled}
                 autoComplete="off"
-                step={step}
+                error={error}
             />
-        </Div>
+            {error && <ErrorMessage><ErrorIcon/>{error}</ErrorMessage>}
+        </div>
         );
 
 }
 
-Input.defaultProps = {
-    fontsize : "15px",
-    height : "40px",
-    margin: "0px",
-    padding: "5px",
-    border: "1px solid #e6e6e6",
-    borderRadius: "10px",
-    color: "#000",
-    fieldwidth: "98%",
-    width: "100%"
-};
-
-const Div = styled.div`
-    display: inline-block;
-    width: ${(props)=>props.width};
-    margin: ${(props)=>props.margin};
-    box-sizing: border-box;
-`;
-
-const InlineDiv = styled.div`
-    display: inline-grid;
-    grid-template-columns: 30% 70%;
-    width: ${(props)=>props.width};
-    margin: ${(props)=>props.margin};
-    box-sizing: border-box;
-
-    @media (max-width: 200px){
-        display: inline-block;
-        margin: ${(props)=>props.margin};
-        width: ${(props)=>props.width};
-        min-width: 220px;
-        box-sizing: border-box;
-    }
-`;
-
-const CenterDiv  = styled.div`
-    display: inline-block;
-    width: ${(props)=>props.width};
-    margin: ${(props)=>props.margin};
-    box-sizing: border-box;
-    text-align: center;
-`;
-
 const Label = styled.label`
-    display: inline-block;
-    margin-left: 5px;
-    margin-bottom: 10px;
-    font-size: ${(props)=>props.fontsize};
-    color: ${(props)=>props.color};
-    font-weight: 600;
-`;
-
-
-const InlineLabel = styled.label`
-    display: inline-block;
-    line-height: 42px;
-    font-size: ${(props)=>props.fontsize};
-    color: ${(props)=>props.color};
+    color: var(--color-black);
+    margin-left: 0.4rem;
+    font-size: 1.4rem;
     font-weight: 600;
 `;
 
 const InputField = styled.input.attrs({
-    placeholderTextColor : "#000"
+    placeholderTextColor : "var(--color-black)",
 })`
-   width: ${(props)=>props.fieldwidth};
-   height: ${(props)=>props.height};
-   box-sizing: border-box;
-   padding: ${(props)=>props.padding};
-   padding-left: 10px;
-   color: ${(props)=>props.color};
-   background-color: transparent;
-   border: ${(props)=>props.border};
-   border-radius: ${(props)=>props.borderRadius};
-   outline: 0;
-   transition: all 0.2s;
-
-   &:hover{
-        border: 1px solid #adb5bd;
-   }
-   &:focus{
-        border: 1.2px solid #398234;
-    }
-`;
-
-const InputField2 = styled.input`
-   width: ${(props)=>props.fieldwidth};
-   height: ${(props)=>props.height};
-   box-sizing: border-box;
-   padding: ${(props)=>props.padding};
-   padding-left: 10px;
-   color: ${(props)=>props.color};
-   background-color: transparent;
-   border: ${(props)=>props.border};
-   border-radius: ${(props)=>props.borderRadius};
-   outline: 0;
-`;
-
-const Textarea = styled.textarea`
-    width: ${(props)=>props.fieldwidth};
-    border: ${(props)=>props.border};
-    border-radius: ${(props)=>props.borderRadius};
-    box-sizing: border-box;
-    padding: ${(props)=>props.padding};
-    margin: ${(props)=>props.margin};
-    color: ${(props)=>props.color};
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.2rem;
     background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
     outline: 0;
+    transition: all 0.2s;
 
     &:hover{
-        border: 1px solid #adb5bd;
-   }
+        border: 1px solid var(--color-border-hover);
+    }
     &:focus{
-        border: 1.2px solid #398234;
+        border: 1.2px solid var(--color-primary);
+        background-color: var(--color-input-focus);
+    }
+
+    ${({ error }) =>
+        error &&
+        css`
+            border: 1.2px solid var(--color-danger);
+            background-color: var(--color-input-danger);
+
+            &:focus{
+                border: 1.2px solid var(--color-danger);
+                background-color: var(--color-input-danger);
+            }
+        `
+    }
+
+    ${({ disabled }) =>
+        disabled &&
+        css`
+            border: 1.2px solid var(--color-border);
+            background-color: var(--color-light-gray);
+
+            &:hover{
+                border: 1px solid var(--color-border);
+            }
+        `
     }
 `;
 
-export default Input;
+const ErrorMessage = styled.p`
+    color: var(--color-danger);
+    font-size: 1.2rem;
+
+    svg{
+        position: relative;
+        top: 0.2rem;
+        margin-right: 0.2rem;
+    }
+`;
+
+export default React.memo(Input);

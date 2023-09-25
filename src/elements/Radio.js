@@ -1,30 +1,64 @@
 import styled from "styled-components";
+import React from "react";
 
 function Radio(props){
-    const {id, label, name, value, margin, fontsize, onClick, onChange} = props;
+    const { legend, radioArray, checked, onChange } = props
 
     return(
-        <Div margin={margin}>
-            <input type="radio" id={id} name={name} value={value} onClick={onClick} onChange={onChange}/>
-            <Label htmlFor={id} fontsize={fontsize}>{label}</Label>
-        </Div>
+        <div>
+            <Legend>{legend}</Legend>
+            <RadioWrapper>
+                {radioArray.map((i) => (
+                    <>
+                    <RadioInput
+                        id={i.id}
+                        type="radio"
+                        name={i.name}
+                        value={i.value}
+                        checked={i.value === checked}
+                        onChange={onChange}/>
+                    <StyledLabel key={i.id} htmlFor={i.id}>{i.label}</StyledLabel>
+                    </>
+                ))}
+            </RadioWrapper>
+        </div>
     )
 }
 
-Radio.defaultProps={
-    margin: "5px",
-    fontsize: "15px",
-}
-
-const Div = styled.div`
-    margin: ${(props)=>props.margin}; 
-    display: inline-block;
-    padding-right: 5px;
+const Legend = styled.legend`
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
 `;
 
-const Label = styled.label`
-    margin-left: 8px;
-    color: #000;
+const RadioWrapper = styled.div`
+    display: flex;
+    gap: 0.4rem;
 `;
 
-export default Radio;
+const StyledLabel = styled.label`
+    color: var(--color-border-hover);
+    font-size: 1.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover{
+        border: 1px solid var(--color-border-hover);
+        color: var(--color-border-hover);
+    }
+`;
+
+const RadioInput = styled.input`
+    display: none;
+
+    &:checked + ${StyledLabel}{
+        border: 1px solid var(--color-primary);
+        background-color: var(--color-input-focus);
+        color: var(--color-primary);
+    }
+`
+
+export default React.memo(Radio);

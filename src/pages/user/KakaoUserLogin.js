@@ -2,8 +2,8 @@ import styled from "styled-components";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import {API} from "../utils/API.js";
-import {REST_API_KEY} from "../utils/kakao_API_KEY.js";
+import {API} from "../../utils/API.js";
+import {REST_API_KEY} from "../../utils/kakao_API_KEY.js";
 
 //카카오 로그인 페이지
 function KakaoUserLogin(){

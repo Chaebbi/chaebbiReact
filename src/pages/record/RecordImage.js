@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import { useState } from "react";
-import Form from "../elements/Form";
-import Image from "../elements/Image";
-import Input from "../elements/Input";
-import Grid from "../elements/Grid";
-import Button from "../elements/Button";
-import Radio from "../elements/Radio";
-import Text from "../elements/Text";
+import Form from "../../elements/Form";
+import Input from "../../elements/Input";
+import Grid from "../../elements/Grid";
+import Button from "../../elements/Button";
+import Radio from "../../elements/Radio";
+import Text from "../../elements/Text";
 import axios from "axios";
-import Modal from "../elements/Modal";
+import Modal from "../../elements/Modal";
 import { useEffect } from "react";
-import {API,FlaskAPI} from "../utils/API.js";
+import {API,FlaskAPI} from "../../utils/API.js";
 
 //식단 기록 - 이미지
 function RecordImage(){

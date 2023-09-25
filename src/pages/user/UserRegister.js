@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import Button from "../elements/Button";
-import Input from "../elements/Input";
-import Form from "../elements/Form";
-import Grid from "../elements/Grid";
-import Radio from "../elements/Radio";
+import Button from "../../elements/Button";
+import Input from "../../elements/Input";
+import Form from "../../elements/Form";
+import Grid from "../../elements/Grid";
+import Radio from "../../elements/Radio";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {API} from '../utils/API.js';
+import {API} from '../../utils/API.js';
 
 //유저 회원가입
 function UserRegister(){

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { useState,useEffect } from "react";
 import axios from "axios";
-import Image from "../elements/Image";
-import WeeklyGraph from "../components/Charts/WeeklyGraph";
-import HorizontalStackGraph from "../components/Charts/HorizontalStackGraph";
-import {API} from '../utils/API.js';
-import Accordion from "../components/Accordion";
-import styles from "../styles/AnalyzeDiet.module.css";
+import Image from "../../elements/Image";
+import WeeklyGraph from "../../components/Charts/WeeklyGraph";
+import HorizontalStackGraph from "../../components/Charts/HorizontalStackGraph";
+import {API} from '../../utils/API.js';
+import Accordion from "../../components/Accordion";
+import styles from "../../styles/AnalyzeDiet.module.css";
 
 //식단분석 페이지
 function AnalyzeDiet(){
