@@ -7,91 +7,133 @@ import Radio from "../../elements/Radio";
 import Text from "../../elements/Text";
 import axios from "axios";
 import { when, dateConversion, timeConversion } from "../../utils/common";
+import { checkRegDate, checkRegTime } from "../../utils/validation";
+import { useSelector, useDispatch } from 'react-redux';
+import { __getFoodList } from "../../store/slices/foodSlice";
+import { dummyFoodList } from "../../utils/dummy"; //테스트용
 
 //식단 기록 - 검색
 function RecordSearch(){
+    const dispatch = useDispatch();
     //상태변수
+    const [error, setError] = useState({date: '', time: '', capacity: ''});
     const [nutrients, setNutrients] = useState({
         name: '',
         calory: 0,
         carb: 0,
         pro: 0,
         fat: 0,
-        capacity: 0,
-        inputAmount: 0,
+        capacity: '',
         meal: 0
     })
 
     const {name, calory, carb, pro, fat, capacity, meal} = nutrients;
 
     const changeAmount=(e)=>{ // 키 입력을 마치면 호출되도록 수정
-        const amount = parseFloat(e.target.value);
-        console.log(capacity, amount);
-        const ratio = (amount/capacity)*10;
-        const convertedCalory = (calory*ratio).toFixed(2);
-        const convertedCarb = (carb*ratio).toFixed(1);
-        const convertedPro = (pro*ratio).toFixed(1);
-        const convertedFat = (fat*ratio).toFixed(1);
-        setNutrients({ 
-            ...nutrients, 
-            calory: convertedCalory, 
-            carb: convertedCarb, 
-            pro: convertedPro, 
-            fat: convertedFat, 
-            capacity: amount 
-        });
-    }
+        const foodInfo = JSON.parse(localStorage.getItem('food'));
+        const amount = Number(e.target.value);
+        const ratio = (amount/foodInfo.capacity);
+        let convertedCalory = Number((foodInfo.calory*ratio).toFixed(2));
+        let convertedCarb = Number((foodInfo.carb*ratio).toFixed(1));
+        let convertedPro = Number((foodInfo.pro*ratio).toFixed(1));
+        let convertedFat = Number((foodInfo.fat*ratio).toFixed(1));
 
-    const changeMeal = (e) => {
-		setNutrients({...nutrients, meal: e.target.value});
-	};
-    
-    const [dateInfo, setDateInfo] = useState({date: '', time: ''});
-    const changeDate = (e) => {
-        if(e.target.name === 'date'){
+        if(amount <= 0 || isNaN(convertedCalory)){
+            setNutrients({ 
+                ...nutrients, 
+                calory: 0, 
+                carb: 0, 
+                pro: 0, 
+                fat: 0,
+                capacity: ''
+            });
+            setError({ capacity: '유효하지 않은 값입니다.'})
+        }else{
+            setNutrients({ 
+                ...nutrients, 
+                calory: convertedCalory, 
+                carb: convertedCarb, 
+                pro: convertedPro, 
+                fat: convertedFat, 
+                capacity: amount
+            });
+            setError({ capacity: '' })
+        }
+
+        
+    }
+    // 날짜, 끼니 입력 ===============================================================
+    const [dateInfo, setDateInfo] = useState({date: '', time: '', prevDate: '', prevTime: ''});
+
+    const changeDate =(e)=>{
+        const { prevTime } = dateInfo;
+
+        if(checkRegDate(e.target.value)){
             const converted = dateConversion(e.target.value);
             setDateInfo({ ...dateInfo, date: converted });
+            setError({...error, date: ''});
+        
+            if (prevTime && checkRegTime(e.target.value, prevTime)) {
+                console.log('changeDate - time : ', prevTime);
+                const timeConverted = timeConversion(prevTime);
+                setDateInfo({ date: converted, time: timeConverted, prevTime: '', prevDate: '' });
+                setError({ date: '', time: '' });
+            }
         }else{
+            setDateInfo({ ...dateInfo, date: '', prevDate: e.target.value});
+            setError({ ...error, date: '유효하지 않은 날짜입니다.'});
+        }
+    }
+
+    const changeTime =(e)=>{
+        const { date, prevDate } = dateInfo;
+
+        if(checkRegTime(date, e.target.value)){
             const converted = timeConversion(e.target.value);
             setDateInfo({ ...dateInfo, time: converted });
+            setError({ ...error, time: ''});
+        
+            if (prevDate && checkRegDate(prevDate)) {
+                console.log('changeTime - date : ', prevDate);
+                const dateConverted = dateConversion(prevDate);
+                setDateInfo({ date: dateConverted, time: converted, prevDate: '', prevTime: '' });
+                setError({ date: '', time: '' });
+            }
+        }else{
+            setDateInfo({ ...dateInfo, time: '', prevTime: e.target.value });
+            setError({ ...error, time: '유효하지 않은 시간입니다.'});
         }
+        
+    }
+    
+    const changeMeal = (e) => {
+		setNutrients({...nutrients, meal: e.target.value});
+        console.log(dateInfo);
 	};
 
 
-    //모든 음식 조회(GET)===============================================================
-    const [foodlist, setFoodlist] = useState([]);
-    const foodlist2 = foodlist;
+    //모든 음식 조회(페이지 접근 시 최초1회)===============================================================
     const getFoodList =async()=>{
         await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/foodname`,
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}})
         .then((response) => 
-            setFoodlist(response.data.result.data)
-        );
+            dispatch(__getFoodList(response.data.data))
+        ).catch(function(error) {
+            console.log(error);
+            dispatch(__getFoodList(dummyFoodList)); // 테스트 후 삭제
+        });
     }
     
     //검색창 핸들링===========================================================================
-    const [searchword, setSearchword] = useState(''); //input값
-    const [autocompletes, setAutocompletes] = useState(foodlist2); //자동완성 결과 담을 상태변수
-
-    //자동완성 리스트==============================================================
+    const foodlist = useSelector((state) => state.foodlist.data);
+    const [searchword, setSearchword] = useState('');
+    const [autocompletes, setAutocompletes] = useState([]);
     const updateData =() => {
-    //    const filteredList = foodlist2.filter((i)=> i.name.includes(searchword) === true).slice(0,20);
-    const filteredList = [{
-        "id": 1,
-        "name": "더덕구이"
-    },
-    {
-        "id": 2,
-        "name": "김치국"
-    },
-    {
-        "id": 3,
-        "name": "떡만둣국"
-    }];
-       setAutocompletes(filteredList);
+        const filteredList = foodlist.filter((i)=> i.name.includes(searchword) === true).slice(0,20);
+        setAutocompletes(filteredList);
     }
 
-    //음식 아이디 전송(POST)==============================================================
+    //특정 음식 정보 조회==============================================================
     const selectFood =(food,id)=>{
         setSearchword(food);
 
@@ -100,9 +142,8 @@ function RecordSearch(){
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            console.log(response.data.result.data[0]);
-            localStorage.setItem('food', response.data.result.data[0]);
-            setNutrients({...nutrients, ...response.data.result.data[0]});
+            localStorage.setItem('food', JSON.stringify(response.data.result.data[0]));
+            setNutrients({...nutrients, ...JSON.parse(localStorage.getItem('food'))});
             setSearchword('');
         }).catch(function(error) {
             console.log(error);
@@ -117,7 +158,7 @@ function RecordSearch(){
         formData.append("carb", carb);
         formData.append("protein", pro);
         formData.append("fat", fat);
-        formData.append("amount", parseFloat(capacity));
+        formData.append("amount", Number(capacity));
         formData.append("meal", meal);
         formData.append("rdate", dateInfo.date);
         formData.append('rtime', dateInfo.time);
@@ -135,16 +176,49 @@ function RecordSearch(){
 
     //유효성 검사===========================================================================
     const handleValid =()=>{
-        recordBySearch();
+        // 필드값 유효성 검사 후 recordBySearch();
+        // error 객체값을 순회하며 값이 있는지 체크 후...
+        // capacity의 경우 값이 0이거나 음수이면
+        let isInputBlank = false;
+        let isErrorBlank = true;
+        let errorMessage = { date: '', time: '', amount: '' };
+
+        if(dateInfo.date === ''){
+            errorMessage.date = '식사날짜를 입력하세요.';
+            isInputBlank = true;
+        }
+        
+        if(dateInfo.time === '') {
+            errorMessage.time = '식사시간을 입력하세요.';
+            isInputBlank = true;
+        }
+        
+        if(nutrients.capacity === ''){
+            errorMessage.capacity = '식사량을 입력하세요.';
+            isInputBlank = true;
+        }
+
+        for (const key in error) {
+            if (error[key] !== '') {
+              isErrorBlank = false;
+            }
+        }
+
+        if(!isInputBlank && isErrorBlank){ // 필드가 채워져 있으면서 유효한 값일 때
+            // recordBySearch();
+            console.log('기록 성공');
+        }else{
+            setError(errorMessage);
+            console.log('기록 실패');
+        }
     }
 
 
     //useEffect==========================================================================
     useEffect(()=>{
-        /* if(저장소가 비었으면){
+        if(foodlist.length === 0){
             getFoodList();
-        } 
-        */
+        }
 
         // 검색어가 변경되고 2초 후에 updateDate()
         const debounce = setTimeout(() => {
@@ -168,16 +242,21 @@ function RecordSearch(){
                 )}
             </SearchWrapper>
             <FormWrapper>
-                <h2>{name ? name : '음식명'}</h2> 
-                <Input label="식사날짜" type="date" name="date" onChange={changeDate}/>
-                <Input label="식사시간" type="time" name="time" onChange={changeDate}/>
-                <Radio legend="끼니" radioArray={when} onChange={changeMeal} checked={Number(meal)}/>
-                <Input label="식사량" type="number" name="capacity" placeholder="그람(1인분 300g)" onChange={changeAmount}/>
-                <Text label="칼로리" text={`${calory} kcal`}/>
-                <Text label="탄수화물" text={`${carb} g`}/>
-                <Text label="단백질" text={`${pro} g`}/>
-                <Text label="지방" text={`${fat} g`}/>
-
+                <h2>{name ? name : '음식명'}</h2>
+                <div>
+                     <GridWrapper>
+                        <Input label="식사날짜" type="text" name="date" placeholder="YYYY-MM-DD" error={error.date} onChange={changeDate}/>
+                        <Input label="식사시간" type="text" name="time" placeholder="hh:mm" error={error.time} onChange={changeTime}/>
+                    </GridWrapper>
+                    <GridWrapper>
+                        <Radio legend="끼니" radioArray={when} onChange={changeMeal} checked={Number(meal)}/>
+                        <Input label="식사량" type="text" name="capacity" value={capacity} placeholder="그람(1인분 300g)" error={error.capacity} onChange={changeAmount}/>
+                    </GridWrapper>
+                    <Text label="칼로리" text={`${calory} kcal`}/>
+                    <Text label="탄수화물" text={`${carb} g`}/>
+                    <Text label="단백질" text={`${pro} g`}/>
+                    <Text label="지방" text={`${fat} g`}/>
+                </div>
                 <Button onClick={handleValid}>기록하기</Button>
             </FormWrapper>
         </Container>
@@ -238,7 +317,19 @@ const FormWrapper = styled.div`
     border-radius: 0.5rem;
     padding: 2rem;
     display: grid;
-    row-gap: 1rem;
+    row-gap: 3rem;
+
+    >div{
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+`;
+
+const GridWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
 `;
 
 
