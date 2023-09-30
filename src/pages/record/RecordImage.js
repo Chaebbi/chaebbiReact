@@ -1,150 +1,146 @@
 import styled from "styled-components";
 import { useState } from "react";
-import Form from "../../elements/Form";
 import Input from "../../elements/Input";
-import Grid from "../../elements/Grid";
 import Button from "../../elements/Button";
 import Radio from "../../elements/Radio";
 import Text from "../../elements/Text";
 import axios from "axios";
-import Modal from "../../elements/Modal";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {API,FlaskAPI} from "../../utils/API.js";
+import { when, timeConversion, dateConversion } from "../../utils/common";
+import { checkRegDate, checkRegTime } from "../../utils/validation";
 
 //식단 기록 - 이미지
 function RecordImage(){
-    const when = [
-        {id: 0, name:"meal", value:"0", label:"아침"},
-        {id: 1, name:"meal", value:"1", label:"점심"},
-        {id: 2, name:"meal", value:"2", label:"저녁"},
-    ]
+    const [error, setError] = useState({ date: '', time: '', capacity: '' });
+    const [nutrients, setNutrients] = useState({
+        name: '',
+        calory: 0,
+        carb: 0,
+        pro: 0,
+        fat: 0,
+        capacity: '',
+        meal: 0
+    })
 
-    //상태변수
-    const [name, setName] = useState();
-    const [calory, setCalory] = useState(0);
-    const [carb, setCarb] = useState(0);
-    const [protein, setProtein] = useState(0);
-    const [fat, setFat] = useState(0);
+    const {name, calory, carb, pro, fat, capacity, meal} = nutrients;
 
-    const [amount, setAmount] = useState('');
-    const [ratio, setRatio] = useState('');
-    const changeAmount=(e)=>{
-        setAmount(e.target.value);
-        console.log([e.target.name], e.target.value);
+    const changeAmount=(e)=>{ // 키 입력을 마치면 호출되도록 수정
+        const foodInfo = JSON.parse(localStorage.getItem('food'));
+        const amount = Number(e.target.value);
+        const ratio = (amount/foodInfo.capacity);
+        let convertedCalory = Number((foodInfo.calory*ratio).toFixed(2));
+        let convertedCarb = Number((foodInfo.carb*ratio).toFixed(1));
+        let convertedPro = Number((foodInfo.pro*ratio).toFixed(1));
+        let convertedFat = Number((foodInfo.fat*ratio).toFixed(1));
 
-        setRatio((parseFloat(e.target.value)/food.capacity)*10);
-        // console.log(parseFloat(e.target.value)/food.capacity);
+        if(amount <= 0 || isNaN(convertedCalory)){
+            setNutrients({ 
+                ...nutrients, 
+                calory: 0, 
+                carb: 0, 
+                pro: 0, 
+                fat: 0,
+                capacity: ''
+            });
+            setError({ ...error, capacity: '유효하지 않은 값입니다.'})
+        }else{
+            setNutrients({ 
+                ...nutrients, 
+                calory: convertedCalory, 
+                carb: convertedCarb, 
+                pro: convertedPro, 
+                fat: convertedFat, 
+                capacity: amount
+            });
+            setError({ ...error, capacity: '' })
+        }
 
-        setCarb((food.carb*ratio).toFixed(1));
-        setProtein((food.pro*ratio).toFixed(1));
-        setFat((food.fat*ratio).toFixed(1));
-        setCalory((food.calory*ratio).toFixed(2));
-    }
-
-    const [meal, setMeal] = useState();
-    const changeMeal = (event) => {
-		setMeal(event.target.value);
-        console.log([event.target.name], event.target.value);
-	};
-
-    const [date, setDate] = useState();
-    const [dateform, setDateform] = useState();//post용
-    const changeDate = (event) => {
-		setDate(event.target.value);
-        dateConversion(event.target.value);
-	};
-
-    const dateConversion =(s)=> {
-        let form = s.split('-');
-        console.log(`${form[0]}.${form[1]}.${form[2]}.`);
-        setDateform(`${form[0]}.${form[1]}.${form[2]}.`);
-    }
-
-    const [time, setTime] = useState('');
-    const [time24, setTime24] = useState('');//post용
-    const changeTime = (event) => {
-        setTime(event.target.value);
-        timeConversion(event.target.value);
-	};
-
-    const timeConversion =(s)=> {
-        let ampm = s.slice(8);  //문자열에서 AM/PM 여부를 알 수 있도록 slice
-        let hh = s.slice(0,2);  //시, 분, 초 부분을 각각 slice
-        let mm = s.slice(3,5); 
-        let ss = s.slice(6,8); 
         
-        if(ampm === 'PM' && hh !== '12') {
-            hh = Number(hh) + 12;  //slice 하면 문자열이 되므로 숫자로 변환해서 계산
-        }
-        if(ampm === 'AM' && hh === '12') {
-            hh = '00';
-        }
-        console.log(`${hh}:${mm}`);
-        setTime24(`${hh}:${mm}`);
     }
+    // 날짜, 끼니 입력 ===============================================================
+    const [dateInfo, setDateInfo] = useState({date: '', time: '', prevDate: '', prevTime: ''});
+
+    const changeDate =(e)=>{
+        const { prevTime } = dateInfo;
+
+        if(checkRegDate(e.target.value)){
+            const converted = dateConversion(e.target.value);
+            setDateInfo({ ...dateInfo, date: converted });
+            setError({...error, date: ''});
+        
+            if (prevTime && checkRegTime(e.target.value, prevTime)) {
+                console.log('changeDate - time : ', prevTime);
+                const timeConverted = timeConversion(prevTime);
+                setDateInfo({ date: converted, time: timeConverted, prevTime: '', prevDate: '' });
+                setError({ date: '', time: '' });
+            }
+        }else{
+            setDateInfo({ ...dateInfo, date: '', prevDate: e.target.value});
+            setError({ ...error, date: '유효하지 않은 날짜입니다.'});
+        }
+    }
+
+    const changeTime =(e)=>{
+        const { date, prevDate } = dateInfo;
+
+        if(checkRegTime(date, e.target.value)){
+            const converted = timeConversion(e.target.value);
+            setDateInfo({ ...dateInfo, time: converted });
+            setError({ ...error, time: ''});
+        
+            if (prevDate && checkRegDate(prevDate)) {
+                console.log('changeTime - date : ', prevDate);
+                const dateConverted = dateConversion(prevDate);
+                setDateInfo({ date: dateConverted, time: converted, prevDate: '', prevTime: '' });
+                setError({ date: '', time: '' });
+            }
+        }else{
+            setDateInfo({ ...dateInfo, time: '', prevTime: e.target.value });
+            setError({ ...error, time: '유효하지 않은 시간입니다.'});
+        }
+        
+    }
+    
+    const changeMeal = (e) => {
+		setNutrients({...nutrients, meal: e.target.value});
+	};
 
     
     //이미지 상태변수=====================================================================================
+    const fileRef = useRef();
+    const clickFileInput =()=>{
+        fileRef.current.click();
+    }
+
     const [image,setImage] = useState('');
     const handleImage =(e)=>{
-        setImage(e.target.files[0]);
-    }
-
-    //미리보기====================================================================================
-    const reader = new FileReader();
-    const previewImage =()=>{
-        reader.onload=()=>{
-            document.querySelector('#image_preview').style.backgroundImage = `url(${reader.result})`
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              // URL로 변환. e.target.files[0].name 자체는 이미지가 아니므로 img src에 넘길 수 없음
+              setImage(e.target.result);
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
-        reader.readAsDataURL(image);
     }
-
-    const showImage =()=>{
-        reader.onload=()=>{
-            document.querySelector('.image2').style.backgroundImage = `url(${reader.result})`
-            document.querySelector('.image2').style.backgroundSize = `cover`;
-            document.querySelector('.image2').style.backgroundPosition = `center`;
-        }
-        reader.readAsDataURL(image);
-    }
-
-    //모달=======================================================================================
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const openModal = (e) => {
-        e.preventDefault();
-        setModalOpen(true);
-        previewImage();
-    };
-    const submitModal = () => {
-        setModalOpen(false);
-        predictImage();
-    };
-
-    const closeModal = () => {
-        setModalOpen(false);
-    };
 
     //음식 이미지 전송(POST)=====================================================================
     const [isPost, setIsPost] = useState(false); //이미지 등록 여부
     const [food,setFood] = useState();
-    const predictImage =()=>{
+    const predictImage =(e)=>{
+        e.preventDefault();
+
         const formData = new FormData();
         formData.append("file", image);
+
         axios.post(`${FlaskAPI}/foodpredict`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            console.log(response);
             setFood(response.data);
-            setName(response.data.name);
-            setCarb(response.data.carb);
-            setProtein(response.data.pro);
-            setFat(response.data.fat);
-            setCalory(response.data.calory);
-            setAmount(response.data.capacity);
             setIsPost(true);
         }).catch(function(error) {
-            console.log(error);
+            console.log('gg');
         });
     }
 
@@ -153,19 +149,18 @@ function RecordImage(){
         const formData = new FormData();
         formData.append("image", image);
         formData.append("text", name);
-        formData.append("calory", calory);
+        formData.append("calory", String(calory));
         formData.append("carb", String(carb));
-        formData.append("protein", String(protein));
+        formData.append("protein", String(pro));
         formData.append("fat", String(fat));
-        formData.append("amount", parseFloat(amount));
+        formData.append("amount", Number(capacity));
         formData.append("meal", Number(meal));
-        formData.append("rdate", dateform);
-        formData.append('rtime', time24);
+        formData.append("rdate", dateInfo.date);
+        formData.append('rtime', dateInfo.time);
         axios.post(`${API}/record`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            console.log(response.data);
-            if(response.data.code == 1000){
+            if(response.data.code === 1000){
                 alert('식단이 정상적으로 등록되었습니다.');
                 window.location.reload();
             }
@@ -175,181 +170,108 @@ function RecordImage(){
     }
 
     //유효성 검사========================================================
-    const handleValid =(e)=>{
-        e.preventDefault();
-        let ckName = name.length > 0;
-        let ckCalory = calory > 0 && calory !== '';
-        let ckCarb = carb > 0 && carb !== '';
-        let ckProtein = protein > 0 && protein !== '';
-        let ckFat = fat > 0 && fat !== '';
-        let ckDate = date !== undefined;
-        let ckTime = time24 !== '';
-        let ckAmount = amount > 0 && amount !== '';
-        let ckMeal = meal !== undefined;
-
-
-        if(isPost && ckName && ckAmount && ckDate && ckTime && ckMeal && ckCarb && ckProtein && ckCalory && ckFat){
-            recordByImage();
-        }else{
-            if(!isPost){
-                alert("이미지를 첨부해주세요.");
-            }else if(!ckName){
-                alert("메뉴를 입력해주세요.");
-            }else if(!ckDate){
-                alert("날짜를 입력해주세요.");
-            }else if(!ckTime){
-                alert("시간을 입력해주세요.");
-            }else if(!ckAmount){
-                alert("식사량을 올바르게 입력해주세요.");
-            }else if(!ckMeal){
-                alert("끼니를 입력해주세요.");
-            }else if(!ckCalory){
-                alert("칼로리를 올바르게 입력해주세요.");
-            }else if(!ckCarb){
-                alert("영양성분(탄수화물)을 올바르게 입력해주세요.");
-            }else if(!ckProtein){
-                alert("영양성분(단백질)을 올바르게 입력해주세요.");
-            }else if(!ckFat){
-                alert("영양성분(지방)을 올바르게 입력해주세요.");
-            }
-        }
+    const handleValid =()=>{
+        // recordByImage();
     }
 
     //useEffect==========================
     useEffect(()=>{
-        if(isPost){
-            showImage();
-        }
-    },[image,isPost])
+        
+    },[])
 
     return(
-        <>
-            <Explain>
-                <h2>이미지를 불러오면 식단을 기록할 수 있습니다.</h2>
-                <ImageBox>
-                    <input type="file" name="image" onChange={handleImage}/>
-                    <Button just width="110px" height="28px" fontsize="13px" borderRadius="10px"text="이미지등록" onClick={openModal}/>
-                </ImageBox>
-            </Explain>
-            
-            {isPost ? 
-                    <Form width="50%" height="auto" margin="0 auto 20px" padding="20px" position="relative" top="85px">
-                        <FoodName>{name}</FoodName>
-                        <Grid col="2" row="1" margin="0 0 20px 0" colgap="20px" width="100%" height="auto">
-                            <div className="image2"></div>
-
-                            <Grid col="1" row="3" margin="0" width="100%" rowgap="8px">
-                                <Input name="date" type="date" text="식사날짜" placeholder="2022-00-00" value={date||''} margin="0px" fieldwidth="95%" onChange={changeDate}/>
-                                <Input name="time" type="time" text="식사시간" placeholder="00:00~23:59" value={time||''} margin="0px" fieldwidth="95%" onChange={changeTime}/>
-                                <RadioBox>
-                                        <Legend>끼니</Legend>
-                                            {Array.from(when).map((m,index) => (
-                                                <Radio
-                                                    key={index} 
-                                                    id={m.id}
-                                                    name={m.name}
-                                                    value={m.value}
-                                                    label={m.label}
-                                                    text={m.label}
-                                                    onClick={changeMeal}/>
-                                            ))}
-                                </RadioBox>
-                            </Grid>
-                        </Grid>
-                        <Grid col="2" row="1" margin="0">
-                            <Text label="칼로리" text={`${calory} kcal`}/>
-                            <Input name="amount" type="number" text="식사량" placeholder="그람(1인분 300g)" value={amount} margin="0px" fieldwidth="95%" onChange={changeAmount}/>
-                        </Grid>
-                        <Grid col="3" row="1" colgap="6px" margin="8px 0 0 0">
-                            <Text label="탄수화물" text={`${carb} g`}/>
-                            <Text label="단백질" text={`${protein} g`}/>
-                            <Text label="지방" text={`${fat} g`}/>
-                        </Grid>
-                        
-                        
-                        
-                        <ButtonPlace>
-                            <Button 
-                                submit
-                                width="240px"
-                                height="46px" 
-                                margin="20px auto 0 auto"
-                                borderRadius="10px"
-                                text="기록하기"
-                                onClick={handleValid}
-                            />
-                        </ButtonPlace>
-                    </Form>
-            :
-                ''
-            }
-            
-            
-
-            <Modal open={modalOpen} close={closeModal} submit={submitModal} header="미리보기" height="460px" margin="120px auto">
-                <PreviewBox id="image_preview"></PreviewBox>
-            </Modal>
-        </>
+        <Container>
+            <FormContainer>
+                <h2>{name ? name : '음식명'}</h2>
+                <div>
+                    <ImageWrapper>
+                        <p className="p-label">이미지</p>
+                        {image ?
+                            <div>
+                                <FoodImage src={image} alt="food"/>
+                                <input type="file" name="image" accept="image/*" ref={fileRef} onChange={handleImage} style={{display:"none"}}/>
+                                <Button onClick={clickFileInput}>이미지 수정</Button>
+                                <Button onClick={predictImage}>이미지 등록</Button>
+                                <p className="p-guide">불러온 이미지를 등록해 음식 정보를 조회합니다.</p>
+                            </div>
+                        :
+                            <div>
+                                <input type="file" name="image" accept="image/*" ref={fileRef} onChange={handleImage} style={{display:"none"}}/>
+                                <p className="p-guide">이미지를 불러오면 식단을 기록할 수 있습니다.</p>
+                                <Button onClick={clickFileInput}>이미지 추가</Button>
+                            </div>
+                        }
+                    </ImageWrapper>
+                    <GridWrapper>
+                        <Input name="date" type="text" label="식사날짜" error={error.date} placeholder="YYYY-MM-DD" onChange={changeDate}/>
+                        <Input name="time" type="text" label="식사시간" error={error.time} placeholder="hh:mm" onChange={changeTime}/>
+                    </GridWrapper>
+                    <GridWrapper>
+                        <Radio legend="끼니" radioArray={when} onChange={changeMeal} checked={Number(meal)}/>
+                        <Input name="capacity" type="text" label="식사량" placeholder="그람(1인분 300g)" error={error.capacity} value={capacity} onChange={changeAmount}/>
+                    </GridWrapper>
+                    <FlexWrapper>
+                        <Text label="칼로리" text={`${calory} kcal`}/>
+                        <Text label="탄수화물" text={`${carb} g`}/>
+                        <Text label="단백질" text={`${pro} g`}/>
+                        <Text label="지방" text={`${fat} g`}/>
+                    </FlexWrapper>
+                </div>
+                <Button onClick={handleValid}>기록하기</Button>
+            </FormContainer>
+        </Container>
     )
 }
 
-
-const Explain = styled.div`
-    width: 50%;
-    min-width: 530px;
+const Container = styled.div`
+    width: 60rem;
     margin: 0 auto;
-    text-align:center;
-    position:relative;
-    top: 55px;
 `;
 
-const ImageBox = styled.form`
-    width: 50%;
-    min-width: 530px;
-    height: 50px;
-    position: relative;
-    top: 15px;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 10px 10px 10px 20px;
-    margin: 0 auto;
-    text-align: left;
+const FormContainer = styled.div`
+    display: grid;
+    row-gap: 3rem;
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
 
-    >button{
-        float: right;
+    >div{
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 `;
 
-const PreviewBox = styled.div`
-    height: 300px;
-    background-position: center;
-    background-size: cover;
-    /* background-position: 50% 50%;
-	background-size: contain;
-	background-repeat: no-repeat; */
+const ImageWrapper = styled.div`
+    .p-label{
+        font-weight: 700;
+        color: var(--color-black);
+        margin: 0 0 0.2rem 0.4rem;
+    }
+
+    .p-guide{
+        color: var(--color-border-hover);
+        margin-bottom: 0.2rem;
+    }
 `;
 
-const FoodName = styled.h2`
-    margin: 5px 0 20px 0;
+const FoodImage = styled.img`
+    width: 20rem;
+    height: 20rem;
 `;
 
-const ButtonPlace = styled.div`
-    text-align:center;
+const GridWrapper = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
 `;
 
-const RadioBox = styled.div`
-    margin-left: 10px;
-    margin-top: 4px;
-    margin-bottom: 20px;
-    display: inline-block;
+const FlexWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 `;
 
-const Legend = styled.legend`
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 6px;
-`;
 
 
 export default RecordImage;
