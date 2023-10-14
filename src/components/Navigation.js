@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import { useState, useEffect, useMemo, useRef } from 'react';
+import styled,{ css } from "styled-components";
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from "../elements/Button";
 import { throttle } from 'lodash';
 import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSharp';
 
-function Navigation(){
+function Navigation({ enableEvent }){
     const insertedToken = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -15,21 +15,18 @@ function Navigation(){
     }
 
     const [scroll, setScroll] = useState(true);
-    const beforeScrollY = useRef(0);
     const throttledScroll = useMemo(
         () =>
           throttle(() => {
-            const currentScrollY = window.scrollY;
-            if (beforeScrollY.current < currentScrollY) {
+            if (window.scrollY > 0) {
+                //스크롤 내려감
                 setScroll(false);
-                console.log(scroll);
-            } else {
+              } else {
+                //초기 위치로 돌아옴
                 setScroll(true);
-                console.log(scroll);
-            }
-            beforeScrollY.current = currentScrollY;
-        }, 300),
-        [beforeScrollY]
+              }
+        }, 200),
+        []
     );
 
     const doLogout =()=>{
@@ -38,14 +35,18 @@ function Navigation(){
     }
 
     useEffect(()=>{
+        if (!enableEvent) {
+            return; // 스크롤 이벤트 처리 비활성화
+        }
+
         window.addEventListener('scroll', throttledScroll);
         return () => {
             window.removeEventListener('scroll', throttledScroll);
     };
-    },[beforeScrollY]);
+    },[enableEvent]);
 
     return(
-        <NavBox state={scroll}>
+        <NavBox state={scroll} otherRoute={enableEvent}>
             {insertedToken ? ( 
                 <Logo>
                     <StyledLink to='/'>CHAEBBI</StyledLink>
@@ -58,7 +59,7 @@ function Navigation(){
                 <div>
                     <MenuIndicator onClick={openMenuList}>
                         <span>
-                            <KeyboardArrowDownSharpIcon className={isOpen && "active"}/> menu
+                            <KeyboardArrowDownSharpIcon className={isOpen ? "active" : "inactive"}/> menu
                         </span>
 
                         <MenuList isOpen={isOpen}>
@@ -99,10 +100,9 @@ const NavBox = styled.div`
     height: 6rem;
     padding: 0 2rem;
     background-color: ${(props)=>(props.state ? 'transparent':'var(--color-white)')};
-    border-bottom: ${(props)=>(props.state ? 'transparent':`1px solid var(--color-light-gray)`)};
+    border-bottom: ${(props)=>(props.state ? 'transparent':`1px solid var(--color-border)`)};
     color: ${(props)=>(props.state ? 'var(--color-white)' : 'var(--color-text)')};
     transition: all 0.2s ease;
-    z-index: 3;
 
     display: flex;
     align-items: center;
@@ -112,6 +112,14 @@ const NavBox = styled.div`
     top: 0;
     left: 0;
     right: 0;
+
+    ${props =>
+        props.otherRoute === false &&
+        css`
+            position: relative;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        `}
 `;
 
 const Logo = styled.div`
@@ -154,6 +162,7 @@ const MenuList = styled.ul`
     background-color: var(--color-white);
     border-radius: 0.5rem;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    z-index: 3;
 
     li {
         color: var(--color-text);
@@ -174,6 +183,7 @@ const MenuList = styled.ul`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
+    display: block;
     color: inherit;
 
     &:focus, &:hover, &:visited, &:link, &:active {
