@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Button from "../elements/Button";
+import Navigation from "../components/Navigation";
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -10,6 +11,7 @@ function Landing(){
 
     return(
         <>
+            <Navigation enableEvent={true}/>
             <SplashImage>
                 <div className="welcome-text-wrapper">
                     <h2>채식인들을 위한 식단 비서</h2>
@@ -56,7 +58,7 @@ function Landing(){
                     <p>다양한 사용자들과 여러분의 채식 라이프를 공유해보세요</p>
                 </div>
                 <Button href="/sign_in">로그인</Button>
-                <Button href="/sign_in">Chaebbi 가입</Button>
+                <Button href="/sign_up">Chaebbi 가입</Button>
             </CommunityWrapper>
             <Footer>
                 &copy; 2022-2023 Chaebbi
@@ -126,7 +128,11 @@ const ListWrapper = styled.div`
 
     >div{
         width: 55%;
-        margin: 0 auto;
+        margin: 4rem auto 5.5rem auto;
+
+        h1{
+            margin-bottom: 4rem;
+        }
 
         ul li {
             list-style: none;
@@ -137,8 +143,6 @@ const ListWrapper = styled.div`
 `;
 
 const GridWrapper = styled.div`
-    // display: grid;
-    // grid-template-columns: repeat(2, 1fr);
     margin: 1rem;
 `;
 
