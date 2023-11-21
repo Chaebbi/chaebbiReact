@@ -1,18 +1,18 @@
 import Button from "../../elements/Button";
 import Input from "../../elements/Input";
-import Form from "../../elements/Form";
+import PwdInput from "../../elements/PwdInput";
 import axios from "axios";
 import { useState } from "react";
-import{ useNavigate } from "react-router-dom";
-import {API} from "../../utils/API.js";
+import{ useNavigate,Link } from "react-router-dom";
+import styled from "styled-components";
+
 
 //유저 로그인
 function UserLogin(){
-    //*****이 부분 rest api key분리해서 따리 관리할 것!!!! */
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=de34834910d5d355823cd6cceaeb1678&redirect_uri=http://localhost:3000/kakao_login&response_type=code`;
-    //*****이 부분 rest api key분리해서 따리 관리할 것!!!! */
+    const client_id = process.env.REACT_APP_REST_API_KEY;
+    const redirect_uri = 'http://localhost:3000/kakao_login'
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
 
-    
     const doKakaoLogin =()=>{
         window.location.href = KAKAO_AUTH_URL;
     }
@@ -29,23 +29,13 @@ function UserLogin(){
 
     //유효성 검사========================================================
     const handleValid =(e)=>{
-        e.preventDefault();
-        let ckEmail = auth.email.length > 0 && auth.email.includes('@');
-        let ckPwd = auth.pwd.length > 0;
 
-        if(ckEmail && ckPwd){
-            doLogin();
-        }else{
-            if(!ckEmail){
-                alert("이메일을 올바르게 입력해주세요.");
-            }else if(!ckPwd){
-                alert("비밀번호를 입력해주세요.");
-            }
-        }
     }
 
     const doLogin =()=>{
-        axios.post(`${API}/user-login`, auth)
+        console.log(auth);
+        
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/user-login`, auth)
         .then(function(response) {
                 console.log(response);
                 let isSuccess = response.data.isSuccess;
@@ -67,28 +57,68 @@ function UserLogin(){
                         alert(msg);
                     }
                 }
-                
-                
-            
             }).catch(function(error) {
                 console.log(error);
             });
     };
     return(
-            <Form>
-                <h1>로그인</h1>
-                <p>서비스를 이용하기 위해선 로그인이 필요합니다.</p>
+            <AuthContainer>
+                <img className="logo" src="/images/chaebbi-logo.svg" alt="logo" onClick={()=>navigate('/landing')}/>
+                <h1 className="login-text">로그인</h1>
+                <p className="login-text">서비스를 이용하기 위해선 로그인이 필요합니다.</p>
 
-                <Input name="email" type="email" label="이메일" placeholder="id@gmail.com" onChange={handleInputs}/>
-                <Input name="pwd" type="password" label="비밀번호" placeholder="*****" onChange={handleInputs}/>
+                <Button onClick={doKakaoLogin}>
+                    <img className="kakao" src="/images/kakaotalk-svg.svg" alt="kakao"/>
+                    &nbsp;카카오 계정으로 로그인
+                </Button>
+
+                <p className="login-text">또는</p>
+
+                <Input label="이메일" name="email" type="email" onChange={handleInputs}/>
+                <PwdInput label="비밀번호" name="pwd" onChange={handleInputs}/>
 
                 <Button onClick={handleValid}>로그인</Button>
-                <Button href="/sign_up">회원가입</Button>
-                <Button onClick={doKakaoLogin}>카카오 계정으로 로그인</Button>
-
-                <Button href="/community">채숲</Button>
-            </Form>
+                <p className="login-text signup-text">아직 계정이 없으신가요? <Link to="/sign_up">회원가입</Link></p>
+                {/* <Button href="/community">채숲</Button> */}
+            </AuthContainer>
     )
 }
+
+const AuthContainer = styled.div`
+    width: 46rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .login-text{
+        text-align: center;
+    }
+
+    .signup-text{
+        margin-top: 2rem;
+    }
+
+    img.logo{
+        width: 8rem;
+        margin: 0 auto;
+        position: relative;
+        top: 1rem;
+        cursor: pointer;
+    }
+
+    img.kakao{
+        position: relative;
+        top: 0.15rem;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        width: 50%;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 100%;
+        padding: 1rem;
+    }
+`;
 
 export default UserLogin;

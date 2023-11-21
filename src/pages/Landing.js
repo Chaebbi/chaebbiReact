@@ -8,7 +8,6 @@ import AssistantIcon from '@mui/icons-material/Assistant';
 
 //비회원용 대문페이지
 function Landing(){
-
     return(
         <>
             <Navigation enableEvent={true}/>
@@ -67,24 +66,24 @@ function Landing(){
 )}
 
 const SplashImage = styled.div`
-    width: 100vw;
+    min-height: 42rem;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     background-blend-mode: multiply;
     background: url('/images/breakfast.jpeg') no-repeat center/cover, rgba(0, 0, 0, 0.3);
-    aspect-ratio: auto 600 / 130;
+    // aspect-ratio: auto 600 / 130;
         
     .welcome-text-wrapper{
         color: var(--color-white);
 
         h2{
-            font-size: 3.4rem;
+            font-size: 3.2rem;
             margin: 1rem 0;
         }
         p{
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 2rem;
         }
     }
@@ -94,10 +93,11 @@ const FunctionsWrapper = styled.div`
     padding: 4rem 0;
 
     .functions-wrapper{
-        width: 55%;
+        width: 88rem;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        column-gap: 2rem; 
+        column-gap: 2rem;
+        row-gap: 2rem;
         margin: 0 auto;
     }
 
@@ -119,6 +119,27 @@ const FunctionsWrapper = styled.div`
             color: var(--color-border-hover);
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        .functions-wrapper{
+            width: 90%;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        .functions-wrapper{
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0 2rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        .functions-wrapper{
+            grid-template-columns: 1fr;
+        }
+    }
 `
 
 const ListWrapper = styled.div`
@@ -127,7 +148,7 @@ const ListWrapper = styled.div`
     margin-bottom: 3rem;
 
     >div{
-        width: 55%;
+        width: 100%;
         margin: 4rem auto 5.5rem auto;
 
         h1{
@@ -140,6 +161,18 @@ const ListWrapper = styled.div`
             margin-bottom: 1rem;
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        padding: 3rem 2rem 1rem 2rem;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        text-align: center;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        
+    }
 `;
 
 const GridWrapper = styled.div`
@@ -147,7 +180,7 @@ const GridWrapper = styled.div`
 `;
 
 const CommunityWrapper = styled.div`
-    width: 55%;
+    width: 88rem;
     margin: 0 auto;
     padding: 4rem 0;
     background-color: var(--color-light-gray);
@@ -161,6 +194,16 @@ const CommunityWrapper = styled.div`
     p { line-height: 2rem; }
     p:last-child { margin-bottom: 1rem; }
     button:last-child { margin-left: 1rem; }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        width: 90%;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 90%;
+        padding-left: 2rem;
+        padding-right: 2rem; 
+    }
 `;
 
 const Footer = styled.div`
