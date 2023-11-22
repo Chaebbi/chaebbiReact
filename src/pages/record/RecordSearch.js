@@ -10,13 +10,11 @@ import { when, dateConversion, timeConversion } from "../../utils/common";
 import { checkRegDate, checkRegTime } from "../../utils/validation";
 import { useSelector, useDispatch } from 'react-redux';
 import { __getFoodList } from "../../store/slices/foodSlice";
-import { dummyFoodList } from "../../utils/dummy"; //테스트용
 
 //식단 기록 - 검색
 function RecordSearch(){
     const dispatch = useDispatch();
-    //상태변수
-    const [error, setError] = useState({date: '', time: '', capacity: ''});
+    const [error, setError] = useState({ date: '', time: '', capacity: '' });
     const [nutrients, setNutrients] = useState({
         name: '',
         calory: 0,
@@ -47,7 +45,7 @@ function RecordSearch(){
                 fat: 0,
                 capacity: ''
             });
-            setError({ capacity: '유효하지 않은 값입니다.'})
+            setError({ ...error, capacity: '유효하지 않은 값입니다.'})
         }else{
             setNutrients({ 
                 ...nutrients, 
@@ -57,7 +55,7 @@ function RecordSearch(){
                 fat: convertedFat, 
                 capacity: amount
             });
-            setError({ capacity: '' })
+            setError({ ...error, capacity: '' })
         }
 
         
@@ -108,7 +106,6 @@ function RecordSearch(){
     
     const changeMeal = (e) => {
 		setNutrients({...nutrients, meal: e.target.value});
-        console.log(dateInfo);
 	};
 
 
@@ -120,7 +117,6 @@ function RecordSearch(){
             dispatch(__getFoodList(response.data.data))
         ).catch(function(error) {
             console.log(error);
-            dispatch(__getFoodList(dummyFoodList)); // 테스트 후 삭제
         });
     }
     
@@ -165,9 +161,17 @@ function RecordSearch(){
         axios.post(`${process.env.REACT_APP_SERVER_URL}/api/record-no-img`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            console.log(response.data);
             if(response.data.code === 1000){
                 alert('식단이 정상적으로 등록되었습니다.');
+                setNutrients({
+                    name: '',
+                    calory: 0,
+                    carb: 0,
+                    pro: 0,
+                    fat: 0,
+                    capacity: '',
+                    meal: 0
+                });
             }
         }).catch(function(error) {
             console.log(error);
@@ -176,25 +180,22 @@ function RecordSearch(){
 
     //유효성 검사===========================================================================
     const handleValid =()=>{
-        // 필드값 유효성 검사 후 recordBySearch();
-        // error 객체값을 순회하며 값이 있는지 체크 후...
-        // capacity의 경우 값이 0이거나 음수이면
         let isInputBlank = false;
         let isErrorBlank = true;
         let errorMessage = { date: '', time: '', amount: '' };
 
         if(dateInfo.date === ''){
-            errorMessage.date = '식사날짜를 입력하세요.';
+            errorMessage.date = '올바른 식사날짜를 입력하세요.';
             isInputBlank = true;
         }
         
         if(dateInfo.time === '') {
-            errorMessage.time = '식사시간을 입력하세요.';
+            errorMessage.time = '올바른 식사시간을 입력하세요.';
             isInputBlank = true;
         }
         
         if(nutrients.capacity === ''){
-            errorMessage.capacity = '식사량을 입력하세요.';
+            errorMessage.capacity = '올바른 식사량을 입력하세요.';
             isInputBlank = true;
         }
 
@@ -205,11 +206,9 @@ function RecordSearch(){
         }
 
         if(!isInputBlank && isErrorBlank){ // 필드가 채워져 있으면서 유효한 값일 때
-            // recordBySearch();
-            console.log('기록 성공');
+            recordBySearch();
         }else{
             setError(errorMessage);
-            console.log('기록 실패');
         }
     }
 
@@ -269,6 +268,15 @@ const Container = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
     column-gap: 2rem;
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        grid-template-columns: 1fr;
+        row-gap: 2rem;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        padding: 2rem 1rem;
+    }
 `;
 
 const SearchWrapper = styled.div`
@@ -330,6 +338,11 @@ const GridWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1.5rem;
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        grid-template-columns: 1fr;
+        row-gap: 1.5rem;
+    }
 `;
 
 
