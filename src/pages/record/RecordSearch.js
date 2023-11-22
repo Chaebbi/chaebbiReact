@@ -224,7 +224,7 @@ function RecordSearch(){
             if(searchword !== '') updateData();
         },200)
         return () => {
-        clearTimeout(debounce)
+            clearTimeout(debounce)
         }
       } ,[searchword]);
 
@@ -232,9 +232,9 @@ function RecordSearch(){
         <Container>
             <SearchWrapper>
                 <Search type="text" placeholder="검색어를 입력하세요." value={searchword} onChange={(e)=>setSearchword(e.target.value)}/>
-                {searchword !== '' && (
+                {autocompletes.length !== 0 && (
                     <AutocompleteList className="scrollbar">
-                        {autocompletes.map((a)=>(
+                        {searchword.length > 0 && autocompletes.map((a)=>(
                             <li key={a.id} onClick={()=>{selectFood(`${a.name}`,`${a.id}`)}}>{a.name}</li>
                         ))}
                     </AutocompleteList>
@@ -280,7 +280,7 @@ const Container = styled.div`
 `;
 
 const SearchWrapper = styled.div`
-
+    position: relative;
 `;
 
 const AutocompleteList = styled.ul`
@@ -300,6 +300,13 @@ const AutocompleteList = styled.ul`
             cursor: pointer; 
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+        position: absolute;
+        z-index: 2;
+        background-color: var(--color-white);
+    } 
 `;
 
 
