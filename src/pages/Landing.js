@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Button from "../elements/Button";
+import Navigation from "../components/Navigation";
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -7,12 +8,12 @@ import AssistantIcon from '@mui/icons-material/Assistant';
 
 //비회원용 대문페이지
 function Landing(){
-
     return(
         <>
+            <Navigation enableEvent={true}/>
             <SplashImage>
                 <div className="welcome-text-wrapper">
-                    <h2>채식인들을 위한 식단 비서</h2>
+                    <h1>채식인들을 위한 식단 비서</h1>
                     <p>대중적이지 않은 식단으로 인해 선택에 어려움을 겪는 채식인들의 라이프 스타일을 반영해 식생활 전반을 관리해드립니다.</p>
                     <Button href="/sign_in">지금 채삐 사용해 보기</Button>
                 </div>
@@ -37,9 +38,10 @@ function Landing(){
                 </div>
             </FunctionsWrapper>
             <ListWrapper>
-                <div>
-                    <h1>이럴 때 채삐를 사용해보세요!</h1>
+                <div className="list-contents">
+                    <img src="/images/salad-svg.svg" alt="salad-image"/>
                     <GridWrapper>
+                        <h1>이럴 때 채삐를 사용해보세요!</h1>
                         <ul>
                             <li>1. 냉장고에 있는 재료만으로 한 끼를 만들어 먹고 싶을 때</li>
                             <li>2. 약속이나 여행 등의 일정으로 외식을 해야 할 때</li>
@@ -56,7 +58,7 @@ function Landing(){
                     <p>다양한 사용자들과 여러분의 채식 라이프를 공유해보세요</p>
                 </div>
                 <Button href="/sign_in">로그인</Button>
-                <Button href="/sign_in">Chaebbi 가입</Button>
+                <Button href="/sign_up">Chaebbi 가입</Button>
             </CommunityWrapper>
             <Footer>
                 &copy; 2022-2023 Chaebbi
@@ -65,25 +67,37 @@ function Landing(){
 )}
 
 const SplashImage = styled.div`
-    width: 100vw;
+    min-height: 42rem;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     background-blend-mode: multiply;
     background: url('/images/breakfast.jpeg') no-repeat center/cover, rgba(0, 0, 0, 0.3);
-    aspect-ratio: auto 600 / 130;
         
     .welcome-text-wrapper{
         color: var(--color-white);
 
-        h2{
-            font-size: 3.4rem;
+        h1{
+            font-size: 3.2rem;
             margin: 1rem 0;
         }
         p{
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 2rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        .welcome-text-wrapper{
+            padding: 0 2.5rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        .welcome-text-wrapper{
+            h1{ font-size: 2.8rem; }
+            p{ font-size: 1.4rem; }
         }
     }
 `;
@@ -92,10 +106,11 @@ const FunctionsWrapper = styled.div`
     padding: 4rem 0;
 
     .functions-wrapper{
-        width: 55%;
+        width: 88rem;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        column-gap: 2rem; 
+        column-gap: 2rem;
+        row-gap: 2rem;
         margin: 0 auto;
     }
 
@@ -117,6 +132,27 @@ const FunctionsWrapper = styled.div`
             color: var(--color-border-hover);
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        .functions-wrapper{
+            width: 90%;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        .functions-wrapper{
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0 2rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        .functions-wrapper{
+            grid-template-columns: 1fr;
+        }
+    }
 `
 
 const ListWrapper = styled.div`
@@ -124,9 +160,24 @@ const ListWrapper = styled.div`
     padding: 3rem 0rem 1rem 0rem;
     margin-bottom: 3rem;
 
-    >div{
-        width: 55%;
-        margin: 0 auto;
+    .list-contents{
+        width: 88rem;
+        margin: 4rem auto 5.5rem auto;
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+
+        img{
+            width: 25%;
+            max-width: 20rem;
+            min-width: 10rem;
+            position: relative;
+            top: -1.5rem;
+        }
+
+        h1{
+            margin-bottom: 4rem;
+        }
 
         ul li {
             list-style: none;
@@ -134,16 +185,28 @@ const ListWrapper = styled.div`
             margin-bottom: 1rem;
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        .list-contents{
+            width: 100%;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        .list-contents{
+            display: block;
+            text-align: center;
+            
+        }
+    }
 `;
 
 const GridWrapper = styled.div`
-    // display: grid;
-    // grid-template-columns: repeat(2, 1fr);
     margin: 1rem;
 `;
 
 const CommunityWrapper = styled.div`
-    width: 55%;
+    width: 88rem;
     margin: 0 auto;
     padding: 4rem 0;
     background-color: var(--color-light-gray);
@@ -157,6 +220,16 @@ const CommunityWrapper = styled.div`
     p { line-height: 2rem; }
     p:last-child { margin-bottom: 1rem; }
     button:last-child { margin-left: 1rem; }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        width: 90%;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 90%;
+        padding-left: 2rem;
+        padding-right: 2rem; 
+    }
 `;
 
 const Footer = styled.div`

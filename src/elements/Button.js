@@ -13,6 +13,8 @@ function Button(props){
 }
 
 const StyledLink = styled(Link)`
+    display: block;
+    padding: 1rem 1.2rem;
     color: var(--color-white);
     text-decoration: none;
 
@@ -26,9 +28,13 @@ const StyledButton = styled.button`
     background: var(--color-primary);
     border: 1px solid var(--color-primary);
     border-radius: 0.4rem;
-    padding: 1rem 1.2rem;
     font-size: 1.4rem;
     transition: all 0.2s;
+
+    span{
+        display: block;
+        padding: 1rem 1.2rem;
+    }
 
     &:hover{
         background: var(--color-hover);

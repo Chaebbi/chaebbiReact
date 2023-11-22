@@ -187,12 +187,14 @@ function RecordImage(){
                     <ImageWrapper>
                         <p className="p-label">이미지</p>
                         {image ?
-                            <div>
+                            <div className="d-flex-wrapper">
                                 <FoodImage src={image} alt="food"/>
                                 <input type="file" name="image" accept="image/*" ref={fileRef} onChange={handleImage} style={{display:"none"}}/>
-                                <Button onClick={clickFileInput}>이미지 수정</Button>
-                                <Button onClick={predictImage}>이미지 등록</Button>
-                                <p className="p-guide">불러온 이미지를 등록해 음식 정보를 조회합니다.</p>
+                                <div>
+                                    <Button onClick={clickFileInput} contrast>이미지 수정</Button>
+                                    <Button onClick={predictImage}>이미지 등록</Button>
+                                    <p className="p-guide">불러온 이미지를 등록해 음식 정보를 조회합니다.</p>
+                                </div>
                             </div>
                         :
                             <div>
@@ -240,6 +242,10 @@ const FormContainer = styled.div`
         flex-direction: column;
         gap: 1.5rem;
     }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        margin: 0 1rem;
+    }
 `;
 
 const ImageWrapper = styled.div`
@@ -253,17 +259,47 @@ const ImageWrapper = styled.div`
         color: var(--color-border-hover);
         margin-bottom: 0.2rem;
     }
+
+    .d-flex-wrapper{
+        display: flex;
+        gap: 1.5rem;
+
+        >div{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        .d-flex-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+    }
 `;
 
 const FoodImage = styled.img`
     width: 20rem;
     height: 20rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.2rem;
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        width: 100%;
+    }
 `;
 
 const GridWrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1.5rem;
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        grid-template-columns: 1fr;
+        row-gap: 1.5rem;
+    }
 `;
 
 const FlexWrapper = styled.div`

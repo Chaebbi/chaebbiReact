@@ -1,67 +1,56 @@
 import styled from "styled-components";
 import { useState,useEffect } from "react";
-import { Link } from "react-router-dom";
-import Grid from "../../elements/Grid";
 import Button from "../../elements/Button";
-import { AiOutlineLink } from "react-icons/ai";
+import MenuCard from "../../elements/MenuCard";
 import axios from "axios";
-import {API,FlaskAPI} from "../../utils/API.js";
+import { useSelector, useDispatch } from 'react-redux';
+import { __getIngredientList } from "../../store/slices/ingredientsSlice";
 import "../../styles/ScrollBar.css";
 
 //냉장고 재료 추천 페이지
 function RecommendFridge(){
+    const dispatch = useDispatch();
+
     //모든 재료 가져와서 복제(GET)===============================================================
-    const [ingredientlist, setIngredientlist] = useState([]);
-    const ingredientlist2 = ingredientlist;
     const getIngredientList =()=>{
-        axios.get(`${API}/ingredient`,
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/ingredient`,
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}})
         .then((response) =>{
             console.log(response.data);
-            setIngredientlist(response.data.result.data);
+            dispatch(__getIngredientList(response.data.data));
     })};
 
     //검색창 핸들링===========================================================================
+    const ingredientlist = useSelector((state) => state.ingredientlist.data);
     const [searchword, setSearchword] = useState('');
-    const [hasText,setHasText] = useState(false);
-    const [autocompletes, setAutocompletes] = useState(ingredientlist2);
+    const [autocompletes, setAutocompletes] = useState([]);
     
     const handleKeyword =(event)=>{
         setSearchword(event.target.value);
-        setHasText(!hasText);
     }
 
     //자동완성 리스트 채우기==============================================================
     const updateData =() => {
-       let b = ingredientlist2.filter((i)=> i.name.includes(searchword)===true).slice(0,20);
-       setAutocompletes(b);
+       const autocompletes = ingredientlist.filter((i)=> i.name.includes(searchword) === true).slice(0,20);
+       setAutocompletes(autocompletes);
     }
 
     //재료추가하기========================================================================
     const [basket, setBasket] = useState([]);
     const selectIngredient =(ingre)=>{
-        console.log(ingre);
-        setSearchword(ingre);
-        setBasket((basket)=>{return [...basket, ingre]});
+        setBasket((basket)=>{ return [...basket, ingre] });
         setSearchword('');
-        console.log("basket :",basket);
     }
 
     //메뉴 추천받기(POST)==================================================================
-    const [recomenu, setRecoMenu] = useState([]);
     const [recomenuinfo, setRecoMenuInfo] = useState([]);
-    const recommendMenu =(e) => {
-        e.preventDefault();
-        axios.post(`${FlaskAPI}/foodrecommend`,{
+    const recommendMenu =() => {
+        axios.post(`${process.env.REACT_APP_FLASK_SERVER_URL}/api/foodrecommend`,{
             ingredients: basket
         },
         { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            console.log(`나의 냉장고:: ${basket}`);
-            setRecoMenu(response.data.foods);
             setRecoMenuInfo(response.data.foodDto);
-            console.log(response.data.foods[0]);
-            console.log(response.data.foodDto[0]);
         }).catch(function(error) {
             console.log(error);
         });
@@ -69,291 +58,174 @@ function RecommendFridge(){
 
     //useEffect==========================================================================
     useEffect(()=>{
-        getIngredientList();
+        if(ingredientlist.length === 0){
+            getIngredientList();
+        }
+
         const debounce = setTimeout(() => {
-            if(searchword) updateData();
+            if(searchword !== '') updateData();
         },200)
         return () => {
             clearTimeout(debounce)
         };
-    },[searchword,basket]);
+    },[searchword]);
 
     return(
-        <div className="boxForZ-index">  
-        <Explain>재료를 먼저 입력 후 '추천받기' 버튼을 눌러주세요.</Explain>
-
-        <SearchBox>
-                <Search type="text" placeholder="검색어를 입력하세요." value={searchword} onChange={handleKeyword}/>
-                {searchword.length > 0 && searchword && (
-                    <AutoSearchContainer className="scrollbar">
-                        <AutoSearchWrap>
-                            {autocompletes.map((a,index)=>(
-                                <AutoSearchData key={index} onClick={()=>{selectIngredient(`${a.name}`)}}>{a.name}</AutoSearchData>
-                            ))}
-                        </AutoSearchWrap>
-                    </AutoSearchContainer>
+        <Container>
+            {/* 검색창 */}
+            <h1>재료를 입력 후 '추천받기' 버튼을 눌러주세요.</h1>
+            <p>냉장고 속 재료를 토대로 만들 수 있는 메뉴를 추천해드릴게요!</p>
+            <SearchWrapper>
+                <SearchBar type="text" placeholder="검색어를 입력하세요." value={searchword} onChange={handleKeyword}/>
+                {searchword.length > 0 && autocompletes.length > 0 && (
+                    <AutocompleteList className="scrollbar">
+                        {autocompletes.map((a,idx)=>(
+                            <li key={idx} onClick={()=>{selectIngredient(`${a.name}`)}}>{a.name}</li>
+                        ))}
+                    </AutocompleteList>
                 )}
-            </SearchBox>
-
-            <Container>
-                <FridgeContainer>
-                    <h3>나의 냉장고</h3>
-                    <IngredientsList>
-                        <ul>
-                            <Grid col="3">
-                                {Array.from(basket).map((b,index) => (
-                                    <li key={index}>{b}</li>
-                                ))} 
-                            </Grid>
-                        </ul>
-                    </IngredientsList>
-                    <div style={{textAlign:"center"}}>
-                        <Button 
-                            just
-                            width="220px"
-                            height="40px" 
-                            margin="0px"
-                            borderRadius="10px"
-                            position="relative"
-                            top="8px"
-                            text="추천받기"
-                            onClick={recommendMenu}
-                    />
+            </SearchWrapper>
+            
+            {/* 나의 냉장고 */}
+            <MyFridgeWrapper>
+                {basket.length !== 0 ? 
+                    <>
+                    <div>
+                        {basket.map((b,index) => (
+                            <Ingredient key={index}>{b}</Ingredient>
+                        ))}
                     </div>
-                </FridgeContainer>
-                
-            </Container>
+                    <Button onClick={recommendMenu}>추천받기</Button>
+                    </>
+                :
+                    <p>냉장고가 비어있습니다.</p>
+                }
+            </MyFridgeWrapper>
 
             {/* 추천메뉴 컨테이너 */}
-            {  recomenu.length == 0 ?
-                ''
-            :
-                <RecommendContainer>
-                    <Grid col="3" row="1" colgap="15px">
-                    {recomenuinfo.map((reco,index) => (
-                        <MenuContainer key={index}>
-                            { recomenu[index] === undefined||null||'' ? 
-                                '' 
-                            : 
-                                (<>
-                                    <h3>{`${recomenu[index]}`}</h3>
-                                    <a href={recomenuinfo[index].recipeUrl} target="_blank">
-                                        <AiOutlineLink size="23"/>
-                                    </a>
-                                </>)
-                            }
-                            <Listlabel>있는 재료</Listlabel>
-                            <HaveList className="scrollbar">
-                                <ul>
-                                    { reco.has === undefined || null ? 
-                                        ''
-                                    :
-                                        <Grid col="2" row="1" colgap="20px" margin="0" width="100%">
-                                            {(reco.has).map((rl,index) => (
-                                                <li key={index}>{rl}</li>
-                                            ))}
-                                        </Grid>
-                                    }
-                                </ul>
-                            </HaveList>
-
-                            <Listlabel>필요한 재료</Listlabel>
-                            <NeedList className="scrollbar">
-                                <ul>
-                                    { reco.no == undefined ? 
-                                        ''
-                                    :
-                                        <Grid col="2" row="1" colgap="20px" margin="0" width="100%">
-                                            {(reco.no).map((rl,index) => (
-                                                <li key={index}>{rl}</li>
-                                            ))}
-                                        </Grid>
-                                    }
-                                </ul>
-                            </NeedList>
-                        </MenuContainer>
-                    ))}    
-                    </Grid>
-
-                </RecommendContainer>
+            {  recomenuinfo.length !== 0 &&
+                <RecommendWrapper>
+                    { recomenuinfo.map((reco,idx) => (
+                        <MenuCard key={idx} foodname={reco.food} have={reco.has} donthave={reco.no} href={reco.recipeUrl}/>
+                    ))}
+                </RecommendWrapper>
             }
-        </div>
+        </Container>
         )
     }
 
+const Container = styled.div`   
+    width: 88rem;
 
-const AutoSearchContainer = styled.div`
-    z-index: 10;
-    width: 40%;
-    min-width: 300px;
-    max-height: 400px;
-    background-color: #fff;
+    h1{ 
+        font-size: 2.2rem;
+    }
+    p{ 
+        font-size: 1.4rem; 
+        color: var(--color-border-hover);
+        margin: 0.5rem 0 1rem 0;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.desktop} {
+        padding: 1rem;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+    }
+`;
+
+const SearchWrapper = styled.form`
     position: relative;
-    left: 30%;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    padding: 5px;
-  `;
-  
-const AutoSearchWrap = styled.ul`
-      list-style-type: none;
-      padding: 0;
-  `;
-  
-const AutoSearchData = styled.li`
-    padding: 5px 0;
+`;
+
+const SearchBar = styled.input`
     width: 100%;
-    font-size: 14px;
-    
-    &:hover {
-        background-color: rgba(198,221,207,0.3);
-        font-weight: bold;
-        cursor: pointer; }
-    `;
-
-const Container = styled.div`
-    width: 45%;
-    min-width: 500px;
-    height: 290px;
-    position: absolute;
-    top: 175px;
-    left: 380px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    box-sizing: border-box;
-    color: #495057;
-`;
-
-const FridgeContainer = styled.div`
-    height: 130px;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    box-sizing: border-box;
-    height: 200px;
-    padding:10px;
-
-    > h3 { 
-        margin: 5px;
-     }
-`;
-
-const IngredientsList = styled.div`
-    width:100%;
-    height: 125px;
-    margin: 20px 0;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    background-color: rgba(198,221,207,0.3);
-    box-sizing: border-box;
-    padding: 10px;
-
-    ul{ padding-left: 10px; }
-    li{
-        list-style-type: none;
-    }
-`;
-
-const RecommendContainer = styled.div`
-    min-width: 600px;
-    max-width: 850px;
-    position: absolute;
-    top: 478px;
-    left: 278px;
-    background-color: #f8f9fa;
-    box-sizing: border-box;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    color: #495057;
-`;
-
-const MenuContainer = styled.div`
-    height: 440px;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    background-color: #fff;
-    box-sizing: border-box;
-    padding: 10px;
-    
-    > h3 {
-        margin: 8px;
-        display: inline-block;
-    }
-    > a{
-        margin: 8px;
-        float: right;
-        
-        &:focus, &:hover, &:visited, &:link, &:active {
-            text-decoration: none;
-            color: #398234;
-        }
-    }
-    
-    ul{ padding-left: 10px; }
-    li{ list-style-type: none; }
-`;
-
-const Listlabel = styled.p`
-    margin: 20px 0 10px 10px;
-`;
-
-const HaveList = styled.div`
-    height: 32%;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 15px;
-    background-color: rgba(198,221,207,0.3);
-`;
-
-const NeedList = styled.div`
-    height: 32%;
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 15px;
-    background-color: rgba(198,221,207,0.3);
-`;
-
-const Explain = styled.h2`
-    text-align:center;
-    position: relative;
-    top: 55px;
-`;
-
-const SearchBox = styled.form`
-    min-width: 600px;
-    text-align: center;
-    position: relative;
-    top: 70px;
-`;
-
-const Search = styled.input`
-    display: inline-block;
-    width: 35%;
-    min-width: 400px;
-    height: 60px;
-
-    padding: 3px 35px 0px 35px;
-
-    font-size: 18px;
+    padding: 2rem;
     background: transparent;
-
-    border: 1px solid #e6e6e6;
-    border-radius: 20px;
     outline: none;
-
-    box-sizing: border-box;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
     transition: all 0.3s;
 
     &:hover{
-        border: 1px solid #868e96;
+        border: 1px solid var(--color-border-hover);
     }
     &:focus{
-        border: 1px solid #398234;
+        border: 1px solid var(--color-primary);
+    }
+`;
+  
+const AutocompleteList = styled.ul`
+    width: 100%;
+    position: absolute;
+    top: 5.6rem;
+    background-color: var(--color-white);
+    border-radius: 0.5rem;
+    list-style-type: none;
+    padding: 1rem;
+    margin: 0;
+    z-index: 2;
+
+    li{
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s;
+
+    &:hover {
+        background-color: var(--color-input-focus);
+        font-weight: bold;
+        cursor: pointer; 
+    }
+}
+`;
+
+const MyFridgeWrapper = styled.div`
+    border: 1px solid var(--color-kakao);
+    border-radius: 0.5rem;
+    background-color: #fffad6;
+    padding: 2rem;
+    margin: 1.6rem 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    div{
+        width: 81%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.2rem;
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+        display: grid;
+        row-gap: 2rem;
+
+        div{
+            width: 100%;
+        }
+    }
+`;
+
+const Ingredient = styled.span`
+    background-color: var(--color-input-focus);
+    border: 1px solid var(--color-primary);
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    color: var(--color-primary);
+`;
+
+const RecommendWrapper = styled.div`
+    width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
     }
 `;
 
