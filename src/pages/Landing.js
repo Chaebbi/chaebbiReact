@@ -13,7 +13,7 @@ function Landing(){
             <Navigation enableEvent={true}/>
             <SplashImage>
                 <div className="welcome-text-wrapper">
-                    <h2>채식인들을 위한 식단 비서</h2>
+                    <h1>채식인들을 위한 식단 비서</h1>
                     <p>대중적이지 않은 식단으로 인해 선택에 어려움을 겪는 채식인들의 라이프 스타일을 반영해 식생활 전반을 관리해드립니다.</p>
                     <Button href="/sign_in">지금 채삐 사용해 보기</Button>
                 </div>
@@ -38,9 +38,10 @@ function Landing(){
                 </div>
             </FunctionsWrapper>
             <ListWrapper>
-                <div>
-                    <h1>이럴 때 채삐를 사용해보세요!</h1>
+                <div className="list-contents">
+                    <img src="/images/salad-svg.svg" alt="salad-image"/>
                     <GridWrapper>
+                        <h1>이럴 때 채삐를 사용해보세요!</h1>
                         <ul>
                             <li>1. 냉장고에 있는 재료만으로 한 끼를 만들어 먹고 싶을 때</li>
                             <li>2. 약속이나 여행 등의 일정으로 외식을 해야 할 때</li>
@@ -73,18 +74,30 @@ const SplashImage = styled.div`
     text-align: center;
     background-blend-mode: multiply;
     background: url('/images/breakfast.jpeg') no-repeat center/cover, rgba(0, 0, 0, 0.3);
-    // aspect-ratio: auto 600 / 130;
         
     .welcome-text-wrapper{
         color: var(--color-white);
 
-        h2{
+        h1{
             font-size: 3.2rem;
             margin: 1rem 0;
         }
         p{
             font-size: 1.5rem;
             margin-bottom: 2rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        .welcome-text-wrapper{
+            padding: 0 2.5rem;
+        }
+    }
+
+    @media ${({ theme }) => theme.breakpoints.mobile} {
+        .welcome-text-wrapper{
+            h1{ font-size: 2.8rem; }
+            p{ font-size: 1.4rem; }
         }
     }
 `;
@@ -147,9 +160,20 @@ const ListWrapper = styled.div`
     padding: 3rem 0rem 1rem 0rem;
     margin-bottom: 3rem;
 
-    >div{
-        width: 100%;
+    .list-contents{
+        width: 88rem;
         margin: 4rem auto 5.5rem auto;
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+
+        img{
+            width: 25%;
+            max-width: 20rem;
+            min-width: 10rem;
+            position: relative;
+            top: -1.5rem;
+        }
 
         h1{
             margin-bottom: 4rem;
@@ -163,15 +187,17 @@ const ListWrapper = styled.div`
     }
 
     @media ${({ theme }) => theme.breakpoints.desktop} {
-        padding: 3rem 2rem 1rem 2rem;
+        .list-contents{
+            width: 100%;
+        }
     }
 
     @media ${({ theme }) => theme.breakpoints.tablet} {
-        text-align: center;
-    }
-
-    @media ${({ theme }) => theme.breakpoints.mobile} {
-        
+        .list-contents{
+            display: block;
+            text-align: center;
+            
+        }
     }
 `;
 
