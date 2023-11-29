@@ -1,34 +1,18 @@
 import styled from "styled-components";
 import { useState } from "react";
-import Button from "../elements/Button";
 import MealBox from "../elements/MealBox";
+import Button from "../elements/Button";
 
 //아침,점심,저녁 조회 + 등록페이지로 이동가능한 버튼을 포함한 컴포넌트 - 메인페이지에서 사용
-function MealRecord({breakfast, lunch, dinner,width}){
-    
-    //탭메뉴==========================================================
-    const [activeIndex, setActiveIndex]=useState(0);
-    const tabClickHandler=(index)=>{ 
-        if(index === 0){
-            setActiveIndex(index);
-            console.log("breakfast: ",breakfast);
-        }else if(index === 1){
-            setActiveIndex(index);
-            console.log("lunch: ",lunch);
-        }else{
-            setActiveIndex(index);
-            console.log("dinner: ",dinner);
-        }
-    };
-    const tabContArr=[
+function MealRecord({ breakfast, lunch, dinner }){
+    const [activeIndex, setActiveIndex] = useState(0);
+    const tabContArr = [
         {
-            tabTitle:(
-                <Li className={activeIndex===0 ? "is-active" : ""} onClick={()=>tabClickHandler(0)}>아침</Li>
-            ),
-            tabCont:(
-                <div>
-                    {breakfast == undefined ? 
-                        <H5>식단을 등록해주세요</H5>
+            tabTitle: '아침',
+            tabContent:(
+                <div className="content-wrapper">
+                    {breakfast.length === 0 ? 
+                        <p>등록된 식단이 없습니다.</p>
                     : 
                     <>
                         {breakfast.map((b,index) => (
@@ -46,13 +30,11 @@ function MealRecord({breakfast, lunch, dinner,width}){
             )
         },
         {
-            tabTitle:(
-                <Li className={activeIndex===1 ? "is-active" : ""} onClick={()=>tabClickHandler(1)}>점심</Li>
-            ),
-            tabCont:(
-                <div>
-                    {lunch == undefined ? 
-                        <H5>식단을 등록해주세요</H5>
+            tabTitle: '점심',
+            tabContent:(
+                <div className="content-wrapper">
+                    {lunch.length === 0 ? 
+                        <p>등록된 식단이 없습니다.</p>
                     : 
                     <>
                         {lunch.map((l,index) => (
@@ -70,13 +52,11 @@ function MealRecord({breakfast, lunch, dinner,width}){
             )
         },
         {
-            tabTitle:(
-                <Li className={activeIndex===2 ? "is-active" : ""} onClick={()=>tabClickHandler(2)}>저녁</Li>
-            ),
-            tabCont:(
-                <div>
-                    {dinner == undefined ? 
-                        <H5>식단을 등록해주세요</H5>
+            tabTitle: '저녁',
+            tabContent:(
+                <div className="content-wrapper">
+                    {dinner.length === 0 ? 
+                        <p>등록된 식단이 없습니다.</p>
                     : 
                     <>
                         {dinner.map((d,index) => (
@@ -95,102 +75,78 @@ function MealRecord({breakfast, lunch, dinner,width}){
         }];
 
     return(
-            <ParentContainer width={width}>
-                <ContentContainer>
+        <>
+            <ParentContainer>
+                <div className="menu-wrapper">
                     <TabMenu>
-                        <Ul>
-                            {tabContArr.map((section,index)=><span key={index}>{section.tabTitle}</span>)}
-                        </Ul>
+                        {tabContArr.map((el,index) => (
+                            <Tab key={index} className={index === activeIndex ? "is-active" : "submenu" }
+                                onClick={() => setActiveIndex(index)}>{el.tabTitle}
+                            </Tab>
+                        ))}
                     </TabMenu>
-                        {tabContArr[activeIndex].tabCont}
-                </ContentContainer>
-            <ButtonContainer>
-                <Button
-                    width="30%" 
-                    height="30px"
-                    borderRadius="10px"
-                    color="#fff"
-                    text="이미지" 
-                    margin="0 5px 0 0"
-                    href="/record-foodimage"
-                />
-                <Button
-                    width="30%" 
-                    height="30px"
-                    borderRadius="10px"
-                    color="#fff"
-                    text="검색"
-                    margin="0"
-                    href="/record-foodsearch"
-                />
-            </ButtonContainer>
+                    <div className="menu-wrapper button-wrapper">
+                        <Button href="/record-foodimage">이미지로 등록</Button>
+                        <Button href="/record-foodsearch">검색어로 등록</Button>
+                    </div>
+                </div>
+                <TabContantWrapper>
+                    {tabContArr[activeIndex].tabContent}
+                </TabContantWrapper>
             </ParentContainer>
+        </>
         )
     }
 
-MealRecord.defaultProps={
-    breakfast: undefined,
-    lunch: undefined,
-    dinner: undefined,
-}
-
 const ParentContainer = styled.div`
-    width:  ${(props)=>props.width};
-    min-width: 280px;
-    border: 1px solid #e6e6e6;
-    border-radius: 15px;
-    box-sizing: border-box;
-    padding: 10px;
-`;
-
-const ContentContainer = styled.div`
-    background-color: rgba(198,221,207,0.3);
-    width: 100%;
-    height: 88%;
-    /* overflow-y: auto; */
-`;
-
-
-const TabMenu = styled.div`
-    width: 100%;
-    height: 40px;
-    position: relative;
-    top: -5px;
-    border-bottom: 1px solid #e6e6e6;
-    background-color: #fff;
-
-`;
-
-const Ul = styled.ul`
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding-left: 0;
-
-    .is-active{
-        font-weight: 700;
-        color: #398234;
-        border-bottom: 2px solid #398234;
+    .menu-wrapper{
+        display: flex;
+        justify-content: space-between;
+    }
+    .button-wrapper{
+        gap: 1rem;
+        position: relative;
+        top: -1rem;
     }
 `;
 
-const Li = styled.li`
+const TabMenu = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding-left: 0;
+`;
+
+const Tab = styled.li`
+    border: 1px solid var(--color-border);
+    border-bottom: 0;
+    border-radius: 0.5rem 0.5rem 0 0;
     list-style-type: none;
-    margin-right: 10px;
+    padding: 1.4rem 3rem;
     cursor: pointer;
-    padding: 10px 10px 8px 10px;
-    color: #495057;
+
+    &.is-active{
+        font-weight: 700;
+        color: var(--color-hover);
+    }
+
+    &.submenu{
+        background-color: var(--color-light-gray);
+        color: var(--color-borde-hover);
+    }
 `;
 
-const H5 = styled.h5`
-    text-align: center;
-`;
+const TabContantWrapper = styled.ul`
+    border: 1px solid var(--color-border);
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 2rem;
+    min-height: 30rem;
 
-const ButtonContainer = styled.div`
-    position: relative;
-    top: 13px;
-    text-align: center;
+    .content-wrapper{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 `;
 
 
