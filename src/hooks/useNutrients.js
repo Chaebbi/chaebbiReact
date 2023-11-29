@@ -4,11 +4,12 @@ export const useNutrients =(initialValue)=>{
   const [nutrients, setNutrients] = useState(initialValue);
   const [capacityError, setCapacityError] = useState('');
 
+  // 영양정보 변경
   const updateNutrients =(values)=>{
     setNutrients({...nutrients, ...values});
-    console.log(nutrients);
   }
 
+  // 영양정보 초기화
   const initNutrients =()=>{
     setNutrients({
       name: '',
@@ -21,6 +22,7 @@ export const useNutrients =(initialValue)=>{
     setCapacityError('');
   }
 
+  // 섭취량에 따른 영양성분 조정
   const changeAmount = (e) => {
     const foodInfoString = localStorage.getItem('food');
 
@@ -59,5 +61,6 @@ export const useNutrients =(initialValue)=>{
     }
   };
 
-  return { nutrients, changeAmount, updateNutrients, initNutrients, capacityError }
+
+  return { nutrients, changeAmount, updateNutrients, initNutrients, capacityError, setCapacityError }
 } 

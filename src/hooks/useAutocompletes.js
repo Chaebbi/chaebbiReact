@@ -13,7 +13,7 @@ export const useAutocompletes =(foodlist)=>{
 
   useEffect(() => {
     const debounce = setTimeout(() => {
-      if(searchword !== '') updateData();
+      if(searchword.length > 0) updateData();
     },200)
 
     return () => {
