@@ -12,46 +12,42 @@ function MealBox(props){
 
     return(
         <RecordContainer id={id}>
-            <p>{rtime}</p>
-            <span>{kcal} kcal</span>
             <StyledLink to={`/detail/${id}`}>
-                <p>{menu}</p>
+                <span className="time">{rtime}</span>
+                <span className="kcal">{kcal} kcal</span>
+                <p className="menu">{menu}</p>
             </StyledLink>
         </RecordContainer>
         )
     }
 
-MealBox.defaultProps={
-    onClick: () => {},
-}
-
 const RecordContainer = styled.div`
-    width: 100%;
-    background-color: rgba(198,221,207,0.3);
-    box-sizing: border-box;
-    padding: 10px;
+    border: 1px solid var(--color-primary);
+    border-radius: 0.5rem;
     cursor: pointer;
     transition: 0.2s all;
 
-    > p:first-child {
-        display: inline-block;
-        width: 60%;
-        margin : 0;
-        font-weight: 600;
-    }
-    > p:last-child {
-        margin : 0;
+    .time{
+        margin-right: 1rem;
+        font-weight: 700;
     }
 
     &:hover{
-        background-color: rgba(198,221,207,0.5);
-        color: #495057;
+        background-color: var(--color-input-focus);
     }
 `;
 
 const StyledLink = styled(Link)`
+    width: 100%;
+    display: block;
     text-decoration: none;
-    color: #495057;
+    color: var(--color-text);
+    padding: 1rem;
+
+    .menu{
+        font-size: 1.6rem;
+        margin-top: 0.8rem;
+    }
 `;
 
 export default MealBox;
