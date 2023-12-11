@@ -9,16 +9,16 @@ function Radio(props){
             <Legend>{legend}</Legend>
             <RadioWrapper>
                 {radioArray.map((i) => (
-                    <>
-                    <RadioInput
-                        id={i.id}
-                        type="radio"
-                        name={i.name}
-                        value={i.value}
-                        checked={i.value === checked}
-                        onChange={onChange}/>
-                    <StyledLabel key={i.id} htmlFor={i.id}>{i.label}</StyledLabel>
-                    </>
+                    <RadioInputWrapper key={i.id}>
+                        <RadioInput
+                            id={i.id}
+                            type="radio"
+                            name={i.name}
+                            value={i.value}
+                            checked={i.value === checked}
+                            onChange={onChange}/>
+                        <StyledLabel htmlFor={i.id}>{i.label}</StyledLabel>
+                    </RadioInputWrapper>
                 ))}
             </RadioWrapper>
         </div>
@@ -28,12 +28,17 @@ function Radio(props){
 const Legend = styled.legend`
     font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 0.2rem;
+    margin-left: 0.4rem;
+    color: var(--color-black);
 `;
 
 const RadioWrapper = styled.div`
     display: flex;
     gap: 0.4rem;
+`;
+
+const RadioInputWrapper = styled.div`
+    margin: 1.3rem 0 1.2rem 0;
 `;
 
 const StyledLabel = styled.label`
