@@ -2,8 +2,6 @@ import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 function Pchart ({nutrient}){
-    // console.log(nutrient);
-
     let carb = nutrient.carb;
     let protein = nutrient.protein;
     let fat = nutrient.fat;
