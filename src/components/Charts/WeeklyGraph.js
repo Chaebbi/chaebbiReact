@@ -1,5 +1,6 @@
 import {LineChart,Line, Legend, Tooltip, YAxis, XAxis, CartesianGrid,ResponsiveContainer } from 'recharts';
 import React from 'react';
+import styled from 'styled-components';
 
 function WeeklyGraph({week}){
     // console.log(week);
@@ -21,7 +22,7 @@ function WeeklyGraph({week}){
     }
 
     return (
-        <>
+        <GraphContainer>
             {weekData ?
             (
                 <ResponsiveContainer width="100%" height="90%">
@@ -39,10 +40,17 @@ function WeeklyGraph({week}){
             :
             <p>식단 분석에 필요한 데이터가 부족합니다.</p>
             }
-        </>
+        </GraphContainer>
         
     )
 
 }
+
+const GraphContainer = styled.div`
+    width: 100%;
+    height: 30rem;
+    position: relative;
+    left: -1.6rem;
+`;
 
 export default WeeklyGraph;

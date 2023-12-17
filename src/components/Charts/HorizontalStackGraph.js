@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 function HorizontalStackGraph(props){
-    const {carb, protein, fat, width} = props;
+    const {carb, protein, fat} = props;
 
     return(
-        <HorizontalContainer width={width} carb={carb} protein={protein} fat={fat}>
+        <HorizontalContainer carb={carb} protein={protein} fat={fat}>
             <span>탄수화물 {carb}</span>
             <span>단백질 {protein}</span>
             <span>지방 {fat}</span>
@@ -13,33 +13,25 @@ function HorizontalStackGraph(props){
 }
 
 const HorizontalContainer = styled.div`
-    width: ${(props)=>props.width};
-    height: 48px;
-    position: relative;
-    box-sizing: border-box;
-    /* border: 1px solid #cac4ce; */
-    border: 1px solid #fff;
-    background-color: #fff;
-    margin: 0 auto;
+    width: 100%;
+    height: 4.8rem;
+    border: 1px solid var(--color-white);
+    background-color: var(--color-white);
     white-space: nowrap;
 
     span{
-        line-height: 48px;
+        line-height: 4.8rem;
         list-style-type: none;
         display: inline-block;
-        border: 1px solid #fff;
-        box-sizing: border-box;
+        border: 1px solid var(--color-white);
         text-align: center;
-        font-size: 14px;
+        font-size: 1.4rem;
         background-color: beige;
-        color: #fff;
+        color: var(--color-white);
     }
     span:first-child{
         width: ${(props)=>props.carb};
         background-color: #0088fe;
-        /* color:"#0088fe" */
-        /* color:"#00c49f" */
-        /* color:"#ffbb28" */
     }
     span:nth-child(2){
         width: ${(props)=>props.protein};
