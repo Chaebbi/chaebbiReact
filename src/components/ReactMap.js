@@ -28,9 +28,7 @@ const ReactMap = ({positions}) => {
                 la={p.la}
                 lo={p.lo}
                 name={p.name}
-                telNo={p.telNo}
                 url={p.url}
-                roadAddr={p.roadAddr}
               />
         )})}
       </Map>);
