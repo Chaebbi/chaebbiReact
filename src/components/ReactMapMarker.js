@@ -43,20 +43,20 @@ const CustomOverlayContent = styled.div`
     margin: 0.3rem 0;
   }
 
-  &:after{
-    border-top: 10px solid var(--color-primary);
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
+  &::after{
     content: "";
-    height: 0;
-    left: 44%;
+    border-right: 1px solid var(--color-primary);
+    border-bottom: 1px solid var(--color-primary);
+    background-color: var(--color-white);
     position: absolute;
-    top: 100%;
-    width: 0;
+    left: 44%;
+    top: 3.5rem;
+    width: 1rem;
+    height: 1rem;
+    transform: rotate(45deg);
   }
 
   &:hover{
-    background-color: var(--color-input-focus);
     color: var(--color-primary);
   }
 `;
