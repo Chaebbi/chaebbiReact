@@ -32,16 +32,15 @@ function OnBoard(){
     //Input값 인식 이벤트 핸들러=======================================================
     const changeContent = (e) => {
         const { name, value } = e.target;
+
+        setUserinfo({...userinfo,[name]: value});
+
         if(name === 'age' || name === 'weight' || name === 'height'){
             if(value <= 0 || isNaN(value)){
-                setUserinfo({...userinfo,[name]: value});
                 setError({...error, [name]: '유효하지 않은 값입니다.'})
             }else{
-                setUserinfo({...userinfo,[name]: value});
                 setError({...error, [name]: ''})
             }
-        }else{
-            setUserinfo({...userinfo,[name]: value});
         }
 	};
 
@@ -119,7 +118,11 @@ function OnBoard(){
         if(isValid && !isError && isOkNickname){
             signUp();
         }else{
-            alert('올바른 값을 입력해주세요.');
+            if(!isOkNickname){
+                alert('닉네임 중복확인을 진행해주세요.');
+            }else{
+                alert('유효한 값을 입력했는지 다시 한번 확인해주세요.');
+            }
         }
     }
 
