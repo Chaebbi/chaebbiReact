@@ -9,23 +9,27 @@ export const activity = [
 ]
 
 export const when = [
-    {id: 0, name:"meal", value:0, label:"아침"},
-    {id: 1, name:"meal", value:1, label:"점심"},
-    {id: 2, name:"meal", value:2, label:"저녁"},
+    {id: 6, name:"meal", value:0, label:"아침"},
+    {id: 7, name:"meal", value:1, label:"점심"},
+    {id: 8, name:"meal", value:2, label:"저녁"},
 ]
 
-export const dateConversion =(str)=> {
-    let form = str.split('-');
-    return `${form[0]}.${form[1]}.${form[2]}.`
+export const dateConversion =(date)=> {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    console.log(`${year}-${month}-${day}`);
+
+    return `${year}-${month}-${day}`;
 }
 
 export const timeConversion =(str)=> {
-    let ampm = str.slice(8);  //문자열에서 AM/PM 여부를 알 수 있도록 slice
-    let hh = str.slice(0,2);  //시, 분, 초 부분을 각각 slice
+    let ampm = str.slice(8);
+    let hh = str.slice(0,2);
     let mm = str.slice(3,5); 
     
     if(ampm === 'PM' && hh !== '12') {
-        hh = Number(hh) + 12;  //slice 하면 문자열이 되므로 숫자로 변환해서 계산
+        hh = Number(hh) + 12;
     }
     if(ampm === 'AM' && hh === '12') {
         hh = '00';

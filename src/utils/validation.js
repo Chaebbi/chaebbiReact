@@ -2,10 +2,15 @@ export const checkEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   return emailRegex.test(email)
 }
+
+export const checkNickname = (name) => {
+  const nicknameRegex = /^.{1,8}$/
+  return nicknameRegex.test(name)
+}
   
 export const checkPassword = (password) => {
   // 8자 이상, 문자와 숫자 포함
-  const pwdRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
+  const pwdRegex = /^.{5,20}$/
   return pwdRegex.test(password)
 }
 
