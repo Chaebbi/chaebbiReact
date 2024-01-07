@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import{ useNavigate,Link } from "react-router-dom";
 import styled from "styled-components";
+import { checkEmail } from "../../utils/validation";
 
 
 //유저 로그인
@@ -20,41 +21,45 @@ function UserLogin(){
     const navigate = useNavigate();
     const [auth, setAuth] = useState({email:'', pwd: ''});
     const handleInputs = (e) =>{
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setAuth({...auth, [name]: value});
-        if(e.key === 'Enter'){
-            handleValid();
-        }
     }
 
     //유효성 검사========================================================
-    const handleValid =(e)=>{
-
+    const [error, setError] = useState('');
+    const handleValid =()=>{
+        if(auth.email === '' || auth.pwd === ''){
+            setError('이메일과 비밀번호를 올바르게 입력해주세요.');
+        }else{
+            if(!checkEmail(auth.email)){
+                setError('유효하지 않은 이메일 형식입니다.');
+            }else{
+                doLogin();
+            }
+        }
     }
 
     const doLogin =()=>{
-        console.log(auth);
-        
         axios.post(`${process.env.REACT_APP_SERVER_URL}/api/user-login`, auth)
         .then(function(response) {
-                console.log(response);
-                let isSuccess = response.data.isSuccess;
-                let error = response.data.code;
-                let msg = response.data.message;
+                const isSuccess = response.data.isSuccess;
+                const error = response.data.code;
+                const msg = response.data.message;
+
                 if(isSuccess){
                     localStorage.setItem('token', response.data.result.token);
-                    localStorage.setItem('userIdx', response.data.result.userId);
+                    localStorage.setItem('userId', response.data.result.userId);
                     navigate("/");
                     window.location.reload(); 
                 }else{
                     if(error === 3014){
-                        alert(msg);
+                        setError(msg);
                     }else if(error === 3015){
-                        alert(msg);
+                        setError(msg);
                     }else if(error === 2018){
-                        alert(msg);
+                        setError(msg);
                     }else if(error === 2015){
-                        alert(msg);
+                        setError(msg);
                     }
                 }
             }).catch(function(error) {
@@ -77,6 +82,8 @@ function UserLogin(){
                 <Input label="이메일" name="email" type="email" onChange={handleInputs}/>
                 <PwdInput label="비밀번호" name="pwd" onChange={handleInputs}/>
 
+                {error && <p className="error-text">{error}</p>}
+
                 <Button onClick={handleValid}>로그인</Button>
                 <p className="login-text signup-text">아직 계정이 없으신가요? <Link to="/sign_up">회원가입</Link></p>
                 {/* <Button href="/community">채숲</Button> */}
@@ -92,6 +99,11 @@ const AuthContainer = styled.div`
 
     .login-text{
         text-align: center;
+    }
+
+    .error-text{
+        text-align: center;
+        color: var(--color-danger);
     }
 
     .signup-text{
