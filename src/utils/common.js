@@ -15,9 +15,10 @@ export const when = [
 ]
 
 export const dateConversion =(date)=> {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = new Date(date);
+    const year = formattedDate.getFullYear();
+    const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(formattedDate.getDate()).padStart(2, '0');
     console.log(`${year}-${month}-${day}`);
 
     return `${year}-${month}-${day}`;
