@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import StarRateRoundedIcon from '@mui/icons-material/StarRateRounded';
 
 const RestaurantCard =(props)=>{
-  const { 
+  const {
     id,
     name,
     category,
@@ -10,28 +12,33 @@ const RestaurantCard =(props)=>{
     address,
     href,
     isBookmark,
-    onClick
+    onClickBookmark,
+    onClickBookmarkAlready
   } = props;
 
   const openRestaurantNewTab = () => {
     window.open(href, '_blank');
   };
 
-  const spCategory = category.split(',').map(i => i.trim());
+  const spCategory = category && category.split(',').map(i => i.trim());
 
 
   return(
-    <RestaurantCardWrapper onClick={openRestaurantNewTab}>
-      <h1>{name}</h1>
-      <div className="category">
-        {spCategory.map((c,idx)=>(
-          <CategoryItem key={idx}>{c}</CategoryItem>
-        ))}
-      </div>
-      <p className="address">{newaddress}</p>
-      <p className="address">{address}</p>
-      <p>{call}</p>
-      <p onClick={onClick}>{isBookmark !== 0 ? 'bookmarked': 'not Bookmarked'}</p>
+    <RestaurantCardWrapper>
+      <h1 onClick={openRestaurantNewTab}>{name}</h1>
+      <span>
+        {isBookmark !== 0 ? <StarRateRoundedIcon className="fill" onClick={onClickBookmarkAlready}/> : <StarBorderRoundedIcon className="empty" onClick={onClickBookmark}/>}
+      </span>
+      { category && 
+        <div className="category">
+          {spCategory.map((c,idx)=>(
+            <CategoryItem key={idx}>{c}</CategoryItem>
+          ))}
+        </div>
+      }
+      <p className="address">{newaddress !== null ? newaddress : '주소 알 수 없음'}</p>
+      <p className="address">{address !== null ? address : '주소 알 수 없음'}</p>
+      <p>{call !== null ? call : '연락처 알 수 없음'}</p>
     </RestaurantCardWrapper>
   )
 }
@@ -51,10 +58,33 @@ const RestaurantCardWrapper = styled.div`
   background-color: var(--color-white);
   border: 1px solid var(--color-hover);
   border-radius: 0.5rem;
-  cursor: pointer;
+  position: relative;
 
   h1{
     font-size: 2rem;
+    transition: all 0.1s;
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover{
+      color: var(--color-primary);
+    }
+  }
+
+  svg{
+    color: var(--color-kakao);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-kakao);
+    border-radius: 100%;
+    padding: 0.2rem;
+    font-size: 2.6rem;
+    position: absolute;
+    right: 1.2rem;
+    cursor: pointer;
+  }
+
+  svg.fill{
+    background-color: var(--color-recommend);
   }
 
   .category{

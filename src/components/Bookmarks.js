@@ -1,47 +1,46 @@
 import styled from "styled-components";
-import Grid from "../elements/Grid";
-import Card from "../elements/Card";
+import RestaurantCard from "../elements/RestaurantCard";
 import axios from "axios";
 import { useState,useEffect } from "react";
+import { usePageChange } from "../hooks/usePageChange";
+import Paginator from "./Paginator";
 import "../styles/ScrollBar.css";
-import {API} from "../utils/API.js";
+import { dummyBookmarks } from "../utils/dummy";
 
 //즐겨찾기 컴포넌트
 function Bookmarks(){
-
     //북마크 조회(GET)=============================================================
-    const [bookmarks, setBookmarks] = useState([]);
-    const getBookmarkList =async()=> {
-        const response = await axios.get(`${API}/bookmarklist`, 
-            { headers : { Authorization: `Bearer ${localStorage.getItem('token')}`}});
-        
-        console.log(response.data); //.count, .data[]
-        if(response.data.code == 2146){
-            setBookmarks(undefined);
-        }else{
-            setBookmarks(response.data.result.data);
-        };
-    }
+    const [bookmarks, setBookmarks] = useState([...dummyBookmarks]);
+    const getBookmarkList = async() => {
+        try {
+          const response = await axios
+            .get(`${process.env.REACT_APP_SERVER_URL}/api/bookmarklist`,
+            { headers: 
+                { Authorization: `Bearer ${localStorage.getItem('token')}`}
+            })
+
+            if(response.data.code === 2146){
+                setBookmarks([]);
+            }else{
+                setBookmarks(response.data.result.data);
+            };
+        } catch (error) {
+            console.log(error);
+            // setBookmarks([]);
+            setBookmarks([...dummyBookmarks]);
+        }
+      }
+    // 페이징
+    const { activePage, slicedArray, handlePageChange } = usePageChange([...bookmarks]);
 
     //북마크 삭제(DELETE)=============================================================
     const deleteBookmark =(id)=>{
-        axios.delete(`${API}/del/bookmark`,
-        {
-            data:
-            {
-                bistroId: Number(id)
-            },
-            headers: 
-            {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-              },
-        })
+        axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/del/bookmark`,
+        { data: { bistroId: Number(id) }, headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
         .then(function(response) {
-            console.log(response.data);
-            alert('삭제되었습니다');
-            window.location.reload();
+            console.log('북마크가 해제 성공');
         }).catch(function(error) {
-            console.log(error);
+            console.log('북마크 해제 요청 실패');
         });
     };
 
@@ -51,59 +50,61 @@ function Bookmarks(){
     },[]);
 
     return(
-        <FavoritesContainer className="scrollbar">
+        <BookmarksContainer>
             <GridContainer>
-                { bookmarks == undefined ?
+                { bookmarks.length === 0 ?
                     <div>북마크된 음식점이 없습니다.</div>
                 :
                 <>
-                    {Array.from(bookmarks).map((b,index) => (
-                        <Card del
-                            width="100%"
-                            height="220px"
-                            key={index}
-                            id={b.bistroId}
-                            title={b.name}
-                            url={b.bistroUrl}
-                            category={b.category}
-                            newaddress={b.roadAddr}
-                            address={b.lnmAddr}
-                            call={b.telNo}
-                            onClick={()=>{
-                                deleteBookmark(`${b.bistroId}`);
-                            }}
+                    {Array.from(slicedArray).map((r) => (
+                        <RestaurantCard
+                            key={r.bistroId}
+                            id={r.bistroId}
+                            name={r.name}
+                            category={r.category}
+                            call={r.telNo}
+                            newaddress={r.roadAddr}
+                            address={r.lnmAddr}
+                            href={r.url}
+                            isBookmark={r.isBookmark}
+                            onClickBookmarkAlready={()=>deleteBookmark(r.bistroId)}
                         />
                     ))}
                 </>
                 }
-                
             </GridContainer>
-        </FavoritesContainer>
+            <Paginator
+                activePage={activePage}
+                totalItemsCount={bookmarks.length}
+                onChange={handlePageChange}/>
+        </BookmarksContainer>
     )
 }
 
-const FavoritesContainer = styled.div`
-    min-height: 550px;
-    height: 550px;
-    padding: 20px;
-    border: 1px solid #e6e6e6;
-    border-radius: 15px;
-    box-sizing: border-box;
-    overflow-y: scroll;
-    overflow-x: hidden;
+const BookmarksContainer = styled.div`
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    width: 60rem;
+
+    @media (max-width: ${(props)=>props.theme.breakpoints.tablet}) {
+        
+    }
+
+    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
+        
+    }
 `;
 
 const GridContainer = styled.div`
     display: grid;
-    width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 20px;
-    row-gap: 20px;
+    // grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    column-gap: 2rem;
+    row-gap: 2rem;
 
-    @media (max-width: 1100px){
-        display: grid;
+    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
         grid-template-columns: repeat(1, 1fr);
-        row-gap: 20px;
     }
 `;
 
