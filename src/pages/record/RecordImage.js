@@ -1,112 +1,40 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Input from "../../elements/Input";
 import Button from "../../elements/Button";
 import Radio from "../../elements/Radio";
 import Text from "../../elements/Text";
 import axios from "axios";
-import { useEffect, useRef } from "react";
-import {API,FlaskAPI} from "../../utils/API.js";
-import { when, timeConversion, dateConversion } from "../../utils/common";
-import { checkRegDate, checkRegTime } from "../../utils/validation";
+import { when } from "../../utils/common";
+import { useConvertDate } from "../../hooks/useConvertDate.js";
+import { useNutrients } from "../../hooks/useNutrients.js";
+
 
 //식단 기록 - 이미지
 function RecordImage(){
-    const [error, setError] = useState({ date: '', time: '', capacity: '' });
-    const [nutrients, setNutrients] = useState({
+    const { nutrients, changeAmount, initNutrients, updateNutrients, capacityError, setCapacityError } = useNutrients({
         name: '',
         calory: 0,
         carb: 0,
         pro: 0,
         fat: 0,
-        capacity: '',
+        capacity: 0,
         meal: 0
-    })
+    });
 
-    const {name, calory, carb, pro, fat, capacity, meal} = nutrients;
+    const {
+        name = '',
+        calory = 0,
+        carb = 0,
+        pro = 0,
+        fat = 0,
+        capacity = 0,
+        meal = 0
+    } = nutrients;
 
-    const changeAmount=(e)=>{ // 키 입력을 마치면 호출되도록 수정
-        const foodInfo = JSON.parse(localStorage.getItem('food'));
-        const amount = Number(e.target.value);
-        const ratio = (amount/foodInfo.capacity);
-        let convertedCalory = Number((foodInfo.calory*ratio).toFixed(2));
-        let convertedCarb = Number((foodInfo.carb*ratio).toFixed(1));
-        let convertedPro = Number((foodInfo.pro*ratio).toFixed(1));
-        let convertedFat = Number((foodInfo.fat*ratio).toFixed(1));
+    const { dateInfo, changeDate, changeTime, dateError, setDateError } = useConvertDate({date: '', time: '', prevDate: '', prevTime: ''});
 
-        if(amount <= 0 || isNaN(convertedCalory)){
-            setNutrients({ 
-                ...nutrients, 
-                calory: 0, 
-                carb: 0, 
-                pro: 0, 
-                fat: 0,
-                capacity: ''
-            });
-            setError({ ...error, capacity: '유효하지 않은 값입니다.'})
-        }else{
-            setNutrients({ 
-                ...nutrients, 
-                calory: convertedCalory, 
-                carb: convertedCarb, 
-                pro: convertedPro, 
-                fat: convertedFat, 
-                capacity: amount
-            });
-            setError({ ...error, capacity: '' })
-        }
 
-        
-    }
-    // 날짜, 끼니 입력 ===============================================================
-    const [dateInfo, setDateInfo] = useState({date: '', time: '', prevDate: '', prevTime: ''});
-
-    const changeDate =(e)=>{
-        const { prevTime } = dateInfo;
-
-        if(checkRegDate(e.target.value)){
-            const converted = dateConversion(e.target.value);
-            setDateInfo({ ...dateInfo, date: converted });
-            setError({...error, date: ''});
-        
-            if (prevTime && checkRegTime(e.target.value, prevTime)) {
-                console.log('changeDate - time : ', prevTime);
-                const timeConverted = timeConversion(prevTime);
-                setDateInfo({ date: converted, time: timeConverted, prevTime: '', prevDate: '' });
-                setError({ date: '', time: '' });
-            }
-        }else{
-            setDateInfo({ ...dateInfo, date: '', prevDate: e.target.value});
-            setError({ ...error, date: '유효하지 않은 날짜입니다.'});
-        }
-    }
-
-    const changeTime =(e)=>{
-        const { date, prevDate } = dateInfo;
-
-        if(checkRegTime(date, e.target.value)){
-            const converted = timeConversion(e.target.value);
-            setDateInfo({ ...dateInfo, time: converted });
-            setError({ ...error, time: ''});
-        
-            if (prevDate && checkRegDate(prevDate)) {
-                console.log('changeTime - date : ', prevDate);
-                const dateConverted = dateConversion(prevDate);
-                setDateInfo({ date: dateConverted, time: converted, prevDate: '', prevTime: '' });
-                setError({ date: '', time: '' });
-            }
-        }else{
-            setDateInfo({ ...dateInfo, time: '', prevTime: e.target.value });
-            setError({ ...error, time: '유효하지 않은 시간입니다.'});
-        }
-        
-    }
-    
-    const changeMeal = (e) => {
-		setNutrients({...nutrients, meal: e.target.value});
-	};
-
-    
     //이미지 상태변수=====================================================================================
     const fileRef = useRef();
     const clickFileInput =()=>{
@@ -125,22 +53,22 @@ function RecordImage(){
         }
     }
 
-    //음식 이미지 전송(POST)=====================================================================
+    //이미지 예측(POST)=====================================================================
     const [isPost, setIsPost] = useState(false); //이미지 등록 여부
-    const [food,setFood] = useState();
     const predictImage =(e)=>{
         e.preventDefault();
 
         const formData = new FormData();
         formData.append("file", image);
 
-        axios.post(`${FlaskAPI}/foodpredict`,formData,
+        axios.post(`${process.env.REACT_APP_FLASK_SERVER_URL}/api/foodpredict`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
-            setFood(response.data);
+            localStorage.setItem('food', JSON.stringify(response.data));
+            updateNutrients(JSON.parse(localStorage.getItem('food')));
             setIsPost(true);
         }).catch(function(error) {
-            console.log('gg');
+            alert(error.message);
         });
     }
 
@@ -157,27 +85,63 @@ function RecordImage(){
         formData.append("meal", Number(meal));
         formData.append("rdate", dateInfo.date);
         formData.append('rtime', dateInfo.time);
-        axios.post(`${API}/record`,formData,
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/record`,formData,
         { headers : { 'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${localStorage.getItem('token')}`}}
         ).then(function(response) {
             if(response.data.code === 1000){
+                initNutrients();
+                localStorage.removeItem('food');
                 alert('식단이 정상적으로 등록되었습니다.');
-                window.location.reload();
             }
         }).catch(function(error) {
-            console.log(error);
+            console.log(error.message);
         });
     }
 
     //유효성 검사========================================================
     const handleValid =()=>{
-        // recordByImage();
-    }
+            let isInputBlank = false;
+            let isErrorBlank = true;
+            const errorMessage = { date: '', time: '', capacity: '' };
 
-    //useEffect==========================
-    useEffect(()=>{
-        
-    },[])
+            if(!isPost){
+                alert('이미지를 먼저 등록해주세요.');
+            }
+    
+            if(dateInfo.date === ''){
+                errorMessage.date = '올바른 식사날짜를 입력하세요.';
+                isInputBlank = true;
+            }
+            
+            if(dateInfo.time === '') {
+                errorMessage.time = '올바른 식사시간을 입력하세요.';
+                isInputBlank = true;
+            }
+            
+            if(nutrients.capacity <= 0){
+                errorMessage.capacity = '올바른 식사량을 입력하세요.';
+                isInputBlank = true;
+            }
+    
+            for (const key in errorMessage) {
+                if (errorMessage[key] !== '') {
+                  isErrorBlank = false;
+                }
+            }
+    
+            for (const key in nutrients) {
+                if (nutrients[key] !== '') {
+                  isInputBlank = true;
+                }
+            }
+    
+            if(!isInputBlank && isErrorBlank){ // 필드가 채워져 있으면서 유효한 값일 때
+                recordByImage();
+            }else{
+                setCapacityError(errorMessage.capacity);
+                setDateError({date: errorMessage.date, time: errorMessage.time});
+            }
+    }
 
     return(
         <Container>
@@ -205,12 +169,12 @@ function RecordImage(){
                         }
                     </ImageWrapper>
                     <GridWrapper>
-                        <Input name="date" type="text" label="식사날짜" error={error.date} placeholder="YYYY-MM-DD" onChange={changeDate}/>
-                        <Input name="time" type="text" label="식사시간" error={error.time} placeholder="hh:mm" onChange={changeTime}/>
+                        <Input name="date" type="text" label="식사날짜" error={dateError.date} placeholder="YYYY-MM-DD" onChange={changeDate}/>
+                        <Input name="time" type="text" label="식사시간" error={dateError.time} placeholder="hh:mm" onChange={changeTime}/>
                     </GridWrapper>
                     <GridWrapper>
-                        <Radio legend="끼니" radioArray={when} onChange={changeMeal} checked={Number(meal)}/>
-                        <Input name="capacity" type="text" label="식사량" placeholder="그람(1인분 300g)" error={error.capacity} value={capacity} onChange={changeAmount}/>
+                        <Radio legend="끼니" radioArray={when} onChange={(e)=> updateNutrients({meal: e.target.value})} checked={Number(meal)}/>
+                        <Input name="capacity" type="text" label="식사량" placeholder="그람(1인분 300g)" error={capacityError} value={capacity} onChange={changeAmount}/>
                     </GridWrapper>
                     <FlexWrapper>
                         <Text label="칼로리" text={`${calory} kcal`}/>
