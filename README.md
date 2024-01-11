@@ -2,7 +2,7 @@
 ## 프로젝트 개요
 | 구분 | 내용 |
 |----|------|
-| 기간 | 2022.09.03 ~ 2022.11.28 (리팩토링 2023.09.03 ~ 진행중) |
+| 기간 | 2022.09.03 ~ 2022.11.28 (리팩토링 완료 2024.01) |
 |역할 | backend(2명) frontend(1명) 中 frontend |
 | 소개 | 기존 IOS 기반이었던 ' 채식인들의 식단 고민을 해결해주는 <br/>채식 비서 어플 ' 채삐(Chaebbi)에서 파생된 웹 프로젝트 |
 
@@ -30,8 +30,10 @@
 
 - HTML/CSS/JS
 - React
+- Redux-Toolkit
 - Styled-components
 - Recharts 
+- React-js-pagination
 - Axios
 ````
 
@@ -47,9 +49,15 @@
 
 ## View
 <p>
-<img src="https://user-images.githubusercontent.com/90168078/198579612-94ec757e-a830-409a-a246-2bb8887a03b3.PNG" width="315" height="500"/>
-<img src="https://user-images.githubusercontent.com/90168078/198581508-5b71fb14-4a2e-4d83-adf4-71814cec4d3d.jpg" width="315" height="500"/>
-<img src="https://user-images.githubusercontent.com/90168078/198581857-9e15871c-5eb5-4f55-ace3-cf066208e607.jpg" width="315" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ea043e69-d82d-4fe6-838a-7f21fee136f1" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/cbaad9cd-b83b-470a-8967-71dd57e03607" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/b7fd1ddc-670b-4b9f-ab8d-ac8db7c78959" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/6e305856-6bc7-48d9-8ac7-ed56ee166203" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/f0f3baa4-4131-4ea2-81ba-6fe712e0057b" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ff353394-7c88-47b7-a1d5-0628fc52eaef" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ce148f4a-2783-43d8-ae96-9abc172f092e" width="500" height="500"/>
+
+
 </p>
 
 ## 관련 Github URL
