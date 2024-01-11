@@ -49,7 +49,7 @@ function UserLogin(){
                 if(isSuccess){
                     localStorage.setItem('token', response.data.result.token);
                     localStorage.setItem('userId', response.data.result.userId);
-                    navigate("/");
+                    navigate("/manage-record");
                     window.location.reload(); 
                 }else{
                     if(error === 3014){
@@ -68,7 +68,7 @@ function UserLogin(){
     };
     return(
             <AuthContainer>
-                <img className="logo" src="/images/chaebbi-logo.svg" alt="logo" onClick={()=>navigate('/landing')}/>
+                <img className="logo" src="/images/chaebbi-logo.svg" alt="logo" onClick={()=>navigate('/')}/>
                 <h1 className="login-text">로그인</h1>
                 <p className="login-text">서비스를 이용하기 위해선 로그인이 필요합니다.</p>
 

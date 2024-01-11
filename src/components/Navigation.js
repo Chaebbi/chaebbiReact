@@ -87,8 +87,7 @@ function Navigation({ enableEvent }){
                     {insertedToken ? 
                         <Button onClick={doLogout}>로그아웃</Button>
                     :
-                        // <Button href="/sign_in">로그인</Button>
-                        <Button onClick={doLogout}>로그아웃</Button>
+                        <Button href="/sign_in">로그인</Button>
                     }
                 </div>
                 
