@@ -2,9 +2,11 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app){
   app.use(
-      createProxyMiddleware('/api', {
-          target: 'https://spring.chaebbiserver.shop',
-          changeOrigin: true
-      })
+    '/api',
+    createProxyMiddleware({
+        // target: 'https://spring.chaebbiserver.shop',
+        target: 'http://localhost:8080',
+        changeOrigin: true
+    })
   )
 };
