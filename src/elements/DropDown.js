@@ -3,7 +3,7 @@ import KeyboardArrowDownSharpIcon from '@mui/icons-material/KeyboardArrowDownSha
 import { useState } from "react"
 
 const DropDown =(props)=>{
-  const { initial, itemList, onClick } = props;
+  const { initial, itemList=[], onClick } = props;
 
   const [item, setItem] = useState(initial); // 리스트 아이템 클릭
   const [isActive, setIsActive] = useState(false); // 드롭다운 활성화 여부
@@ -19,8 +19,8 @@ const DropDown =(props)=>{
         <span>{item}</span>
         <KeyboardArrowDownSharpIcon className={isActive ? "active" : "inactive"}/>
       </SelectedItem>
-      {isActive && (
-        <DropDownList>
+      {isActive && itemList && (
+        <DropDownList className="scrollbar">
           {itemList.map((i,idx) => (
             <li key={idx} onClick={() => handleClick(i)}>
               {i}
@@ -33,13 +33,14 @@ const DropDown =(props)=>{
 }
 
 const DropDownWrapper = styled.div`
-  
+  position: relative;
 `;
 
 const SelectedItem = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  background-color: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
 
@@ -53,9 +54,14 @@ const SelectedItem = styled.div`
 `;
 
 const DropDownList = styled.ul`
+  width: 100%;
+  height: 20rem;
+  background-color: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   margin-top: 1rem;
+  position: absolute;
+  z-index: 10;
 
   li{
     width: 100%;
