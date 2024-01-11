@@ -82,30 +82,19 @@ function Bookmarks(){
 }
 
 const BookmarksContainer = styled.div`
-    padding: 2rem;
-    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     width: 60rem;
 
-    @media (max-width: ${(props)=>props.theme.breakpoints.tablet}) {
-        
-    }
-
-    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
-        
-    }
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+    }  
 `;
 
 const GridContainer = styled.div`
     display: grid;
-    // grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
     column-gap: 2rem;
     row-gap: 2rem;
-
-    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
-        grid-template-columns: repeat(1, 1fr);
-    }
 `;
 
 export default Bookmarks;
