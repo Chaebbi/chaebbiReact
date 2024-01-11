@@ -58,20 +58,11 @@ function Profile(){
                 activity: response.data.result.activity,
                 gender: response.data.result.gender
             });
-            showActlabel(response.data.result.activity);
+            
+            Number(response.data.result.activity) === 25 ? setActlabel("1단계") : 
+            Number(response.data.result.activity) === 33 ? setActlabel("2단계") : setActlabel("3단계");
         }catch(error){
             
-        }
-    }
-
-    //성별에 따른 아바타 가져오기========================================================
-    const getAvatar =(gender)=>{
-        if(gender === 0){
-            return maleAvt;
-        }else if(gender === 1){
-            return femaleAvt;
-        }else{
-            return defaultAvt;
         }
     }
 
@@ -145,7 +136,11 @@ function Profile(){
 
     return(
         <ProfileContainer>
-            <img src={`${getAvatar(profile.gender)}`} alt="프로필 이미지"/>
+            <img src={
+                profile.gender === 0 ? maleAvt : 
+                profile.gender === 1 ? femaleAvt : defaultAvt
+                } 
+                alt="프로필 이미지"/>
          {editmode ?
             (  
             <>
