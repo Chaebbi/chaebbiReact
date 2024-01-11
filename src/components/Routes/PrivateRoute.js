@@ -1,22 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Outlet } from "react-router-dom";
+import { Outlet,Navigate } from "react-router-dom";
 import Navigation from "../Navigation";
 
 const PrivateRoute =()=>{
-    // const isActive =()=>{
-    //     const active = localStorage.getItem('login');
-    //     return active !== '' ? true : false
-    // }
-    // return isActive ? <Outlet/> : <Navigate to="/sign_in"/>
-    return (
+    const isActive =()=>{
+        const active = localStorage.getItem('login');
+        return active !== '' ? true : false
+    }
+
+    console.log(isActive());
+    return (!isActive ? 
         <>
             <Navigation enableEvent={false}/>
             <ComponentWrapper>
                 <Outlet/>
             </ComponentWrapper>
-        </>
-    )
+        </> 
+        : 
+        <Navigate to="/sign_in"/>
+        )
+    
 }
 
 const ComponentWrapper = styled.div`
