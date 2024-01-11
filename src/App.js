@@ -55,11 +55,11 @@ function App() {
             </Route>
 
             {/* 채숲 ======================================================= */}
-            <Route path='/community' element={<CommunityMain/>}/>
+            {/* <Route path='/community' element={<CommunityMain/>}/>
             <Route path='/community-mypage' element={<CommunityMypage/>}/>
             <Route path='/community/posting' element={<BlogPost/>}></Route>
             <Route path='/community/detail/:postIdx' element={<BlogDetail/>}/>
-            <Route path='/community/detail/:postIdx/edit' element={<BlogUpdate/>}/>
+            <Route path='/community/detail/:postIdx/edit' element={<BlogUpdate/>}/> */}
           </Routes>
     </>
   );
