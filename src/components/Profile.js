@@ -27,22 +27,6 @@ function Profile(){
     });
 
     const [actlabel, setActlabel] = useState('1단계');
-    const showActlabel =(p)=>{
-        switch(Number(p)){
-            case 25:
-                setActlabel("1단계");
-                break;
-            case 33:
-                setActlabel("2단계");
-                break;
-            case 40:
-                setActlabel("3단계");
-                break;
-            default:
-                break;
-        }
-    }
-
     //유저정보 불러오기(GET)========================================================
     const getProfile = async() => {
         try{
@@ -58,7 +42,7 @@ function Profile(){
                 activity: response.data.result.activity,
                 gender: response.data.result.gender
             });
-            
+
             Number(response.data.result.activity) === 25 ? setActlabel("1단계") : 
             Number(response.data.result.activity) === 33 ? setActlabel("2단계") : setActlabel("3단계");
         }catch(error){
