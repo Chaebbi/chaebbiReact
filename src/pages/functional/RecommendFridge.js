@@ -18,7 +18,10 @@ function RecommendFridge(){
         .then((response) =>{
             console.log(response.data);
             dispatch(__getIngredientList(response.data.data));
-    })};
+        }).catch((error)=>{
+            console.log('서버 연결 끊김');
+        })
+    };
 
     //검색창 핸들링===========================================================================
     const ingredientlist = useSelector((state) => state.ingredientlist.data);
@@ -183,7 +186,7 @@ const AutocompleteList = styled.ul`
 const MyFridgeWrapper = styled.div`
     border: 1px solid var(--color-kakao);
     border-radius: 0.5rem;
-    background-color: #fffad6;
+    background-color: var(--color-recommend);
     padding: 2rem;
     margin: 1.6rem 0;
 

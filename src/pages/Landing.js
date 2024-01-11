@@ -39,16 +39,13 @@ function Landing(){
             </FunctionsWrapper>
             <ListWrapper>
                 <div className="list-contents">
-                    <img src="/images/salad-svg.svg" alt="salad-image"/>
-                    <GridWrapper>
-                        <h1>이럴 때 채삐를 사용해보세요!</h1>
-                        <ul>
-                            <li>1. 냉장고에 있는 재료만으로 한 끼를 만들어 먹고 싶을 때</li>
-                            <li>2. 약속이나 여행 등의 일정으로 외식을 해야 할 때</li>
-                            <li>3. 집 근처에서 간편식으로 간단히 한 끼를 해결하고 싶을 때</li>
-                            <li>4. 나의 식이 습관의 문제와 해결방안을 알고 싶을 때</li>
-                        </ul>
-                    </GridWrapper>
+                    <h1>이럴 때 채삐를 사용해보세요!</h1>
+                    <ul>
+                        <li>냉장고에 있는 재료만으로 한 끼를 만들어 먹고 싶을 때</li>
+                        <li>약속이나 여행 등의 일정으로 외식을 해야 할 때</li>
+                        <li>집 근처에서 간편식으로 간단히 한 끼를 해결하고 싶을 때</li>
+                        <li>나의 식이 습관의 문제와 해결방안을 알고 싶을 때</li>
+                    </ul>
                 </div>
             </ListWrapper>
             <CommunityWrapper>
@@ -156,24 +153,14 @@ const FunctionsWrapper = styled.div`
 `
 
 const ListWrapper = styled.div`
+    text-align: center;
     background-color: var(--color-input-focus);
-    padding: 3rem 0rem 1rem 0rem;
+    padding: 3rem 0rem 3rem 0rem;
     margin-bottom: 3rem;
 
     .list-contents{
         width: 88rem;
-        margin: 4rem auto 5.5rem auto;
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-
-        img{
-            width: 25%;
-            max-width: 20rem;
-            min-width: 10rem;
-            position: relative;
-            top: -1.5rem;
-        }
+        margin: 4rem auto;
 
         h1{
             margin-bottom: 4rem;
@@ -199,10 +186,6 @@ const ListWrapper = styled.div`
             
         }
     }
-`;
-
-const GridWrapper = styled.div`
-    margin: 1rem;
 `;
 
 const CommunityWrapper = styled.div`

@@ -19,15 +19,14 @@ function EditRecord(){
     const location = useLocation();
     const n = location.state;
 
-    console.log(n);
     const { nutrients, changeAmount, updateNutrients, capacityError, setCapacityError } = useNutrients({
-        name: n.text,
-        calory: n.cal,
-        carb: n.carb,
-        pro: n.protein,
-        fat: n.fat,
-        capacity: n.amount,
-        meal: n.meal
+        name: '',
+        calory: 0,
+        carb: 0,
+        pro: 0,
+        fat: 0,
+        capacity: 0,
+        meal: 0
     });
 
     const {
@@ -86,8 +85,8 @@ function EditRecord(){
         fileRef.current.click();
     }
 
-    const [image, setImage] = useState(n.image_url);
-    const [imagename, setImagename] = useState(n.image_url);
+    const [image, setImage] = useState('');
+    const [imagename, setImagename] = useState('');
     const [exist, setExist] = useState(false);
     const handleImage =(e)=>{
         setImage(e.target.files[0]);
@@ -156,7 +155,8 @@ function EditRecord(){
     }
 
     useEffect(()=>{
-        // getRecord();
+      localStorage.setItem('nutrients', JSON.stringify(n));
+      updateNutrients(JSON.parse(localStorage.getItem('nutrients')));
     },[]);
 
     return(

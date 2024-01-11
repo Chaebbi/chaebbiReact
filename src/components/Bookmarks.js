@@ -5,12 +5,11 @@ import { useState,useEffect } from "react";
 import { usePageChange } from "../hooks/usePageChange";
 import Paginator from "./Paginator";
 import "../styles/ScrollBar.css";
-import { dummyBookmarks } from "../utils/dummy";
 
 //즐겨찾기 컴포넌트
 function Bookmarks(){
     //북마크 조회(GET)=============================================================
-    const [bookmarks, setBookmarks] = useState([...dummyBookmarks]);
+    const [bookmarks, setBookmarks] = useState([]);
     const getBookmarkList = async() => {
         try {
           const response = await axios
@@ -26,8 +25,7 @@ function Bookmarks(){
             };
         } catch (error) {
             console.log(error);
-            // setBookmarks([]);
-            setBookmarks([...dummyBookmarks]);
+            setBookmarks([]);
         }
       }
     // 페이징
@@ -82,30 +80,24 @@ function Bookmarks(){
 }
 
 const BookmarksContainer = styled.div`
+    border-radius: 1rem;
+    background-color: var(--color-light-gray);
     padding: 2rem;
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+    padding-bottom: 1rem;
     width: 60rem;
 
-    @media (max-width: ${(props)=>props.theme.breakpoints.tablet}) {
-        
-    }
-
-    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
-        
-    }
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+    }  
 `;
 
 const GridContainer = styled.div`
     display: grid;
-    // grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
+    min-height: 45rem;
     column-gap: 2rem;
-    row-gap: 2rem;
-
-    @media (max-width: ${(props)=>props.theme.breakpoints.mobile}) {
-        grid-template-columns: repeat(1, 1fr);
-    }
+    row-gap: 1rem;
+    margin-bottom: 2rem;
 `;
 
 export default Bookmarks;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 //텍스트 엘리먼트
 function Text(props){
@@ -150,4 +151,4 @@ const P = styled.p`
 `;
 
 
-export default Text;
+export default React.memo(Text);

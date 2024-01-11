@@ -1,0 +1,13 @@
+.date-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.bedge{
+  padding: 0.8rem;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 0.5rem;
+}

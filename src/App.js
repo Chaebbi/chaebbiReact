@@ -10,16 +10,17 @@ import SearchRestaurant from "./pages/functional/SearchRestaurant";
 import RecommendFridge from "./pages/functional/RecommendFridge";
 import AnalyzeDiet from "./pages/functional/AnalyzeDiet";
 import Detail from "./pages/record/Detail";
+import EditRecord from './pages/record/EditRecord';
 import KakaoUserLogin from "./pages/user/KakaoUserLogin";
 import OnBoard from "./pages/user/OnBoard";
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import PublicRoute from './components/Routes/PublicRoute';
-import Test from "./pages/Test";
 import CommunityMain from "./pages/community/CommunityMain";
 import CommunityMypage from "./pages/community/CommunityMypage";
 import BlogPost from "./pages/community/BlogPost";
 import BlogDetail from "./pages/community/BlogDetail";
 import BlogUpdate from "./pages/community/BlogUpdate";
+import NotFound from './pages/NotFound';
 
 function App() {
   //커뮤니티에 접속중일때 로컬스토리지에 접속여부를 저장
@@ -29,17 +30,20 @@ function App() {
   return (
     <>
           <Routes>
-            <Route path='/landing' element={<Landing/>}/>
+            <Route path='/' element={<Landing/>}/>
             <Route element={<PrivateRoute />}>
               {/* 채삐 관련 페이지 ============================================== */}
-              <Route path='/' element={<Main />} exact/>
+              <Route path='/manage-record' element={<Main />} exact/>
               <Route path='/analyze-diet' element={<AnalyzeDiet/>}/>
               <Route path='/record-foodsearch'element={<RecordSearch/>}/>
               <Route path='/record-foodimage'element={<RecordImage/>}/>
               <Route path='/detail/:r_id' element={<Detail/>}/>
+              <Route path='/detail/:r_id/edit' element={<EditRecord/>}/>
               <Route path='/search-restaurant' element={<SearchRestaurant/>}/>
               <Route path='/recommend-fridge-ingredients' element={<RecommendFridge/>}/>
               <Route path='/mypage' element={<Mypage/>}/>
+              <Route path="/error/:error" element={<NotFound />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
 
             {/* 유저 인증 =================================================== */}
@@ -56,7 +60,6 @@ function App() {
             <Route path='/community/posting' element={<BlogPost/>}></Route>
             <Route path='/community/detail/:postIdx' element={<BlogDetail/>}/>
             <Route path='/community/detail/:postIdx/edit' element={<BlogUpdate/>}/>
-            <Route path='/test' element={<Test/>}/>
           </Routes>
     </>
   );

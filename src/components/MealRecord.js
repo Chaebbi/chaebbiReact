@@ -10,7 +10,7 @@ function MealRecord({ breakfast, lunch, dinner }){
         {
             tabTitle: '아침',
             tabContent:(
-                <div className="content-wrapper">
+                <div className="content-wrapper scrollbar">
                     {breakfast.length === 0 ? 
                         <p>등록된 식단이 없습니다.</p>
                     : 
@@ -32,7 +32,7 @@ function MealRecord({ breakfast, lunch, dinner }){
         {
             tabTitle: '점심',
             tabContent:(
-                <div className="content-wrapper">
+                <div className="content-wrapper scrollbar">
                     {lunch.length === 0 ? 
                         <p>등록된 식단이 없습니다.</p>
                     : 
@@ -54,7 +54,7 @@ function MealRecord({ breakfast, lunch, dinner }){
         {
             tabTitle: '저녁',
             tabContent:(
-                <div className="content-wrapper">
+                <div className="content-wrapper scrollbar">
                     {dinner.length === 0 ? 
                         <p>등록된 식단이 없습니다.</p>
                     : 
@@ -132,7 +132,7 @@ const Tab = styled.li`
 
     &.submenu{
         background-color: var(--color-light-gray);
-        color: var(--color-borde-hover);
+        color: var(--color-border-hover);
     }
 `;
 
@@ -140,12 +140,14 @@ const TabContantWrapper = styled.ul`
     border: 1px solid var(--color-border);
     border-radius: 0 0 0.5rem 0.5rem;
     padding: 2rem;
-    min-height: 30rem;
+    min-height: 20rem;
 
     .content-wrapper{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        display: grid;
+        grid-template-rows: repeat(4, 1fr);
+        row-gap: 0.5rem;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 `;
 
