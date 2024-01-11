@@ -49,13 +49,13 @@
 
 ## View
 <p>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ea043e69-d82d-4fe6-838a-7f21fee136f1" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/cbaad9cd-b83b-470a-8967-71dd57e03607" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/b7fd1ddc-670b-4b9f-ab8d-ac8db7c78959" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/6e305856-6bc7-48d9-8ac7-ed56ee166203" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/f0f3baa4-4131-4ea2-81ba-6fe712e0057b" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ff353394-7c88-47b7-a1d5-0628fc52eaef" width="500" height="500"/>
-<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ce148f4a-2783-43d8-ae96-9abc172f092e" width="500" height="500"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ea043e69-d82d-4fe6-838a-7f21fee136f1" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/cbaad9cd-b83b-470a-8967-71dd57e03607" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/b7fd1ddc-670b-4b9f-ab8d-ac8db7c78959" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/6e305856-6bc7-48d9-8ac7-ed56ee166203" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/f0f3baa4-4131-4ea2-81ba-6fe712e0057b" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ff353394-7c88-47b7-a1d5-0628fc52eaef" width="500" height="600"/>
+<img src="https://github.com/Chaebbi/chaebbiReact/assets/90168078/ce148f4a-2783-43d8-ae96-9abc172f092e" width="500" height="600"/>
 
 
 </p>
