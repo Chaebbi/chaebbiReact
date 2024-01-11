@@ -132,7 +132,7 @@ const Tab = styled.li`
 
     &.submenu{
         background-color: var(--color-light-gray);
-        color: var(--color-borde-hover);
+        color: var(--color-border-hover);
     }
 `;
 

@@ -2,7 +2,7 @@ import { Map } from 'react-kakao-maps-sdk';
 import ReactMapMarker from './ReactMapMarker';
 
 const ReactMap = ({positions}) => {
-  const mapStyle = { width: "80rem", height: "80rem", borderRadius: "1rem", padding: "2rem" };
+  const mapStyle = { width: "100%", height: "100%", borderRadius: "1rem", padding: "2rem" };
 
   const calculateCenter = () => {
     const totalLat = positions.reduce((sum, p) => sum + parseFloat(p.la), 0);

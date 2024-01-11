@@ -9,6 +9,7 @@ function Input(props){
         placeholder,
         disabled,
         onChange,
+        onKeyDown,
         value,
         label,
         error
@@ -24,6 +25,7 @@ function Input(props){
                 type={type}
                 placeholder={placeholder}
                 onChange={onChange}
+                onKeyDown={onKeyDown}
                 value={value}
                 disabled={disabled}
                 autoComplete="off"
