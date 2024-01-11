@@ -22,6 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-src/utils/kakao_API_KEY.js
+
+src/utils/dummy.js
 
 .env
+
