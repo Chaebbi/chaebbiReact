@@ -46,14 +46,14 @@ function Navigation({ enableEvent }){
     },[enableEvent]);
 
     return(
-        <NavBox state={scroll} otherRoute={enableEvent}>
+        <NavBox state={scroll} otherRoute={enableEvent} isOpen={isOpen}>
             {insertedToken ? ( 
                 <Logo>
-                    <StyledLink to='/'>CHAEBBI</StyledLink>
+                    <StyledLink to='/manage-record'>CHAEBBI</StyledLink>
                 </Logo>
                 ) : (
                 <Logo>
-                    <StyledLink to='/landing'>CHAEBBI</StyledLink>
+                    <StyledLink to='/'>CHAEBBI</StyledLink>
                 </Logo>
                 )}
                 <div>
@@ -87,7 +87,8 @@ function Navigation({ enableEvent }){
                     {insertedToken ? 
                         <Button onClick={doLogout}>로그아웃</Button>
                     :
-                        <Button href="/sign_in">로그인</Button>
+                        // <Button href="/sign_in">로그인</Button>
+                        <Button onClick={doLogout}>로그아웃</Button>
                     }
                 </div>
                 
@@ -112,6 +113,7 @@ const NavBox = styled.div`
     top: 0;
     left: 0;
     right: 0;
+    z-index: 4;
 
     ${props =>
         props.otherRoute === false &&
@@ -120,6 +122,11 @@ const NavBox = styled.div`
             border-bottom: 1px solid var(--color-border);
             color: var(--color-text);
         `}
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        background-color: ${({isOpen})=>(isOpen && 'var(--color-white)')};
+        color: ${({isOpen})=>(isOpen && 'var(--color-text)')};
+    }
 `;
 
 const Logo = styled.div`
@@ -155,7 +162,7 @@ const MenuIndicator = styled.div`
 const MenuList = styled.ul`
     display: ${(props) => (props.isOpen ? 'block' : 'none')};
     position: absolute;
-    width: 20rem;
+    width: 22rem;
     top: 100%;
     left: -12.5rem;
     padding: 1rem;
@@ -167,7 +174,6 @@ const MenuList = styled.ul`
     li {
         color: var(--color-text);
         margin: 1rem;
-        padding: 1rem;
         font-size: 14px;
         font-weight: 500;
         list-style: none;
@@ -178,6 +184,14 @@ const MenuList = styled.ul`
             background-color: var(--color-border);
         }
     }
+
+    @media ${({ theme }) => theme.breakpoints.tablet} {
+        width: 100%;
+        position: fixed;
+        top: 6rem;
+        left: 0;
+        border-radius: 0 0 0.5rem 0.5rem;
+    }
 `;
 
 
@@ -185,6 +199,7 @@ const StyledLink = styled(Link)`
     text-decoration: none;
     display: block;
     color: inherit;
+    padding: 1rem;
 
     &:focus, &:hover, &:visited, &:link, &:active {
         text-decoration: none;

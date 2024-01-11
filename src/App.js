@@ -30,10 +30,10 @@ function App() {
   return (
     <>
           <Routes>
-            <Route path='/landing' element={<Landing/>}/>
+            <Route path='/' element={<Landing/>}/>
             <Route element={<PrivateRoute />}>
               {/* 채삐 관련 페이지 ============================================== */}
-              <Route path='/' element={<Main />} exact/>
+              <Route path='/manage-record' element={<Main />} exact/>
               <Route path='/analyze-diet' element={<AnalyzeDiet/>}/>
               <Route path='/record-foodsearch'element={<RecordSearch/>}/>
               <Route path='/record-foodimage'element={<RecordImage/>}/>

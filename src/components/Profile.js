@@ -183,7 +183,7 @@ function Profile(){
             </InfoContainer>
             <ButtonWrapper>
                 <Button onClick={changeEditmode}>프로필 수정</Button>
-                <Button onClick={()=>navigate('/')}>식단관리</Button>
+                <Button onClick={()=>navigate('/manage-record')}>식단관리</Button>
                 <Button onClick={confirmDelete} contrast>회원탈퇴</Button>
                 {/* <Button onClick={gotoCommunity} href="/community">커뮤니티</Button> */}
             </ButtonWrapper>
