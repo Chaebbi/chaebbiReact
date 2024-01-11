@@ -94,6 +94,7 @@ const BookmarksContainer = styled.div`
 const GridContainer = styled.div`
     display: grid;
     grid-template-rows: repeat(4, 1fr);
+    min-height: 45rem;
     column-gap: 2rem;
     row-gap: 1rem;
     margin-bottom: 2rem;
