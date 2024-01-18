@@ -5,9 +5,9 @@ function HorizontalStackGraph(props){
 
     return(
         <HorizontalContainer carb={carb} protein={protein} fat={fat}>
-            <span>탄수화물 {carb}</span>
-            <span>단백질 {protein}</span>
-            <span>지방 {fat}</span>
+            <span>탄수화물 {carb}%</span>
+            <span>단백질 {protein}%</span>
+            <span>지방 {fat}%</span>
         </HorizontalContainer>
     )
 }
@@ -30,15 +30,15 @@ const HorizontalContainer = styled.div`
         color: var(--color-white);
     }
     span:first-child{
-        width: ${(props)=>props.carb};
+        width: ${(props)=>props.carb}%;
         background-color: #0088fe;
     }
     span:nth-child(2){
-        width: ${(props)=>props.protein};
+        width: ${(props)=>props.protein}%;
         background-color: #00c49f;
     }
     span:last-child{
-        width: ${(props)=>props.fat};
+        width: ${(props)=>props.fat}%;
         background-color: #ffbb28;
     }
 `;
